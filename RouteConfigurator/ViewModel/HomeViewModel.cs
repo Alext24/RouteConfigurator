@@ -12,6 +12,8 @@ namespace RouteConfigurator.ViewModel
 {
     public class HomeViewModel : ViewModelBase
     {
+        
+
         #region PrivateVariables
         private readonly INavigationService _navigationService;
         private IDataAccessService _serviceProxy = new DataAccessService();

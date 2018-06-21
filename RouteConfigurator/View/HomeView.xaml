@@ -5,16 +5,134 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:RouteConfigurator.View"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      MinHeight="650"
+      MinWidth="700"
       Title="HomeView"
       DataContext="{Binding Home, Source={StaticResource Locator}}">
 
-    <Border Background="AliceBlue" Padding="20">
-        <Border Background="LightGray" Padding="10 10 10 30" CornerRadius="20">
-            <Border Background="White" Padding="10" CornerRadius="20">
-                <TextBlock Text="Welcome"/>
+    <Border Padding="40">
+        <Border.Background>
+            <ImageBrush ImageSource="/Backgrounds/OceanWaterBackground.jpg"/>
+        </Border.Background>
 
-            </Border>
+        <Border Background="LightSkyBlue" Padding="10 10 10 0" CornerRadius="20" 
+                MaxWidth="600" MaxHeight="550">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>      <!--Row 0-->
+                            <RowDefinition Height="20"/>        <!--Row 1: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 2-->
+                            <RowDefinition Height="auto"/>      <!--Row 3-->
+                            <RowDefinition Height="auto"/>      <!--Row 4-->
+                            <RowDefinition Height="20"/>        <!--Row 5: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 6-->
+                            <RowDefinition Height="auto"/>      <!--Row 7-->
+                            <RowDefinition Height="auto"/>      <!--Row 8-->
+                            <RowDefinition Height="20"/>        <!--Row 9: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 10-->
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--Row 0 setup: Part Number-->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Padding="5" Text="Enter Part Number: "
+                                   FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBox   Grid.Row="0" Grid.Column="1" Margin="10 0 0 0"
+                                   FontSize="20" VerticalAlignment="Center"/>
+
+                        <!--Row 1 setup: Blank, Spacing-->
+
+                        <!--Row 2 setup: Route-->
+                        <TextBlock Grid.Row="2" Grid.Column="0" Padding="5" Text="Route: "
+                                   FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBox   Grid.Row="2" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="LightGray"
+                                   FontSize="20" VerticalAlignment="Center"
+                                   Text="Temp"/>
+
+                        <!--Row 3 setup: Product Supervisor Code-->
+                        <TextBlock Grid.Row="3" Grid.Column="0" Padding="5" Text="Product Supervisor Code: "
+                                   FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBox   Grid.Row="3" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="LightGray"
+                                   FontSize="20" VerticalAlignment="Center"
+                                   Text="Temp"/>
+
+                        <!--Row 4 setup: Total Time-->
+                        <TextBlock Grid.Row="4" Grid.Column="0" Padding="5" Text="Production Time: "
+                                   FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBox   Grid.Row="4" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="LightGray"
+                                   FontSize="20" VerticalAlignment="Center"
+                                   Text="4 hrs 13 min. 4:13 hrs:min"/>
+
+                        <!--Row 5 setup: Blank, Spacing-->
+
+                        <!--Row 6 setup: Model search-->
+                        <TextBox   Grid.Row="6" Grid.Column="0" Margin="0 5"
+                                   FontSize="20" />
+                        <Button    Grid.Row="6" Grid.Column="1" Content="Search" Padding="5" Margin="10 0 0 0"
+                                   FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                        <!--Row 7 setup: Time Table-->
+                        <DataGrid  Grid.Row="7" Grid.ColumnSpan="2" Height="150" CanUserResizeRows="False" BorderBrush="LightGray" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="Header1" Header="Date" Width="auto" FontSize="16"/>
+                                <DataGridTextColumn x:Name="Header2" Header="Sales Order" Width="auto" FontSize="16"/>
+                                <DataGridTextColumn x:Name="Header3" Header="Production Number" Width="auto" FontSize="16"/>
+                                <DataGridTextColumn x:Name="Header4" Header="Production Time" Width="auto" FontSize="16"/>
+                            </DataGrid.Columns>
+
+                            <TextBlock/>
+                            
+                        </DataGrid>
+
+                        <!--Row 8 setup: Average Production Time-->
+                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="8" Grid.ColumnSpan="2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="6"/>
+                                    <ColumnDefinition Width="{Binding ElementName=Header1, Path=ActualWidth}"/>
+                                    <ColumnDefinition Width="{Binding ElementName=Header2, Path=ActualWidth}"/>
+                                    <ColumnDefinition Width="{Binding ElementName=Header3, Path=ActualWidth}"/>
+                                    <ColumnDefinition Width="{Binding ElementName=Header4, Path=ActualWidth}"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="1" Grid.ColumnSpan="3" TextAlignment="Right" Text="Average Production Time: "
+                                           FontSize="14" Padding="0 2"/>
+                                <TextBlock Grid.Column="4" Margin="5 0" Text="12:15" FontSize="14" Padding="0 2"/>
+                            </Grid>
+                        </Border>
+
+                        <!--Row 9 setup: Blank, Spacing-->
+
+                        <!--Row 10 setup: Navigation Buttons-->
+                        <StackPanel Grid.Row="10" Grid.ColumnSpan="2" Orientation="Horizontal">
+                            <Button Padding="4" FontSize="16">
+                                <TextBlock TextAlignment="Center" Text="Supervisor&#xa;Login"/>        <!--&#xa; is a line break-->
+                            </Button>
+
+                            <Button Padding="4" FontSize="16" Margin="10 0 0 0">
+                                <TextBlock TextAlignment="Center" Text="Director&#xa;Login"/>        <!--&#xa; is a line break-->
+                            </Button>
+                        </StackPanel>
+
+                    </Grid>
+                </Border>
+
+                <!--Information text-->
+                <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
+                           FontSize="12" Text="Hello" />
+
+            </Grid>
         </Border>
     </Border>
 </Page>

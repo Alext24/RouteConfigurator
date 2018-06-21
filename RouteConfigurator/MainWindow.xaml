@@ -5,9 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         mc:Ignorable="d ignore"
-        Height="300"
-        Width="300"
+
         Title="Route Configurator"
+        MinHeight="{Binding Content.MinHeight, ElementName=mainFrame}"
+        MinWidth="{Binding Content.MinWidth, ElementName=mainFrame}"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
     
     <Window.Resources>

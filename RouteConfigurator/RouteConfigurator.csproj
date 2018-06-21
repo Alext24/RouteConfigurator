@@ -141,9 +141,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Backgrounds\" />
     <Folder Include="Converters\" />
     <Folder Include="Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Backgrounds\StarrySkyBackground.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Backgrounds\OceanWaterBackground.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
