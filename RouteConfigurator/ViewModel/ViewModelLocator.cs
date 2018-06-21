@@ -9,10 +9,12 @@
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 */
 
+using CommonServiceLocator;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
+using RouteConfigurator.Design;
 using RouteConfigurator.Model;
+using System;
 
 namespace RouteConfigurator.ViewModel
 {
@@ -25,9 +27,13 @@ namespace RouteConfigurator.ViewModel
     /// </summary>
     public class ViewModelLocator
     {
-        static ViewModelLocator()
+        public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+
+            setupNavigation();
+
+            SimpleIoc.Default.Register<HomeViewModel>();
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -55,11 +61,31 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public HomeViewModel Home
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<HomeViewModel>();
+                SimpleIoc.Default.Register<HomeViewModel>();
+                return ServiceLocator.Current.GetInstance<HomeViewModel>();
+            }
+        }
+
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>
         public static void Cleanup()
         {
+            SimpleIoc.Default.Unregister<HomeViewModel>();
+        }
+
+        public static void setupNavigation()
+        {
+            var navigationService = new FrameNavigationService();
+
+            navigationService.Configure("HomeView", new System.Uri("/View/HomeView.xaml", UriKind.Relative));
+
+            SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
         }
     }
 }

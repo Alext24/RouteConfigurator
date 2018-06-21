@@ -7,7 +7,7 @@
         mc:Ignorable="d ignore"
         Height="300"
         Width="300"
-        Title="MVVM Light Application"
+        Title="Route Configurator"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
     
     <Window.Resources>
@@ -18,15 +18,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid x:Name="LayoutRoot">
-
-        <TextBlock FontSize="36"
-                   FontWeight="Bold"
-                   Foreground="Purple"
-                   Text="{Binding WelcomeTitle}"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   TextWrapping="Wrap" />
-
+    <Grid>
+        <Frame x:Name="mainFrame" Source="/View/HomeView.xaml" NavigationUIVisibility="Hidden"/>
     </Grid>
-</Window>
+</Window> 
