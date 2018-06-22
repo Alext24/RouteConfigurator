@@ -8,28 +8,32 @@ using System.Threading.Tasks;
 
 namespace RouteConfigurator.Model
 {
-    [Table("Models")]
+    [Table("Model")]
     public class Model
     {
         [Key]
         [StringLength(30)]
-        public string ModelNum;
+        public string ModelNum { get; set; }
 
-        public int RouteNum;
+        public int RouteNum { get; set; }
 
-        public decimal TotalTime;
+        public decimal TotalTime { get; set; }
 
-        public bool IsOverrideActive;
+        public bool IsOverrideActive { get; set; }
 
-        public int OverrideRoute;
+        public int OverrideRoute { get; set; }
 
-        public decimal OverrideTime;
+        public decimal OverrideTime { get; set; }
 
         [StringLength(5)]
-        public string BoxSize;
+        public string BoxSize { get; set; }
 
-        public decimal BaseTime;
+        public decimal BaseTime { get; set; }
 
-        public decimal AVTime;
+        public decimal AVTime { get; set; }
+
+        public virtual ICollection<Option> Options { get; set; }
+
+        public virtual ICollection<TimeTrial> TimeTrials { get; set; }
     }
 }

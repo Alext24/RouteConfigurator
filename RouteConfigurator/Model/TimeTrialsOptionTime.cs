@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace RouteConfigurator.Model
 {
-    [Table("TimeTrialsOptionTimes")]
+    [Table("TimeTrialsOptionTime")]
     public class TimeTrialsOptionTime
     {
         [Key]
         [StringLength(2)]
-        public string OptionCode;
+        public string OptionCode { get; set; }
 
-        public decimal Time;
+        public decimal Time { get; set; }
     }
 }

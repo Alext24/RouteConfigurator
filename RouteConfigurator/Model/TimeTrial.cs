@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 
 namespace RouteConfigurator.Model
 {
-    [Table("TimeTrials")]
+    [Table("TimeTrial")]
     public class TimeTrial
     {
         [Key]
-        public int ProductionNumber;
+        public int ProductionNumber { get; set; }
 
-        public int SalesOrder;
+        public int SalesOrder { get; set; }
 
-        public decimal BaseTime;
+        public decimal BaseTime { get; set; }
 
-        public decimal AVTime;
+        public decimal AVTime { get; set; }
+
+        public virtual ICollection<TimeTrialsOptionTime> TTOptionTimes { get; set; }
     }
 }

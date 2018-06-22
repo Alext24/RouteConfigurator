@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace RouteConfigurator.Model
 {
-    [Table("Options")]
+    [Table("Option")]
     public class Option
     {
         [Key]
         [StringLength(2)]
-        public string OptionCode;
+        public string OptionCode { get; set; }
 
         [StringLength(5)]
-        public string BoxSize;
+        public string BoxSize { get; set; }
 
-        public decimal Time;
+        public decimal Time { get; set; }
 
         [StringLength(45)]
-        public string Name;
+        public string Name { get; set; }
     }
 }
