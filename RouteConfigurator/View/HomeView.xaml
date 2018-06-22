@@ -15,7 +15,7 @@
             <ImageBrush ImageSource="/Backgrounds/OceanWaterBackground.jpg"/>
         </Border.Background>
 
-        <Border Background="LightSkyBlue" Padding="10 10 10 0" CornerRadius="20" 
+        <Border Background="{StaticResource LightBlue}" Padding="10 10 10 0" CornerRadius="20" 
                 MaxWidth="600" MaxHeight="550">
             <Grid>
                 <Grid.RowDefinitions>
@@ -48,28 +48,29 @@
                         <TextBlock Grid.Row="0" Grid.Column="0" Padding="5" Text="Enter Part Number: "
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBox   Grid.Row="0" Grid.Column="1" Margin="10 0 0 0"
-                                   FontSize="20" VerticalAlignment="Center"/>
+                                   FontSize="20" VerticalAlignment="Center"
+                                   Text="{Binding partNumber}"/>
 
                         <!--Row 1 setup: Blank, Spacing-->
 
                         <!--Row 2 setup: Route-->
                         <TextBlock Grid.Row="2" Grid.Column="0" Padding="5" Text="Route: "
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                        <TextBox   Grid.Row="2" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="LightGray"
+                        <TextBox   Grid.Row="2" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="{StaticResource LightGray}"
                                    FontSize="20" VerticalAlignment="Center"
-                                   Text="Temp"/>
+                                   Text="{Binding partNumber}"/>
 
                         <!--Row 3 setup: Product Supervisor Code-->
                         <TextBlock Grid.Row="3" Grid.Column="0" Padding="5" Text="Product Supervisor Code: "
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                        <TextBox   Grid.Row="3" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="LightGray"
+                        <TextBox   Grid.Row="3" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="{StaticResource LightGray}"
                                    FontSize="20" VerticalAlignment="Center"
                                    Text="Temp"/>
 
                         <!--Row 4 setup: Total Time-->
                         <TextBlock Grid.Row="4" Grid.Column="0" Padding="5" Text="Production Time: "
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                        <TextBox   Grid.Row="4" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="LightGray"
+                        <TextBox   Grid.Row="4" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="{StaticResource LightGray}"
                                    FontSize="20" VerticalAlignment="Center"
                                    Text="4 hrs 13 min. 4:13 hrs:min"/>
 
@@ -77,9 +78,11 @@
 
                         <!--Row 6 setup: Model search-->
                         <TextBox   Grid.Row="6" Grid.Column="0" Margin="0 5"
-                                   FontSize="20" />
+                                   FontSize="20" 
+                                   Text="{Binding timeSearchPartNumber}"/>
                         <Button    Grid.Row="6" Grid.Column="1" Content="Search" Padding="5" Margin="10 0 0 0"
-                                   FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                   FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                   Command="{Binding timeSearchCommand}"/>
 
                         <!--Row 7 setup: Time Table-->
                         <DataGrid  Grid.Row="7" Grid.ColumnSpan="2" Height="150" CanUserResizeRows="False" BorderBrush="LightGray" IsReadOnly="True">
@@ -116,12 +119,23 @@
 
                         <!--Row 10 setup: Navigation Buttons-->
                         <StackPanel Grid.Row="10" Grid.ColumnSpan="2" Orientation="Horizontal">
-                            <Button Padding="4" FontSize="16">
-                                <TextBlock TextAlignment="Center" Text="Supervisor&#xa;Login"/>        <!--&#xa; is a line break-->
+                            <Button Padding="4" FontSize="16"
+                                    Command="{Binding supervisorLoginCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Supervisor"/>        
+                                        <TextBlock TextAlignment="Center" Text="Login"/>
+                                    </StackPanel>
+                                </Button.Content>
                             </Button>
 
                             <Button Padding="4" FontSize="16" Margin="10 0 0 0">
-                                <TextBlock TextAlignment="Center" Text="Director&#xa;Login"/>        <!--&#xa; is a line break-->
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Director"/>        
+                                        <TextBlock TextAlignment="Center" Text="Login"/>
+                                    </StackPanel>
+                                </Button.Content>
                             </Button>
                         </StackPanel>
 
@@ -130,7 +144,7 @@
 
                 <!--Information text-->
                 <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
-                           FontSize="12" Text="Hello" />
+                           FontSize="12" Text="{Binding informationText}" />
 
             </Grid>
         </Border>

@@ -9,9 +9,18 @@
              mc:Ignorable="d ignore">
     
     <Application.Resources>
+
+        <ResourceDictionary>
         <!--Global View Model Locator-->
-        <vm:ViewModelLocator x:Key="Locator"
-                             d:IsDataSource="True" />
+        <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
+
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="Skins/Colors.xaml"></ResourceDictionary>
+            <ResourceDictionary Source="Skins/Fonts.xaml"></ResourceDictionary>
+            <ResourceDictionary Source="Skins/Buttons.xaml"></ResourceDictionary>
+        </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
     </Application.Resources>
     
 </Application>

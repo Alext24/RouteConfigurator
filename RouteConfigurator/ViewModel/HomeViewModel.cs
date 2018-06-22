@@ -1,9 +1,11 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using RouteConfigurator.Design;
 using RouteConfigurator.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,17 +14,20 @@ namespace RouteConfigurator.ViewModel
 {
     public class HomeViewModel : ViewModelBase
     {
-        
 
         #region PrivateVariables
         private readonly INavigationService _navigationService;
         private IDataAccessService _serviceProxy = new DataAccessService();
 
-//        private bool _startShiftActive;
+        private string _partNumber;
+        private string _timeSearchPartNumber;
+
+        private string _informationText;
         #endregion
 
         #region RelayCommands
-//        public RelayCommand startShiftCommand { get; set; }
+        public RelayCommand timeSearchCommand { get; set; }
+        public RelayCommand supervisorLoginCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -33,7 +38,6 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
-
             if (navigationService.Parameter != null)
             {
             }
@@ -41,40 +45,67 @@ namespace RouteConfigurator.ViewModel
             {
             }
 
-//            startShiftCommand = new RelayCommand(startShift);
+            timeSearchCommand = new RelayCommand(timeSearch);
+            supervisorLoginCommand = new RelayCommand(supervisorLogin);
         }
         #endregion
 
         #region Commands
         /// <summary>
-        /// User pressed start shift
+        /// 
         /// </summary>
-        private void startShift()
+        private void timeSearch()
         {
-
+            informationText = "I am searching for times.  Not really";
         }
 
-        private void manageDays()
+        private void supervisorLogin()
         {
+            informationText = "Hello Mr. Supervisor";
 //            _navigationService.NavigateTo("DaysView", _day);
         }
         #endregion
 
         #region Public Variables
-        /*
-        public bool startShiftActive
+        public string partNumber 
         {
             get
             {
-                return _startShiftActive;
+                return _partNumber;
             }
             set
             {
-                _startShiftActive = value;
-                RaisePropertyChanged("startShiftActive");
+                _partNumber = value.ToUpper();
+                timeSearchPartNumber = partNumber;
+                RaisePropertyChanged("partNumber");
             }
         }
-        */
+
+        public string timeSearchPartNumber 
+        {
+            get
+            {
+                return _timeSearchPartNumber;
+            }
+            set
+            {
+                _timeSearchPartNumber = value.ToUpper();
+                RaisePropertyChanged("timeSearchPartNumber");
+            }
+        }
+
+        public string informationText 
+        {
+            get
+            {
+                return _informationText;
+            }
+            set
+            {
+                _informationText = value;
+                RaisePropertyChanged("informationText");
+            }
+        }
         #endregion
     }
 }

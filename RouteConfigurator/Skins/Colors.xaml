@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Project_Tracking">
+    <Color x:Key="Light">#efefef</Color>
+    <SolidColorBrush x:Key="BackgroundLightBrush" Color="{StaticResource BackgroundLight}" />
+
+    <Color x:Key="BackgroundVeryLight">#fafafa</Color>
+    <SolidColorBrush x:Key="BackgroundVeryLightBrush" Color="{StaticResource BackgroundVeryLight}" />
+
+    <Color x:Key="BackgroundVeryDark">#000000</Color>
+    <SolidColorBrush x:Key="BackgroundVeryDarkBrush" Color="{StaticResource BackgroundVeryDark}" />
+
+    <Color x:Key="BackgroundOrange">#F0A150</Color>
+    <SolidColorBrush x:Key="BackgroundOrangeBrush" Color="{StaticResource BackgroundOrange}" />
+
+    <Color x:Key="BackgroundBlue">#0056B5</Color>
+    <SolidColorBrush x:Key="BackgroundBlueBrush" Color="{StaticResource BackgroundBlue}" />
+
+    <Color x:Key="ForegroundMain">#686868</Color>
+    <SolidColorBrush x:Key="ForegroundMainBrush" Color="{StaticResource ForegroundMain}" />
+
+    <Color x:Key="ForegroundVeryDark">#000000</Color>
+    <SolidColorBrush x:Key="ForegroundVeryDarkBrush" Color="{StaticResource ForegroundVeryDark}" />
+
+    <Color x:Key="ForegroundLight">#ffffff</Color>
+    <SolidColorBrush x:Key="ForegroundLightBrush" Color="{StaticResource ForegroundLight}" />
+
+    <Color x:Key="ForegroundDark">#bdbdbd</Color>
+    <SolidColorBrush x:Key="ForegroundDarkBrush" Color="{StaticResource ForegroundDark}" />
+
+    
+    <Color x:Key="LightBlueColor">#77eaff</Color>
+    <SolidColorBrush x:Key="LightBlue" Color="{StaticResource LightBlueColor}" />
+
+    <Color x:Key="LightGrayColor">#f2f2f2</Color>
+    <SolidColorBrush x:Key="LightGray" Color="{StaticResource LightGrayColor}" />
+    
+    <Color x:Key="TealColor">#1affd1</Color>
+    <SolidColorBrush x:Key="Teal" Color="{StaticResource TealColor}" />
+    
+</ResourceDictionary>
