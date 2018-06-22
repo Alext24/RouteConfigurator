@@ -22,5 +22,7 @@ namespace RouteConfigurator.Model
 
         [StringLength(45)]
         public string Name { get; set; }
+
+        public virtual Model Model { get; set; }
     }
 }

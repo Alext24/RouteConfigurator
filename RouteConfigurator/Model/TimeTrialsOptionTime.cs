@@ -15,6 +15,9 @@ namespace RouteConfigurator.Model
         [StringLength(2)]
         public string OptionCode { get; set; }
 
+        [Key]
+        public virtual TimeTrial TimeTrial { get; set; }
+
         public decimal Time { get; set; }
     }
 }
