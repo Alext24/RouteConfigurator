@@ -85,6 +85,11 @@
     <Compile Include="Model\IDataAccessService.cs" />
     <Compile Include="Model\IDataService.cs" />
     <Compile Include="Model\IFrameNavigationService.cs" />
+    <Compile Include="Model\Model.cs" />
+    <Compile Include="Model\Option.cs" />
+    <Compile Include="Model\RouteConfiguratorDB.cs" />
+    <Compile Include="Model\TimeTrial.cs" />
+    <Compile Include="Model\TimeTrialsOptionTime.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
