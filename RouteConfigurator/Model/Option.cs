@@ -12,6 +12,7 @@ namespace RouteConfigurator.Model
     public class Option
     {
         [Key]
+        [Column(Order=1)]
         [StringLength(2)]
         public string OptionCode { get; set; }
 
@@ -24,5 +25,9 @@ namespace RouteConfigurator.Model
         public string Name { get; set; }
 
         public virtual Model Model { get; set; }
+
+        [Key]
+        [Column(Order=2)]
+        public string ModelNum { get; set; }
     }
 }

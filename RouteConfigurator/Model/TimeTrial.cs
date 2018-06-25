@@ -11,7 +11,7 @@ namespace RouteConfigurator.Model
     [Table("TimeTrial")]
     public class TimeTrial
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ProductionNumber { get; set; }
 
         public int SalesOrder { get; set; }

@@ -80,9 +80,9 @@
     <Compile Include="Design\DataAccessService.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Design\FrameNavigationService.cs" />
-    <Compile Include="Migrations\201806221956103_initial.cs" />
-    <Compile Include="Migrations\201806221956103_initial.Designer.cs">
-      <DependentUpon>201806221956103_initial.cs</DependentUpon>
+    <Compile Include="Migrations\201806251537162_initial.cs" />
+    <Compile Include="Migrations\201806251537162_initial.Designer.cs">
+      <DependentUpon>201806251537162_initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\DataItem.cs" />
@@ -152,8 +152,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\201806221956103_initial.resx">
-      <DependentUpon>201806221956103_initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201806251537162_initial.resx">
+      <DependentUpon>201806251537162_initial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
