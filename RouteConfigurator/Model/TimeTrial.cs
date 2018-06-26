@@ -16,6 +16,11 @@ namespace RouteConfigurator.Model
 
         public int SalesOrder { get; set; }
 
+        [Column(TypeName = "date")]
+        public DateTime Date { get; set; }
+
+        public decimal TotalTime { get; set; }
+
         public decimal BaseTime { get; set; }
 
         public decimal AVTime { get; set; }

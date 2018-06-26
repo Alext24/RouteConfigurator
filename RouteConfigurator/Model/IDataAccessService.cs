@@ -10,5 +10,8 @@ namespace RouteConfigurator.Model
     public interface IDataAccessService
     {
         //ObservableCollection<Day> getDays();
+        Model getModel(string modelName);
+
+        ObservableCollection<TimeTrial> getTimeTrials(string modelName);
     }
 }

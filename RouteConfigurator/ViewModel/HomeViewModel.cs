@@ -19,10 +19,18 @@ namespace RouteConfigurator.ViewModel
         private readonly INavigationService _navigationService;
         private IDataAccessService _serviceProxy = new DataAccessService();
 
-        private string _partNumber;
-        private string _timeSearchPartNumber;
+        private string _modelNumber;
+        private string _routeText;
+        private string _prodSupCodeText;
+        private string _productionTimeText;
+        private string _timeSearchModelNumber;
+
+        private ObservableCollection<TimeTrial> _timeTrials = new ObservableCollection<TimeTrial>();
+        private decimal _averageTime;
 
         private string _informationText;
+
+        private Model.Model _model;
         #endregion
 
         #region RelayCommands
@@ -56,7 +64,7 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void timeSearch()
         {
-            informationText = "I am searching for times.  Not really";
+            searchTimeTrials(timeSearchModelNumber);
         }
 
         private void supervisorLogin()
@@ -67,30 +75,110 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Public Variables
-        public string partNumber 
+        public string modelNumber 
         {
             get
             {
-                return _partNumber;
+                return _modelNumber;
             }
             set
             {
-                _partNumber = value.ToUpper();
-                timeSearchPartNumber = partNumber;
-                RaisePropertyChanged("partNumber");
+                _modelNumber = value.ToUpper();
+                timeSearchModelNumber = modelNumber;
+                RaisePropertyChanged("modelNumber");
+                searchModel();
             }
         }
 
-        public string timeSearchPartNumber 
+        public string routeText
         {
             get
             {
-                return _timeSearchPartNumber;
+                return _routeText;
             }
             set
             {
-                _timeSearchPartNumber = value.ToUpper();
-                RaisePropertyChanged("timeSearchPartNumber");
+                _routeText = value;
+                RaisePropertyChanged("routeText");
+            }
+        }
+
+        public string prodSupCodeText
+        {
+            get
+            {
+                return _prodSupCodeText;
+            }
+            set
+            {
+                _prodSupCodeText = value;
+                RaisePropertyChanged("prodSupCodeText");
+            }
+        }
+
+        public string productionTimeText
+        {
+            get
+            {
+                return _productionTimeText;
+            }
+            set
+            {
+                _productionTimeText = value;
+                RaisePropertyChanged("productionTimeText");
+            }
+        }
+
+        public string timeSearchModelNumber 
+        {
+            get
+            {
+                return _timeSearchModelNumber;
+            }
+            set
+            {
+                _timeSearchModelNumber = value.ToUpper();
+                RaisePropertyChanged("timeSearchModelNumber");
+                searchTimeTrials(timeSearchModelNumber);
+            }
+        }
+
+        public Model.Model model
+        {
+            get
+            {
+                return _model;
+            }
+            set
+            {
+                _model = value;
+                RaisePropertyChanged("model");
+            }
+        }
+
+        public ObservableCollection<TimeTrial> timeTrials
+        {
+            get
+            {
+                return _timeTrials;
+            }
+            set
+            {
+                _timeTrials = value;
+                RaisePropertyChanged("timeTrials");
+            }
+        }
+
+        public decimal averageTime
+        {
+            get
+            {
+                return _averageTime;
+            }
+            set
+            {
+                _averageTime = value;
+                RaisePropertyChanged("averageTime");
             }
         }
 
@@ -106,6 +194,118 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+        #endregion
+
+        #region Private Functions
+        private void searchModel()
+        {
+            try
+            {
+                model = _serviceProxy.getModel(modelNumber);
+                routeText = string.Format("{0}", model.RouteNum);
+                productionTimeText =  string.Format("{0}", model.TotalTime);
+                setProdSupCode();
+
+                informationText = "Model loaded";
+
+            }catch(Exception e)
+            {
+                informationText = e.Message;
+
+                routeText = string.Format("N/A");
+                prodSupCodeText = string.Format("N/A");
+                productionTimeText =  string.Format("N/A");
+            }
+        }
+
+        private void searchTimeTrials(string model)
+        {
+            if (!string.IsNullOrWhiteSpace(model))
+            {
+                timeTrials = _serviceProxy.getTimeTrials(model);
+
+                if (timeTrials.Count() > 0)
+                {
+                    informationText = "Time trials loaded";
+                    calcAverageTime();
+                }
+                else
+                {
+                    informationText = "No time trials for this model exist";
+                }
+            }
+            else
+            {
+                informationText = "Please enter model number";
+            }
+        }
+
+        private void calcAverageTime()
+        {
+            decimal sum = 0;
+            decimal count = 0;
+
+            foreach(TimeTrial timeTrial in timeTrials)
+            {
+                sum += timeTrial.TotalTime;
+                count++;
+            }
+
+            averageTime = sum/count;
+        }
+
+        private void setProdSupCode()
+        {
+            if(model.TotalTime <= 0)
+            {
+                prodSupCodeText = "";
+            }
+            else if(model.TotalTime > 0 && model.TotalTime < 1.50M)
+            {
+                prodSupCodeText = "3";
+            }
+            else if(model.TotalTime >= 1.50M && model.TotalTime < 2.50M)
+            {
+                prodSupCodeText = "4";
+            }
+            else if(model.TotalTime >= 2.50M && model.TotalTime < 4.00M)
+            {
+                prodSupCodeText = "5";
+            }
+            else if(model.TotalTime >= 4.00M && model.TotalTime < 5.00M)
+            {
+                prodSupCodeText = "6";
+            }
+            else if(model.TotalTime >= 5.00M && model.TotalTime < 9.00M)
+            {
+                prodSupCodeText = "7";
+            }
+            else if(model.TotalTime >= 9.00M && model.TotalTime < 15.00M)
+            {
+                prodSupCodeText = "8";
+            }
+            else if(model.TotalTime >= 15.00M && model.TotalTime < 20.00M)
+            {
+                prodSupCodeText = "9";
+            }
+            else if(model.TotalTime >= 20.00M && model.TotalTime < 30.00M)
+            {
+                prodSupCodeText = "10";
+            }
+            else if(model.TotalTime >= 30.00M && model.TotalTime < 40.00M)
+            {
+                prodSupCodeText = "11";
+            }
+            else if(model.TotalTime >= 40.00M)
+            {
+                prodSupCodeText = "12";
+            }
+            else
+            {
+                prodSupCodeText = "error";
+            }
+        }
+
         #endregion
     }
 }

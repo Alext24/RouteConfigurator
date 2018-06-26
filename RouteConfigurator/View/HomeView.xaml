@@ -45,11 +45,11 @@
                         </Grid.ColumnDefinitions>
 
                         <!--Row 0 setup: Part Number-->
-                        <TextBlock Grid.Row="0" Grid.Column="0" Padding="5" Text="Enter Part Number: "
+                        <TextBlock Grid.Row="0" Grid.Column="0" Padding="5" Text="Enter Model Number: "
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBox   Grid.Row="0" Grid.Column="1" Margin="10 0 0 0"
                                    FontSize="20" VerticalAlignment="Center"
-                                   Text="{Binding partNumber}"/>
+                                   Text="{Binding modelNumber}"/>
 
                         <!--Row 1 setup: Blank, Spacing-->
 
@@ -58,43 +58,45 @@
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBox   Grid.Row="2" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="{StaticResource LightGray}"
                                    FontSize="20" VerticalAlignment="Center"
-                                   Text="{Binding partNumber}"/>
+                                   Text="{Binding routeText}"/>
 
                         <!--Row 3 setup: Product Supervisor Code-->
                         <TextBlock Grid.Row="3" Grid.Column="0" Padding="5" Text="Product Supervisor Code: "
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBox   Grid.Row="3" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="{StaticResource LightGray}"
                                    FontSize="20" VerticalAlignment="Center"
-                                   Text="Temp"/>
+                                   Text="{Binding prodSupCodeText}"/>
 
                         <!--Row 4 setup: Total Time-->
                         <TextBlock Grid.Row="4" Grid.Column="0" Padding="5" Text="Production Time: "
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBox   Grid.Row="4" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="{StaticResource LightGray}"
                                    FontSize="20" VerticalAlignment="Center"
-                                   Text="4 hrs 13 min. 4:13 hrs:min"/>
+                                   Text="{Binding productionTimeText}"/>
 
                         <!--Row 5 setup: Blank, Spacing-->
 
                         <!--Row 6 setup: Model search-->
                         <TextBox   Grid.Row="6" Grid.Column="0" Margin="0 5"
                                    FontSize="20" 
-                                   Text="{Binding timeSearchPartNumber}"/>
+                                   Text="{Binding timeSearchModelNumber}"/>
                         <Button    Grid.Row="6" Grid.Column="1" Content="Search" Padding="5" Margin="10 0 0 0"
                                    FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"
                                    Command="{Binding timeSearchCommand}"/>
 
                         <!--Row 7 setup: Time Table-->
-                        <DataGrid  Grid.Row="7" Grid.ColumnSpan="2" Height="150" CanUserResizeRows="False" BorderBrush="LightGray" IsReadOnly="True">
+                        <DataGrid  Grid.Row="7" Grid.ColumnSpan="2" Height="150" CanUserResizeRows="False" BorderBrush="LightGray" IsReadOnly="True"
+                                   ItemsSource="{Binding timeTrials}" AutoGenerateColumns="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn x:Name="Header1" Header="Date" Width="auto" FontSize="16"/>
-                                <DataGridTextColumn x:Name="Header2" Header="Sales Order" Width="auto" FontSize="16"/>
-                                <DataGridTextColumn x:Name="Header3" Header="Production Number" Width="auto" FontSize="16"/>
-                                <DataGridTextColumn x:Name="Header4" Header="Production Time" Width="auto" FontSize="16"/>
+                                <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Date"
+                                                    Binding="{Binding Date, StringFormat=d}"/>
+                                <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Sales Order"
+                                                    Binding="{Binding SalesOrder}"/>
+                                <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Production Number"
+                                                    Binding="{Binding ProductionNumber}"/>
+                                <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="Production Time"
+                                                    Binding="{Binding TotalTime}"/>
                             </DataGrid.Columns>
-
-                            <TextBlock/>
-                            
                         </DataGrid>
 
                         <!--Row 8 setup: Average Production Time-->
@@ -111,7 +113,8 @@
 
                                 <TextBlock Grid.Column="1" Grid.ColumnSpan="3" TextAlignment="Right" Text="Average Production Time: "
                                            FontSize="14" Padding="0 2"/>
-                                <TextBlock Grid.Column="4" Margin="5 0" Text="12:15" FontSize="14" Padding="0 2"/>
+                                <TextBlock Grid.Column="4" Margin="5 0" FontSize="14" Padding="0 2"
+                                           Text="{Binding averageTime}"/>
                             </Grid>
                         </Border>
 

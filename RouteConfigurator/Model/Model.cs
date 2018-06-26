@@ -32,6 +32,8 @@ namespace RouteConfigurator.Model
 
         public decimal AVTime { get; set; }
 
+        public decimal ExtraTime { get; set; }
+
         public virtual ICollection<Option> Options { get; set; }
 
         public virtual ICollection<TimeTrial> TimeTrials { get; set; }

@@ -16,12 +16,12 @@ namespace RouteConfigurator.Model
         [StringLength(2)]
         public string OptionCode { get; set; }
 
-        public virtual TimeTrial TimeTrial { get; set; }
-
         [Key]
         [Column(Order=2)]
         public int ProductionNumber { get; set; }
 
         public decimal Time { get; set; }
+
+        public virtual TimeTrial TimeTrial { get; set; }
     }
 }
