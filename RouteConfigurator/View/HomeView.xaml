@@ -4,8 +4,9 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:RouteConfigurator.View"
+      xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
       mc:Ignorable="d" 
-      MinHeight="650"
+      MinHeight="750"
       MinWidth="700"
       Title="HomeView"
       DataContext="{Binding Home, Source={StaticResource Locator}}">
@@ -16,7 +17,7 @@
         </Border.Background>
 
         <Border Background="{StaticResource LightBlue}" Padding="10 10 10 0" CornerRadius="20" 
-                MaxWidth="600" MaxHeight="550">
+                MaxWidth="600" MaxHeight="650">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -43,6 +44,10 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
+
+                        <Grid.Resources>
+                            <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
+                        </Grid.Resources>
 
                         <!--Row 0 setup: Part Number-->
                         <TextBlock Grid.Row="0" Grid.Column="0" Padding="5" Text="Enter Model Number: "
@@ -85,8 +90,10 @@
                                    Command="{Binding timeSearchCommand}"/>
 
                         <!--Row 7 setup: Time Table-->
-                        <DataGrid  Grid.Row="7" Grid.ColumnSpan="2" Height="150" CanUserResizeRows="False" BorderBrush="LightGray" IsReadOnly="True"
-                                   ItemsSource="{Binding timeTrials}" AutoGenerateColumns="False">
+                        <DataGrid  Grid.Row="7" Grid.ColumnSpan="2" Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="True"
+                                   ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" AutoGenerateColumns="False"
+                                   ToolTip="Hold 'ctrl' while clicking to unselect the selection.">
+
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Date"
                                                     Binding="{Binding Date, StringFormat=d}"/>
@@ -95,8 +102,24 @@
                                 <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Production Number"
                                                     Binding="{Binding ProductionNumber}"/>
                                 <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="Production Time"
-                                                    Binding="{Binding TotalTime}"/>
+                                                    Binding="{Binding TotalTime, Converter={StaticResource TimeConverter}}"/>
                             </DataGrid.Columns>
+
+                            <!--Setup the options visibility-->
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <DataGrid CanUserResizeRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False" IsReadOnly="True"
+                                              ItemsSource="{Binding TTOptionTimes}" AutoGenerateColumns="False" MaxHeight="110">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Width="auto" FontSize="12" Header="Option"
+                                                                Binding="{Binding OptionCode}"/>
+                                            <DataGridTextColumn Width="auto" FontSize="12" Header="Time"
+                                                                Binding="{Binding Time, Converter={StaticResource TimeConverter}}"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+
                         </DataGrid>
 
                         <!--Row 8 setup: Average Production Time-->
@@ -114,7 +137,7 @@
                                 <TextBlock Grid.Column="1" Grid.ColumnSpan="3" TextAlignment="Right" Text="Average Production Time: "
                                            FontSize="14" Padding="0 2"/>
                                 <TextBlock Grid.Column="4" Margin="5 0" FontSize="14" Padding="0 2"
-                                           Text="{Binding averageTime}"/>
+                                           Text="{Binding averageTime, Converter={StaticResource TimeConverter}}"/>
                             </Grid>
                         </Border>
 

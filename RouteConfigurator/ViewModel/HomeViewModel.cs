@@ -14,9 +14,16 @@ namespace RouteConfigurator.ViewModel
 {
     public class HomeViewModel : ViewModelBase
     {
-
         #region PrivateVariables
+
+        /// <summary>
+        /// Navigation service to help navigate to other pages
+        /// </summary>
         private readonly INavigationService _navigationService;
+
+        /// <summary>
+        /// Data access service to retrieve data from a data source
+        /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
         private string _modelNumber;
@@ -27,6 +34,8 @@ namespace RouteConfigurator.ViewModel
 
         private ObservableCollection<TimeTrial> _timeTrials = new ObservableCollection<TimeTrial>();
         private decimal _averageTime;
+
+        private TimeTrial _selectedTimeTrial;
 
         private string _informationText;
 
@@ -46,13 +55,6 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
-            if (navigationService.Parameter != null)
-            {
-            }
-            else
-            {
-            }
-
             timeSearchCommand = new RelayCommand(timeSearch);
             supervisorLoginCommand = new RelayCommand(supervisorLogin);
         }
@@ -60,7 +62,7 @@ namespace RouteConfigurator.ViewModel
 
         #region Commands
         /// <summary>
-        /// 
+        /// see searchTimeTrials
         /// </summary>
         private void timeSearch()
         {
@@ -182,6 +184,19 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public TimeTrial selectedTimeTrial
+        {
+            get
+            {
+                return _selectedTimeTrial;
+            }
+            set
+            {
+                _selectedTimeTrial = value;
+                RaisePropertyChanged("selectedTimeTrial");
+            }
+        }
+
         public string informationText 
         {
             get
@@ -197,17 +212,21 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions
+
+        /// <summary>
+        /// Looks for and updates the information for the entered model number
+        /// </summary>
         private void searchModel()
         {
             try
             {
+                //Retrieves a model from the database
                 model = _serviceProxy.getModel(modelNumber);
                 routeText = string.Format("{0}", model.RouteNum);
                 productionTimeText =  string.Format("{0}", model.TotalTime);
                 setProdSupCode();
 
                 informationText = "Model loaded";
-
             }catch(Exception e)
             {
                 informationText = e.Message;
@@ -218,10 +237,15 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Looks for time trials for the given model
+        /// </summary>
+        /// <param name="model"> model number to search for </param>
         private void searchTimeTrials(string model)
         {
             if (!string.IsNullOrWhiteSpace(model))
             {
+                //Retrieve timeTrials from the database
                 timeTrials = _serviceProxy.getTimeTrials(model);
 
                 if (timeTrials.Count() > 0)
@@ -236,10 +260,16 @@ namespace RouteConfigurator.ViewModel
             }
             else
             {
+                //Reset the information since there is not a model name
+                timeTrials.Clear();
+                averageTime = 0;
                 informationText = "Please enter model number";
             }
         }
 
+        /// <summary>
+        /// Calculates the average time for all of the time trials for the entered model
+        /// </summary>
         private void calcAverageTime()
         {
             decimal sum = 0;
@@ -254,6 +284,9 @@ namespace RouteConfigurator.ViewModel
             averageTime = sum/count;
         }
 
+        /// <summary>
+        /// Determines the product supervisor code based off the production time
+        /// </summary>
         private void setProdSupCode()
         {
             if(model.TotalTime <= 0)

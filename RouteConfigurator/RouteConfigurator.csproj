@@ -77,6 +77,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\BaseValueConverter.cs" />
+    <Compile Include="Converters\DecimalTimeToStringConverter.cs" />
     <Compile Include="Design\DataAccessService.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Design\FrameNavigationService.cs" />
@@ -198,7 +200,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Converters\" />
     <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
