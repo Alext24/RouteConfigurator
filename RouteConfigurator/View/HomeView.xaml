@@ -92,7 +92,7 @@
                         <!--Row 7 setup: Time Table-->
                         <DataGrid  Grid.Row="7" Grid.ColumnSpan="2" Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="True"
                                    ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" AutoGenerateColumns="False"
-                                   ToolTip="Hold 'ctrl' while clicking to unselect the selection.">
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Date"

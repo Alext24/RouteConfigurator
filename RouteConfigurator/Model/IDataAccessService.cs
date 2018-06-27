@@ -12,6 +12,8 @@ namespace RouteConfigurator.Model
         //ObservableCollection<Day> getDays();
         Model getModel(string modelName);
 
-        ObservableCollection<TimeTrial> getTimeTrials(string modelName);
+        decimal getTotalOptionsTime(string boxSize, List<string> options);
+
+        ObservableCollection<TimeTrial> getTimeTrials(string modelBase, List<string> options);
     }
 }

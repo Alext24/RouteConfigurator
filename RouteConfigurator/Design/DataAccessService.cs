@@ -36,18 +36,66 @@ namespace RouteConfigurator.Design
             return returnModel;
         }
 
-        public ObservableCollection<TimeTrial> getTimeTrials(string modelName)
+        public decimal getTotalOptionsTime(string boxSize, List<string> options)
         {
-            ObservableCollection<TimeTrial> timeTrials = new ObservableCollection<TimeTrial>();
+            decimal totalTime = 0;
 
-            foreach (var timeTrial in context.TimeTrials)
+            if (options.Count() == 0)
             {
-                if (timeTrial.Model.ModelNum.Equals(modelName.ToUpper()))
+                return 0;
+            }
+
+            List<Option> optionsForBoxSize = context.Options.Where(o => o.BoxSize.Equals(boxSize)).ToList();
+
+            foreach(string option in options)
+            {
+                foreach(Option op in optionsForBoxSize)
                 {
-                    timeTrials.Add(timeTrial);
+                    if (op.OptionCode.Equals(option))
+                    {
+                        totalTime += op.Time;
+                        break;
+                    }
                 }
             }
 
+            return totalTime;
+        }
+
+        public ObservableCollection<TimeTrial> getTimeTrials(string modelBase, List<string> options)
+        {
+            ObservableCollection<TimeTrial> timeTrials = new ObservableCollection<TimeTrial>();
+
+            //Search through each stored time trial
+            foreach (var timeTrial in context.TimeTrials)
+            {
+                // Make sure the model base matches the entered model base
+                if (timeTrial.Model.ModelNum.Equals(modelBase.ToUpper()))
+                {
+                    // Make sure the options with the time trial are the same as the options for entered model
+                    bool hasAllSameOptions = true;
+                    if (timeTrial.TTOptionTimes.Count() != options.Count())
+                    {
+                        hasAllSameOptions = false;
+                    }
+                    else
+                    {
+                        foreach(TimeTrialsOptionTime ttot in timeTrial.TTOptionTimes)
+                        {
+                            if (!options.Contains(ttot.OptionCode))
+                            {
+                                hasAllSameOptions = false;
+                                break;
+                            }
+                        }
+
+                        if (hasAllSameOptions)
+                        {
+                            timeTrials.Add(timeTrial);
+                        }
+                    }
+                }
+            }
             return timeTrials;
         }
     }
