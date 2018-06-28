@@ -336,13 +336,33 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateModelText()
         {
-            decimal totalTime = getTotalTime();
+            routeText = "";
+            prodSupCodeText = "";
+            productionTimeText = "";
 
-            TimeSpan time = TimeSpan.FromHours((double)totalTime);
-            productionTimeText = string.Format("{0}:{1:00}", time.Hours, time.Minutes);
+            Override modelOverride = _serviceProxy.getModelOverride(modelNumber);
 
-            setRoute(time);
-            setProdSupCode(totalTime);
+            if (modelOverride != null && modelOverride.IsOverrideActive)
+            {
+                //Model's information is currently overriden
+                routeText = modelOverride.OverrideRoute.ToString();
+
+                TimeSpan time = TimeSpan.FromHours((double)modelOverride.OverrideTime);
+                productionTimeText = string.Format("{0}:{1:00}", ((time.Days*24) + time.Hours), time.Minutes);
+
+                setProdSupCode(modelOverride.OverrideTime);
+            }
+            else
+            {
+                //Model's information is not currently overriden
+                decimal totalTime = getTotalTime();
+
+                TimeSpan time = TimeSpan.FromHours((double)totalTime);
+                productionTimeText = string.Format("{0}:{1:00}", ((time.Days*24) + time.Hours), time.Minutes);
+
+                setRoute(time);
+                setProdSupCode(totalTime);
+            }
         }
 
         /// <summary>

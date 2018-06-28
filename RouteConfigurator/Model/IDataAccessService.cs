@@ -9,8 +9,9 @@ namespace RouteConfigurator.Model
 {
     public interface IDataAccessService
     {
-        //ObservableCollection<Day> getDays();
         Model getModel(string modelName);
+
+        Override getModelOverride(string modelNum);
 
         decimal getTotalOptionsTime(string boxSize, List<string> options);
 

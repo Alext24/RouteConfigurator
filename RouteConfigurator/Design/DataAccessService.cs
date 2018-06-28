@@ -36,6 +36,22 @@ namespace RouteConfigurator.Design
             return returnModel;
         }
 
+        public Override getModelOverride(string modelNum)
+        {
+            Override retOverride = null;
+
+            var overrideVal = context.Overrides.Find(modelNum);
+
+            if(overrideVal == null)
+            {
+                return retOverride;
+            }
+
+            retOverride = overrideVal as Override;
+
+            return retOverride;
+        }
+
         public decimal getTotalOptionsTime(string boxSize, List<string> options)
         {
             decimal totalTime = 0;
@@ -47,18 +63,34 @@ namespace RouteConfigurator.Design
 
             List<Option> optionsForBoxSize = context.Options.Where(o => o.BoxSize.Equals(boxSize)).ToList();
 
+            string errorText = "";
+            bool missedOption = false;
+            bool foundOption;
+
             foreach(string option in options)
             {
+                foundOption = false;
                 foreach(Option op in optionsForBoxSize)
                 {
                     if (op.OptionCode.Equals(option))
                     {
                         totalTime += op.Time;
+                        foundOption = true;
                         break;
                     }
                 }
+                if (!foundOption)
+                {
+                    missedOption = true;
+                    errorText += string.Format("{0} not found\n", option);
+                }
             }
 
+            if (missedOption)
+            {
+                errorText += "Information may be inaccurate.";
+                MessageBox.Show(errorText);
+            }
             return totalTime;
         }
 
