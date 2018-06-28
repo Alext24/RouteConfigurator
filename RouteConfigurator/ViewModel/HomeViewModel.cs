@@ -95,8 +95,7 @@ namespace RouteConfigurator.ViewModel
 
         private void supervisorLogin()
         {
-            informationText = "Hello Mr. Supervisor";
-//            _navigationService.NavigateTo("DaysView", _day);
+            _navigationService.NavigateTo("SupervisorView");
         }
         #endregion
 

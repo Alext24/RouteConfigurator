@@ -27,13 +27,14 @@ namespace RouteConfigurator.ViewModel
     /// </summary>
     public class ViewModelLocator
     {
-        public ViewModelLocator()
+        static ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             setupNavigation();
 
             SimpleIoc.Default.Register<HomeViewModel>();
+            SimpleIoc.Default.Register<SupervisorViewModel>();
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -42,22 +43,6 @@ namespace RouteConfigurator.ViewModel
             else
             {
                 SimpleIoc.Default.Register<IDataService, DataService>();
-            }
-
-            SimpleIoc.Default.Register<MainViewModel>();
-        }
-
-        /// <summary>
-        /// Gets the Main property.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
-            "CA1822:MarkMembersAsStatic",
-            Justification = "This non-static member is needed for data binding purposes.")]
-        public MainViewModel Main
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
 
@@ -71,12 +56,23 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public SupervisorViewModel Supervisor 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<SupervisorViewModel>();
+                SimpleIoc.Default.Register<SupervisorViewModel>();
+                return ServiceLocator.Current.GetInstance<SupervisorViewModel>();
+            }
+        }
+
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>
         public static void Cleanup()
         {
             SimpleIoc.Default.Unregister<HomeViewModel>();
+            SimpleIoc.Default.Unregister<SupervisorViewModel>();
         }
 
         public static void setupNavigation()
@@ -84,7 +80,9 @@ namespace RouteConfigurator.ViewModel
             var navigationService = new FrameNavigationService();
 
             navigationService.Configure("HomeView", new System.Uri("/View/HomeView.xaml", UriKind.Relative));
+            navigationService.Configure("SupervisorView", new System.Uri("/View/SupervisorView.xaml", UriKind.Relative));
 
+            SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
         }
     }
