@@ -20,6 +20,67 @@ namespace RouteConfigurator.Design
             context = new RouteConfiguratorDB();
         }
 
+        public ObservableCollection<Model.Model> getModels()
+        {
+            ObservableCollection<Model.Model> models = new ObservableCollection<Model.Model>();
+
+            foreach(Model.Model model in context.Models)
+            {
+                models.Add(model);
+            }
+
+            return models;
+        }
+
+        public ObservableCollection<Model.Model> getFilteredModels(string modelFilter, string boxSizeFilter)
+        {
+
+            ObservableCollection<Model.Model> models = new ObservableCollection<Model.Model>();
+
+            var result = context.Models.Where(model => model.Base.Contains(modelFilter) && 
+                                                       model.BoxSize.Contains(boxSizeFilter)).ToList();
+
+            foreach(Model.Model model in result)
+            {
+                models.Add(model);
+            }
+
+            return models;
+        }
+
+        public ObservableCollection<Option> getOptions()
+        {
+            ObservableCollection<Option> options = new ObservableCollection<Option>();
+
+            foreach(Option option in context.Options)
+            {
+                options.Add(option);
+            }
+
+            return options;
+        }
+
+        public ObservableCollection<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter)
+        {
+
+            ObservableCollection<Option> options = new ObservableCollection<Option>();
+
+            var result = context.Options.Where(option => option.OptionCode.Contains(optionFilter) && 
+                                                       option.BoxSize.Contains(optionBoxSizeFilter)).ToList();
+
+            foreach(Option option in result)
+            {
+                options.Add(option);
+            }
+
+            return options;
+        }
+
+        /// <summary>
+        /// Gets a specific model
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
         public Model.Model getModel(string modelName)
         {
             Model.Model returnModel = null;

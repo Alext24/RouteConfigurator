@@ -5,11 +5,14 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:RouteConfigurator.View"
       mc:Ignorable="d" 
-      MinHeight="600"
+      MinHeight="800"
       MinWidth="500"
       Title="SupervisorView"
-      d:DesignHeight="450" d:DesignWidth="800"
       DataContext="{Binding Supervisor, Source={StaticResource Locator}}">
+      
+    <!--
+    <DecimalTimeToStringConverter x:Key="TimeConverter"/>
+    -->
 
     <Border Padding="40">
         <Border.Background>
@@ -17,7 +20,7 @@
         </Border.Background>
 
         <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20"
-                MaxWidth="400" MaxHeight="500">
+                MaxWidth="400" MaxHeight="700">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -25,7 +28,86 @@
                 </Grid.RowDefinitions>
 
                 <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
-                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>      <!--Row 0-->
+                            <RowDefinition/>                    <!--Row 1-->
+                            <RowDefinition Height="20"/>        <!--Row 2: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 3-->
+                            <RowDefinition/>                    <!--Row 4-->
+                        </Grid.RowDefinitions>
+
+                        <!--Row 0 setup: Model table filters-->
+                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="6"/>
+                                    <ColumnDefinition Width="{Binding ElementName=Header1, Path=ActualWidth}"/>
+                                    <ColumnDefinition Width="{Binding ElementName=Header2, Path=ActualWidth}"/>
+                                    <ColumnDefinition Width="{Binding ElementName=Header3, Path=ActualWidth}"/>
+                                    <ColumnDefinition Width="{Binding ElementName=Header4, Path=ActualWidth}"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="1" FontSize="16" Text="{Binding modelFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Grid.Column="2" FontSize="16" Text="{Binding boxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                        </Border>
+
+                        <!--Row 1 setup: Model table-->
+                        <DataGrid  Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="True"
+                                   Grid.Row="1" VerticalAlignment="Top"
+                               ItemsSource="{Binding models}" AutoGenerateColumns="False"
+                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Model"
+                                                Binding="{Binding Base}"/>
+                                <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size"
+                                                Binding="{Binding BoxSize}"/>
+                                <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Drive Time"
+                                                Binding="{Binding DriveTime}"/>
+                                <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
+                                                Binding="{Binding AVTime}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!--Row 2 setup: Blank, Spacing-->
+
+                        <!--Row 3 setup: Options table filters-->
+                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="3">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="6"/>
+                                    <ColumnDefinition Width="{Binding ElementName=HeaderOptions1, Path=ActualWidth}"/>
+                                    <ColumnDefinition Width="{Binding ElementName=HeaderOptions2, Path=ActualWidth}"/>
+                                    <ColumnDefinition Width="{Binding ElementName=HeaderOptions3, Path=ActualWidth}"/>
+                                    <ColumnDefinition Width="{Binding ElementName=HeaderOptions4, Path=ActualWidth}"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="1" FontSize="16" Text="{Binding optionFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Grid.Column="2" FontSize="16" Text="{Binding optionBoxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                        </Border>
+
+                        <!--Row 4 setup: Model table-->
+                        <DataGrid  Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="True"
+                                   Grid.Row="4" VerticalAlignment="Top"
+                               ItemsSource="{Binding options}" AutoGenerateColumns="False"
+                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="HeaderOptions1" Width="auto" FontSize="16" Header="Option"
+                                                Binding="{Binding OptionCode}"/>
+                                <DataGridTextColumn x:Name="HeaderOptions2" Width="auto" FontSize="16" Header="Box Size"
+                                                Binding="{Binding BoxSize}"/>
+                                <DataGridTextColumn x:Name="HeaderOptions3" Width="auto" FontSize="16" Header="Time"
+                                                Binding="{Binding Time}"/>
+                                <DataGridTextColumn x:Name="HeaderOptions4" Width="auto" FontSize="16" Header="Name"
+                                                Binding="{Binding Name}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                    </Grid>
                 </Border>
 
                 <!--Information text-->

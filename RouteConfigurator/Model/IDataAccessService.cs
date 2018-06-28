@@ -9,6 +9,14 @@ namespace RouteConfigurator.Model
 {
     public interface IDataAccessService
     {
+        ObservableCollection<Model> getModels();
+
+        ObservableCollection<Model> getFilteredModels(string modelFilter, string boxSizeFilter);
+
+        ObservableCollection<Option> getOptions();
+
+        ObservableCollection<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter);
+
         Model getModel(string modelName);
 
         Override getModelOverride(string modelNum);
