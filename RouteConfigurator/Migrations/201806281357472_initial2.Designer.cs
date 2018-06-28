@@ -7,13 +7,13 @@ namespace RouteConfigurator.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class addedModelVar : IMigrationMetadata
+    public sealed partial class initial2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addedModelVar));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(initial2));
         
         string IMigrationMetadata.Id
         {
-            get { return "201806252047053_addedModelVar"; }
+            get { return "201806281357472_initial2"; }
         }
         
         string IMigrationMetadata.Source

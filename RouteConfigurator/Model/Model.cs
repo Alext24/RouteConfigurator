@@ -13,26 +13,18 @@ namespace RouteConfigurator.Model
     {
         [Key]
         [StringLength(30)]
-        public string ModelNum { get; set; }
-
-        public int RouteNum { get; set; }
-
-        public decimal TotalTime { get; set; }
-
-        public bool IsOverrideActive { get; set; }
-
-        public int OverrideRoute { get; set; }
-
-        public decimal OverrideTime { get; set; }
+        public string Base { get; set; }
 
         [StringLength(5)]
         public string BoxSize { get; set; }
 
-        public decimal BaseTime { get; set; }
+        public decimal DriveTime { get; set; }
 
         public decimal AVTime { get; set; }
 
         public decimal ExtraTime { get; set; }
+
+        public virtual ICollection<Override> Overrides { get; set; }
 
         public virtual ICollection<Option> Options { get; set; }
 

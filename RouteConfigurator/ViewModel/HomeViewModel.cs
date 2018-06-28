@@ -352,7 +352,7 @@ namespace RouteConfigurator.ViewModel
         private decimal getTotalTime()
         {
             decimal totalTime = 0;
-            totalTime += model.BaseTime;
+            totalTime += model.DriveTime;
             totalTime += model.AVTime;
 
             totalTime += _serviceProxy.getTotalOptionsTime(model.BoxSize, _optionsList);

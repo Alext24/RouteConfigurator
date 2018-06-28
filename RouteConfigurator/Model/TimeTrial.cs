@@ -21,7 +21,7 @@ namespace RouteConfigurator.Model
 
         public decimal TotalTime { get; set; }
 
-        public decimal BaseTime { get; set; }
+        public decimal DriveTime { get; set; }
 
         public decimal AVTime { get; set; }
 

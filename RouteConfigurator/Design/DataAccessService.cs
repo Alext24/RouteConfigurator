@@ -70,7 +70,7 @@ namespace RouteConfigurator.Design
             foreach (var timeTrial in context.TimeTrials)
             {
                 // Make sure the model base matches the entered model base
-                if (timeTrial.Model.ModelNum.Equals(modelBase.ToUpper()))
+                if (timeTrial.Model.Base.Equals(modelBase.ToUpper()))
                 {
                     // Make sure the options with the time trial are the same as the options for entered model
                     bool hasAllSameOptions = true;
