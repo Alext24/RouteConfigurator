@@ -11,12 +11,10 @@ namespace RouteConfigurator.Design
 {
     public class DataAccessService : IDataAccessService
     {
-        //private WorkHoursDBContext context;
         private RouteConfiguratorDB context;
 
         public DataAccessService()
         {
-            //   context = new WorkHoursDBContext();
             context = new RouteConfiguratorDB();
         }
 

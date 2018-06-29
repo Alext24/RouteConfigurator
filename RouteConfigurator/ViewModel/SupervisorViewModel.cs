@@ -38,12 +38,14 @@ namespace RouteConfigurator.ViewModel
         private string _optionFilter = "";
 
         private string _optionBoxSizeFilter = "";
+
+        private bool _TTVisible = false;
         #endregion
 
         #region RelayCommands
         public RelayCommand addModelCommand { get; set; }
-        public RelayCommand timeSearchCommand { get; set; }
-        public RelayCommand supervisorLoginCommand { get; set; }
+        public RelayCommand loadModelsCommand { get; set; }
+        public RelayCommand loadOptionsCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -54,12 +56,9 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
-            models = _serviceProxy.getModels();
-            options = _serviceProxy.getOptions();
-
             addModelCommand = new RelayCommand(addModel);
-            timeSearchCommand = new RelayCommand(timeSearch);
-            supervisorLoginCommand = new RelayCommand(supervisorLogin);
+            loadModelsCommand = new RelayCommand(loadModels);
+            loadOptionsCommand = new RelayCommand(loadOptions);
         }
         #endregion
 
@@ -70,19 +69,16 @@ namespace RouteConfigurator.ViewModel
             addModel.Show();
         }
 
-
-        /// <summary>
-        /// see searchTimeTrials
-        /// </summary>
-        private void timeSearch()
+        private void loadModels()
         {
-            //modelNumberSections(timeSearchModelNumber);
+            models = _serviceProxy.getModels();
         }
 
-        private void supervisorLogin()
+        private void loadOptions()
         {
-            _navigationService.NavigateTo("HomeView");
+            options = _serviceProxy.getOptions();
         }
+
         #endregion
 
         #region Public Variables
@@ -109,6 +105,19 @@ namespace RouteConfigurator.ViewModel
             {
                 _modelFilter = value.ToUpper();
                 RaisePropertyChanged("modelFilter");
+
+                /*
+                 * Testing
+                 */
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    TTVisible = true;
+                }
+                else
+                {
+                    TTVisible = false;
+                }
+
                 updateFilter();
             }
         }
@@ -165,6 +174,19 @@ namespace RouteConfigurator.ViewModel
                 _optionBoxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("optionBoxSizeFilter");
                 updateOptionFilter();
+            }
+        }
+
+        public bool TTVisible
+        {
+            get
+            {
+                return _TTVisible;
+            }
+            set
+            {
+                _TTVisible = value;
+                RaisePropertyChanged("TTVisible");
             }
         }
         #endregion

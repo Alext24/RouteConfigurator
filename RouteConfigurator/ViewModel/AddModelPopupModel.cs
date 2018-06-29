@@ -440,7 +440,7 @@ namespace RouteConfigurator.ViewModel
 
                 routeText = "501";
 
-                string hoursText = string.Format("{0:00}", time.Hours);
+                string hoursText = string.Format("{0:00}", (time.Days*24 + time.Hours));
                 routeText = string.Concat(routeText, hoursText);
 
                 string minutesText = "0";

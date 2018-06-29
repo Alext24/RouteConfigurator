@@ -78,19 +78,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BaseValueConverter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\DecimalTimeToStringConverter.cs" />
     <Compile Include="Design\DataAccessService.cs" />
-    <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Design\FrameNavigationService.cs" />
     <Compile Include="Migrations\201806281357472_initial2.cs" />
     <Compile Include="Migrations\201806281357472_initial2.Designer.cs">
       <DependentUpon>201806281357472_initial2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model\DataItem.cs" />
-    <Compile Include="Model\DataService.cs" />
     <Compile Include="Model\IDataAccessService.cs" />
-    <Compile Include="Model\IDataService.cs" />
     <Compile Include="Model\IFrameNavigationService.cs" />
     <Compile Include="Model\Model.cs" />
     <Compile Include="Model\Option.cs" />
@@ -100,7 +97,6 @@
     <Compile Include="Model\TimeTrialsOptionTime.cs" />
     <Compile Include="ViewModel\AddModelPopupModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\SupervisorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AddModelPopup.xaml.cs">
