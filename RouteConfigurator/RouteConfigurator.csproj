@@ -98,10 +98,14 @@
     <Compile Include="Model\RouteConfiguratorDB.cs" />
     <Compile Include="Model\TimeTrial.cs" />
     <Compile Include="Model\TimeTrialsOptionTime.cs" />
+    <Compile Include="ViewModel\AddModelPopupModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\SupervisorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\AddModelPopup.xaml.cs">
+      <DependentUpon>AddModelPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
@@ -139,6 +143,10 @@
     <Page Include="Skins\Texts.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AddModelPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\HomeView.xaml">
       <SubType>Designer</SubType>

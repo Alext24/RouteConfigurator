@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using RouteConfigurator.Design;
 using RouteConfigurator.Model;
+using RouteConfigurator.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,6 +41,7 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region RelayCommands
+        public RelayCommand addModelCommand { get; set; }
         public RelayCommand timeSearchCommand { get; set; }
         public RelayCommand supervisorLoginCommand { get; set; }
         #endregion
@@ -55,12 +57,20 @@ namespace RouteConfigurator.ViewModel
             models = _serviceProxy.getModels();
             options = _serviceProxy.getOptions();
 
+            addModelCommand = new RelayCommand(addModel);
             timeSearchCommand = new RelayCommand(timeSearch);
             supervisorLoginCommand = new RelayCommand(supervisorLogin);
         }
         #endregion
 
         #region Commands
+        private void addModel()
+        {
+            AddModelPopup addModel = new AddModelPopup();
+            addModel.Show();
+        }
+
+
         /// <summary>
         /// see searchTimeTrials
         /// </summary>
@@ -159,6 +169,7 @@ namespace RouteConfigurator.ViewModel
         }
         #endregion
 
+        #region Private Functions
         private void updateFilter()
         {
             models = _serviceProxy.getFilteredModels(modelFilter, boxSizeFilter);
@@ -168,5 +179,6 @@ namespace RouteConfigurator.ViewModel
         {
             options = _serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter);
         }
+        #endregion
     }
 }

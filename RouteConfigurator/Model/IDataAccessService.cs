@@ -24,5 +24,7 @@ namespace RouteConfigurator.Model
         decimal getTotalOptionsTime(string boxSize, List<string> options);
 
         ObservableCollection<TimeTrial> getTimeTrials(string modelBase, List<string> options);
+
+        ObservableCollection<Option> getModelOptions(List<string> optionsList, string boxSize);
     }
 }

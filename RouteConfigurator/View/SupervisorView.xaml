@@ -31,10 +31,11 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>      <!--Row 0-->
-                            <RowDefinition/>                    <!--Row 1-->
+                            <RowDefinition Height="auto"/>      <!--Row 1-->
                             <RowDefinition Height="20"/>        <!--Row 2: Spacing-->
                             <RowDefinition Height="auto"/>      <!--Row 3-->
-                            <RowDefinition/>                    <!--Row 4-->
+                            <RowDefinition Height="auto"/>      <!--Row 4-->
+                            <RowDefinition Height="auto"/>      <!--Row 5-->
                         </Grid.RowDefinitions>
 
                         <!--Row 0 setup: Model table filters-->
@@ -89,7 +90,7 @@
                             </Grid>
                         </Border>
 
-                        <!--Row 4 setup: Model table-->
+                        <!--Row 4 setup: Option table-->
                         <DataGrid  Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="True"
                                    Grid.Row="4" VerticalAlignment="Top"
                                ItemsSource="{Binding options}" AutoGenerateColumns="False"
@@ -106,6 +107,9 @@
                                                 Binding="{Binding Name}"/>
                             </DataGrid.Columns>
                         </DataGrid>
+
+                        <!--Row 5 setup: -->
+                        <Button Content="Add Model" Grid.Row="5" Command="{Binding addModelCommand}"/>
 
                     </Grid>
                 </Border>

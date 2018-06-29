@@ -330,8 +330,8 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// updates the route, product supervisor code, and production time for the model
-        /// calls getTotalTime, setRoute and setProdSupCode
+        /// Updates the route, product supervisor code, and production time for the model
+        /// calls getTotalTime, setRoute, and setProdSupCode
         /// </summary>
         private void updateModelText()
         {

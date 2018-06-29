@@ -191,5 +191,22 @@ namespace RouteConfigurator.Design
             }
             return timeTrials;
         }
+
+        public ObservableCollection<Option> getModelOptions(List<string> optionsList, string boxSize)
+        {
+            ObservableCollection<Option> options = new ObservableCollection<Option>();
+
+            var result = context.Options.Where(option => optionsList.Any(optionCode => option.OptionCode.Contains(optionCode)) && 
+                                                         option.BoxSize.Contains(boxSize)).ToList();
+
+            foreach(Option option in result)
+            {
+                options.Add(option);
+            }
+
+            return options;
+        }
+
+
     }
 }
