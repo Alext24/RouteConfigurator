@@ -22,14 +22,14 @@
             <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="20"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>      <!--Row 0-->
+                        <RowDefinition Height="auto"/>      <!--Row 1-->
+                        <RowDefinition Height="auto"/>      <!--Row 2-->
+                        <RowDefinition Height="20"/>        <!--Row 3-->
+                        <RowDefinition Height="auto"/>      <!--Row 4-->
+                        <RowDefinition/>                    <!--Row 5-->
+                        <RowDefinition Height="30"/>        <!--Row 6-->
+                        <RowDefinition Height="auto"/>      <!--Row 7-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -73,7 +73,7 @@
 
                     <!--Row 3 setup: Blank, Spacing-->
                     
-                    <!--Row 4 setup: -->
+                    <!--Row 4 setup: Options table header-->
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Options"
                                FontSize="16" Padding="20 0"/>
 

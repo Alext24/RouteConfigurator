@@ -17,7 +17,7 @@
         </Border.Background>
 
         <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20"
-                HorizontalAlignment="Center" MaxWidth="800" MaxHeight="760">
+                HorizontalAlignment="Center" MaxWidth="800" MaxHeight="780">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -135,10 +135,36 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="5"/>
                                 <ColumnDefinition/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             
-                            <Button Content="Add Model" Grid.Column="0" Command="{Binding addModelCommand}"/>
-                            <Button Content="Add Option" Grid.Column="2" Command="{Binding addOptionCommand}"/>
+                            <Button Grid.Column="0" Padding="4" FontSize="16" Command="{Binding addModelCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Add"/>        
+                                        <TextBlock TextAlignment="Center" Text="Model"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            
+                            <Button Grid.Column="2" Padding="4" FontSize="16" Command="{Binding addOptionCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Add"/>        
+                                        <TextBlock TextAlignment="Center" Text="Options"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            
+                            <Button Grid.Column="4" Padding="4" FontSize="16" Command="{Binding addOptionCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Add"/>        
+                                        <TextBlock TextAlignment="Center" Text="Time Trials"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
                         </Grid>
 
                         <!--Row 0 Column 1 setup: Blank, Spacing-->
@@ -211,7 +237,8 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Row="0" Content="Edit Time Trial" Command="{Binding editTTCommand}"/>
+                            <Button Grid.Row="0" Content="Edit Time Trial" FontSize="16" Command="{Binding editTTCommand}"
+                                    Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
                             
                         </Grid>
 

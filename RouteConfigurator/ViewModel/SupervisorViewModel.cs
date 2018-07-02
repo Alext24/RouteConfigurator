@@ -43,7 +43,7 @@ namespace RouteConfigurator.ViewModel
 
         private string _optionBoxSizeFilter = "";
 
-        //Set to true for visual in SupervisorView
+//Set to true for visual in SupervisorView
         private bool _TTVisible = true;
 
         private ObservableCollection<TimeTrial> _timeTrials;
@@ -88,7 +88,8 @@ namespace RouteConfigurator.ViewModel
 
         private void addOption()
         {
-            MessageBox.Show("Not implemented yet");
+            AddOptionPopup addOption = new AddOptionPopup();
+            addOption.Show();
         }
 
         private void loadModels()
