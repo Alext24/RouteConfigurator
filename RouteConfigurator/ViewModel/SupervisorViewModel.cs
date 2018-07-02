@@ -10,6 +10,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RouteConfigurator.ViewModel
 {
@@ -29,6 +31,8 @@ namespace RouteConfigurator.ViewModel
 
         private ObservableCollection<Model.Model> _models;
 
+        private Model.Model _selectedModel;
+
         private string _modelFilter = "";
 
         private string _boxSizeFilter = "";
@@ -39,13 +43,24 @@ namespace RouteConfigurator.ViewModel
 
         private string _optionBoxSizeFilter = "";
 
-        private bool _TTVisible = false;
+        //Set to true for visual in SupervisorView
+        private bool _TTVisible = true;
+
+        private ObservableCollection<TimeTrial> _timeTrials;
+
+        private TimeTrial _selectedTimeTrial;
+
+        private string _salesFilter = "";
+
+        private string _productionNumFilter = "";
         #endregion
 
         #region RelayCommands
         public RelayCommand addModelCommand { get; set; }
+        public RelayCommand addOptionCommand { get; set; }
         public RelayCommand loadModelsCommand { get; set; }
         public RelayCommand loadOptionsCommand { get; set; }
+        public RelayCommand editTTCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -57,8 +72,10 @@ namespace RouteConfigurator.ViewModel
             _navigationService = navigationService;
 
             addModelCommand = new RelayCommand(addModel);
+            addOptionCommand = new RelayCommand(addOption);
             loadModelsCommand = new RelayCommand(loadModels);
             loadOptionsCommand = new RelayCommand(loadOptions);
+            editTTCommand = new RelayCommand(editTT);
         }
         #endregion
 
@@ -69,6 +86,11 @@ namespace RouteConfigurator.ViewModel
             addModel.Show();
         }
 
+        private void addOption()
+        {
+            MessageBox.Show("Not implemented yet");
+        }
+
         private void loadModels()
         {
             models = _serviceProxy.getModels();
@@ -77,6 +99,11 @@ namespace RouteConfigurator.ViewModel
         private void loadOptions()
         {
             options = _serviceProxy.getOptions();
+        }
+
+        private void editTT()
+        {
+            MessageBox.Show("Not implemented yet");
         }
 
         #endregion
@@ -95,6 +122,35 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Sets TTVisible based on if model is null
+        /// </summary>
+        public Model.Model selectedModel
+        {
+            get
+            {
+                return _selectedModel;
+            }
+            set
+            {
+                _selectedModel = value;
+                RaisePropertyChanged("selectedModel");
+
+                if (value != null)
+                {
+                    TTVisible = true;
+                    timeTrials = _serviceProxy.getTimeTrials(selectedModel.Base);
+                }
+                else
+                {
+                    TTVisible = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calls updateFilter
+        /// </summary>
         public string modelFilter
         {
             get
@@ -105,23 +161,13 @@ namespace RouteConfigurator.ViewModel
             {
                 _modelFilter = value.ToUpper();
                 RaisePropertyChanged("modelFilter");
-
-                /*
-                 * Testing
-                 */
-                if (!string.IsNullOrWhiteSpace(value))
-                {
-                    TTVisible = true;
-                }
-                else
-                {
-                    TTVisible = false;
-                }
-
                 updateFilter();
             }
         }
 
+        /// <summary>
+        /// Calls updateFilter
+        /// </summary>
         public string boxSizeFilter
         {
             get
@@ -149,6 +195,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOptionFilter
+        /// </summary>
         public string optionFilter
         {
             get
@@ -163,6 +212,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOptionFilter
+        /// </summary>
         public string optionBoxSizeFilter
         {
             get
@@ -189,17 +241,91 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("TTVisible");
             }
         }
+
+        public ObservableCollection<TimeTrial> timeTrials
+        {
+            get
+            {
+                return _timeTrials;
+            }
+            set
+            {
+                _timeTrials = value;
+                RaisePropertyChanged("timeTrials");
+            }
+        }
+
+        public TimeTrial selectedTimeTrial
+        {
+            get
+            {
+                return _selectedTimeTrial;
+            }
+            set
+            {
+                _selectedTimeTrial = value;
+                RaisePropertyChanged("selectedTimeTrial");
+            }
+        }
+
+        /// <summary>
+        /// Calls updateTTFilter
+        /// </summary>
+        public string salesFilter
+        {
+            get
+            {
+                return _salesFilter;
+            }
+            set
+            {
+                _salesFilter = value;
+                RaisePropertyChanged("salesFilter");
+                updateTTFilter();
+            }
+        }
+
+        /// <summary>
+        /// Calls updateTTFilter
+        /// </summary>
+        public string productionNumFilter
+        {
+            get
+            {
+                return _productionNumFilter;
+            }
+            set
+            {
+                _productionNumFilter = value;
+                RaisePropertyChanged("productionNumFilter");
+                updateTTFilter();
+            }
+        }
         #endregion
 
         #region Private Functions
+        /// <summary>
+        /// Updates the model list to only show models with the specified filters
+        /// </summary>
         private void updateFilter()
         {
             models = _serviceProxy.getFilteredModels(modelFilter, boxSizeFilter);
         }
 
+        /// <summary>
+        /// Updates the options list to only show options with the specified filters
+        /// </summary>
         private void updateOptionFilter()
         {
             options = _serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter);
+        }
+
+        /// <summary>
+        /// Updates the time trials list to only show time trials with the specified filters
+        /// </summary>
+        private void updateTTFilter()
+        {
+            timeTrials = _serviceProxy.getFilteredTimeTrials(selectedModel.Base, salesFilter, productionNumFilter);
         }
         #endregion
     }

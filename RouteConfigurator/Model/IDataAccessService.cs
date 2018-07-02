@@ -23,7 +23,11 @@ namespace RouteConfigurator.Model
 
         decimal getTotalOptionsTime(string boxSize, List<string> options);
 
+        ObservableCollection<TimeTrial> getTimeTrials(string modelBase);
+
         ObservableCollection<TimeTrial> getTimeTrials(string modelBase, List<string> options);
+
+        ObservableCollection<TimeTrial> getFilteredTimeTrials(string modelBase, string salesFilter, string productionNumFilter);
 
         ObservableCollection<Option> getModelOptions(List<string> optionsList, string boxSize);
     }

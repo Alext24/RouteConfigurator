@@ -17,38 +17,43 @@
         </Border.Background>
 
         <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20"
-                MaxWidth="800" MaxHeight="750">
+                HorizontalAlignment="Center" MaxWidth="800" MaxHeight="760">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
+                <Grid.Resources>
+                    <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
+                    <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
+                </Grid.Resources>
+
                 <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>      <!--Row 0-->
                             <RowDefinition Height="auto"/>      <!--Row 1-->
-                            <RowDefinition Height="20"/>        <!--Row 2: Spacing-->
-                            <RowDefinition Height="auto"/>      <!--Row 3-->
+                            <RowDefinition Height="auto"/>      <!--Row 2-->
+                            <RowDefinition Height="20"/>        <!--Row 3: Spacing-->
                             <RowDefinition Height="auto"/>      <!--Row 4-->
-                            <RowDefinition Height="20"/>        <!--Row 5: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 5-->
                             <RowDefinition Height="auto"/>      <!--Row 6-->
+                            <RowDefinition Height="20"/>        <!--Row 7: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 8-->
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="350"/>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="320"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Grid.Resources>
-                            <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
-                            <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
-                        </Grid.Resources>
+                        <!--Row 0 setup: Table name-->
+                        <TextBlock Text="All Models" Grid.Row="0"/>
 
-                        <!--Row 0 setup: Model table filters-->
-                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="0">
+                        <!--Row 1 setup: Model table filters-->
+                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="1" >
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="6"/>
@@ -61,32 +66,34 @@
                                 <TextBox Grid.Column="1" FontSize="16" VerticalContentAlignment="Center" Text="{Binding modelFilter, UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBox Grid.Column="2" FontSize="16" VerticalContentAlignment="Center" Text="{Binding boxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
                                 <Button  Grid.Column="4" FontSize="16" Content="Load Models" HorizontalAlignment="Right" Command="{Binding loadModelsCommand}"/>
-                                    
                             </Grid>
                         </Border>
 
-                        <!--Row 1 setup: Model table-->
+                        <!--Row 2 setup: Model table-->
                         <DataGrid  Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="True"
-                                   Grid.Row="1" VerticalAlignment="Top"
-                               ItemsSource="{Binding models}" AutoGenerateColumns="False"
-                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                                   Grid.Row="2" VerticalAlignment="Top" SelectedItem="{Binding selectedModel}"
+                                   ItemsSource="{Binding models}" AutoGenerateColumns="False"
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Model"
-                                                Binding="{Binding Base}"/>
+                                                    Binding="{Binding Base}"/>
                                 <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size"
-                                                Binding="{Binding BoxSize}"/>
+                                                    Binding="{Binding BoxSize}"/>
                                 <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Drive Time"
-                                                Binding="{Binding DriveTime}"/>
+                                                    Binding="{Binding DriveTime}"/>
                                 <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
-                                                Binding="{Binding AVTime}"/>
+                                                    Binding="{Binding AVTime}"/>
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <!--Row 2 setup: Blank, Spacing-->
+                        <!--Row 3 setup: Blank, Spacing-->
 
-                        <!--Row 3 setup: Options table filters-->
-                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="3">
+                        <!--Row 4 setup: Options table name-->
+                        <TextBlock Text="All Options" Grid.Row="4"/>
+
+                        <!--Row 5 setup: Options table filters-->
+                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="5">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="6"/>
@@ -102,28 +109,28 @@
                             </Grid>
                         </Border>
 
-                        <!--Row 4 setup: Option table-->
+                        <!--Row 6 setup: Options table-->
                         <DataGrid  Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="True"
-                                   Grid.Row="4" VerticalAlignment="Top"
-                               ItemsSource="{Binding options}" AutoGenerateColumns="False"
-                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                                   Grid.Row="6" VerticalAlignment="Top" AutoGenerateColumns="False"
+                                   ItemsSource="{Binding options}"
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="HeaderOptions1" Width="auto" FontSize="16" Header="Option"
-                                                Binding="{Binding OptionCode}"/>
+                                                    Binding="{Binding OptionCode}"/>
                                 <DataGridTextColumn x:Name="HeaderOptions2" Width="auto" FontSize="16" Header="Box Size"
-                                                Binding="{Binding BoxSize}"/>
+                                                    Binding="{Binding BoxSize}"/>
                                 <DataGridTextColumn x:Name="HeaderOptions3" Width="auto" FontSize="16" Header="Time"
-                                                Binding="{Binding Time}"/>
+                                                    Binding="{Binding Time}"/>
                                 <DataGridTextColumn x:Name="HeaderOptions4" Width="auto" FontSize="16" Header="Name"
-                                                Binding="{Binding Name}"/>
+                                                    Binding="{Binding Name}"/>
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <!--Row 5 setup: Blank, Spacing-->
+                        <!--Row 7 setup: Blank, Spacing-->
 
-                        <!--Row 6 setup: -->
-                        <Grid Grid.Row="6">
+                        <!--Row 8 setup: -->
+                        <Grid Grid.Row="8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="5"/>
@@ -134,9 +141,16 @@
                             <Button Content="Add Option" Grid.Column="2" Command="{Binding addOptionCommand}"/>
                         </Grid>
 
-                        <!--Row 0 Column 2 setup: -->
+                        <!--Row 0 Column 1 setup: Blank, Spacing-->
+                        <Rectangle Grid.Row="0" Grid.Column="1" Width="10"
+                                   Visibility="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="0" Grid.Column="2"
+                        <!--Row 0 Column 2 setup: Time Trial Table Filter-->
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding selectedModel.Base, StringFormat=Time Trials for {0}}" 
+                                   Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <!--Row 1 Column 2 setup: Time Trial Table Filter-->
+                        <Border BorderBrush="LightGray" BorderThickness="1" Grid.Row="1" Grid.Column="2"
                                 Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -147,15 +161,13 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox Grid.Column="2" FontSize="16" VerticalContentAlignment="Center" Text="{Binding modelFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox Grid.Column="3" FontSize="16" VerticalContentAlignment="Center" Text="{Binding boxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                    
+                                <TextBox Grid.Column="2" FontSize="16" VerticalContentAlignment="Center" Text="{Binding salesFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Grid.Column="3" FontSize="16" VerticalContentAlignment="Center" Text="{Binding productionNumFilter, UpdateSourceTrigger=PropertyChanged}"/>
                             </Grid>
                         </Border>
 
-                        <!--Row 1 Column 2 setup: Model table-->
-
-                        <DataGrid  Grid.Row="1" Grid.Column="2" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                        <!--Row 2 Column 2 setup: Time Trial Table-->
+                        <DataGrid  Grid.Row="2" Grid.Column="2" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
                                    ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" AutoGenerateColumns="False"
                                    Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
                                    ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
@@ -165,10 +177,12 @@
                                                     Binding="{Binding Date, StringFormat=d}"/>
                                 <DataGridTextColumn x:Name="TTHeader2" Width="auto" FontSize="16" Header="Sales Order"
                                                     Binding="{Binding SalesOrder}"/>
-                                <DataGridTextColumn x:Name="TTHeader3" Width="auto" FontSize="16" Header="Production Number"
+                                <DataGridTextColumn x:Name="TTHeader3" Width="auto" FontSize="16" Header="Production #"
                                                     Binding="{Binding ProductionNumber}"/>
                                 <DataGridTextColumn x:Name="TTHeader4" Width="auto" FontSize="16" Header="Production Time"
                                                     Binding="{Binding TotalTime, Converter={StaticResource TimeConverter}}"/>
+                                <DataGridTextColumn x:Name="TTHeader5" Width="auto" FontSize="16" Header="# of Options"
+                                                    Binding="{Binding NumOptions}"/>
                             </DataGrid.Columns>
 
                             <!--Setup the options visibility-->
@@ -185,8 +199,21 @@
                                     </DataGrid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
-
                         </DataGrid>
+
+                        <!--Row 3 Column 2 setup: Time trial editing buttons-->
+                        <Grid Grid.Row="3" Grid.Column="2" Grid.RowSpan="2" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Row="0" Content="Edit Time Trial" Command="{Binding editTTCommand}"/>
+                            
+                        </Grid>
 
                     </Grid>
                 </Border>

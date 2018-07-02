@@ -25,6 +25,8 @@ namespace RouteConfigurator.Model
 
         public decimal AVTime { get; set; }
 
+        public int NumOptions { get; set; }
+
         public virtual ICollection<TimeTrialsOptionTime> TTOptionTimes { get; set; }
 
         public virtual Model Model { get; set; }

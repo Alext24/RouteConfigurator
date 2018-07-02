@@ -13,11 +13,14 @@ namespace RouteConfigurator.Design
     {
         private RouteConfiguratorDB context;
 
+        #region Constructor
         public DataAccessService()
         {
             context = new RouteConfiguratorDB();
         }
+        #endregion
 
+        /// <returns> returns all models </returns>
         public ObservableCollection<Model.Model> getModels()
         {
             ObservableCollection<Model.Model> models = new ObservableCollection<Model.Model>();
@@ -30,6 +33,9 @@ namespace RouteConfigurator.Design
             return models;
         }
 
+        /// <param name="modelFilter"> base name for the model </param>
+        /// <param name="boxSizeFilter"> box size for the model </param>
+        /// <returns> returns a list of the models that meet the filters</returns>
         public ObservableCollection<Model.Model> getFilteredModels(string modelFilter, string boxSizeFilter)
         {
 
@@ -46,6 +52,7 @@ namespace RouteConfigurator.Design
             return models;
         }
 
+        /// <returns> returns all options </returns>
         public ObservableCollection<Option> getOptions()
         {
             ObservableCollection<Option> options = new ObservableCollection<Option>();
@@ -58,9 +65,11 @@ namespace RouteConfigurator.Design
             return options;
         }
 
+        /// <param name="optionFilter"> name for the option </param>
+        /// <param name="optionBoxSizeFilter"> box size for the option </param>
+        /// <returns> returns a list of the options that meet the filters</returns>
         public ObservableCollection<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter)
         {
-
             ObservableCollection<Option> options = new ObservableCollection<Option>();
 
             var result = context.Options.Where(option => option.OptionCode.Contains(optionFilter) && 
@@ -74,11 +83,9 @@ namespace RouteConfigurator.Design
             return options;
         }
 
-        /// <summary>
-        /// Gets a specific model
-        /// </summary>
-        /// <param name="modelName"></param>
-        /// <returns></returns>
+        /// <param name="modelName"> base name for a model </param>
+        /// <returns> returns the model specified by the model name </returns>
+        /// throws Exception if model does not exist
         public Model.Model getModel(string modelName)
         {
             Model.Model returnModel = null;
@@ -95,6 +102,8 @@ namespace RouteConfigurator.Design
             return returnModel;
         }
 
+        /// <param name="modelNum"> the entire model number </param>
+        /// <returns> returns the override info for a model</returns>
         public Override getModelOverride(string modelNum)
         {
             Override retOverride = null;
@@ -111,6 +120,9 @@ namespace RouteConfigurator.Design
             return retOverride;
         }
 
+        /// <param name="boxSize"> box size for the model </param>
+        /// <param name="options"> list of options</param>
+        /// <returns> total time for the options </returns>
         public decimal getTotalOptionsTime(string boxSize, List<string> options)
         {
             decimal totalTime = 0;
@@ -153,6 +165,27 @@ namespace RouteConfigurator.Design
             return totalTime;
         }
 
+        /// <param name="modelBase"> model base to get time trials for</param>
+        /// <returns> list of time trials with the model base </returns>
+        public ObservableCollection<TimeTrial> getTimeTrials(string modelBase)
+        {
+            ObservableCollection<TimeTrial> timeTrials = new ObservableCollection<TimeTrial>();
+
+            //Search through each stored time trial
+            foreach (var timeTrial in context.TimeTrials)
+            {
+                // Make sure the model base matches the entered model base
+                if (timeTrial.Model.Base.Equals(modelBase.ToUpper()))
+                {
+                    timeTrials.Add(timeTrial);
+                }
+            }
+            return timeTrials;
+        }
+
+        /// <param name="modelBase">model base name</param>
+        /// <param name="options">list of options</param>
+        /// <returns> list of time trials for a specific model </returns>
         public ObservableCollection<TimeTrial> getTimeTrials(string modelBase, List<string> options)
         {
             ObservableCollection<TimeTrial> timeTrials = new ObservableCollection<TimeTrial>();
@@ -190,6 +223,29 @@ namespace RouteConfigurator.Design
             return timeTrials;
         }
 
+        /// <param name="modelBase"> base model name </param>
+        /// <param name="salesFilter"> sales number for the time trials</param>
+        /// <param name="productionNumFilter"> production number for the time trials</param>
+        /// <returns> a list of time trials that meet the filters</returns>
+        public ObservableCollection<TimeTrial> getFilteredTimeTrials(string modelBase, string salesFilter, string productionNumFilter)
+        {
+            ObservableCollection<TimeTrial> timeTrials = new ObservableCollection<TimeTrial>();
+
+            var result = context.TimeTrials.Where(tt => tt.Model.Base.Contains(modelBase) &&
+                                                        tt.SalesOrder.ToString().Contains(salesFilter) &&
+                                                        tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
+
+            foreach(TimeTrial tt in result)
+            {
+                timeTrials.Add(tt);
+            }
+
+            return timeTrials;
+        }
+
+        /// <param name="optionsList"> option codes to search for </param>
+        /// <param name="boxSize"> box size of model </param>
+        /// <returns> list of options </returns>
         public ObservableCollection<Option> getModelOptions(List<string> optionsList, string boxSize)
         {
             ObservableCollection<Option> options = new ObservableCollection<Option>();
@@ -204,7 +260,5 @@ namespace RouteConfigurator.Design
 
             return options;
         }
-
-
     }
 }
