@@ -58,7 +58,7 @@
                     <!--Row 2 setup: Input boxes-->
                     <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0"
                              Text="{Binding optionCode}"
-                             ToolTip="Ex. PA or TX"/>
+                             ToolTip="Format Example: PA or TX"/>
 
                     <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0"
                              Text="{Binding boxSize}"/>
@@ -74,7 +74,7 @@
 
                     <!--Row 4 Col 0-1 setup: Options table header-->
                     <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="20 0" FontSize="16"
-                               Text="Current Options to Submit"/>
+                               Text="Current Options to Submit" VerticalAlignment="Bottom" Padding="0 5"/>
 
                     <!--Row 4 Col 3 setup: Add Option Button-->
                     <Button Grid.Row="4" Grid.Column="3" Content="Add Option" Command="{Binding addOptionCommand}"/>

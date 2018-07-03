@@ -58,6 +58,7 @@ namespace RouteConfigurator.ViewModel
         #region RelayCommands
         public RelayCommand addModelCommand { get; set; }
         public RelayCommand addOptionCommand { get; set; }
+        public RelayCommand addTimeTrialCommand { get; set; }
         public RelayCommand loadModelsCommand { get; set; }
         public RelayCommand loadOptionsCommand { get; set; }
         public RelayCommand editTTCommand { get; set; }
@@ -73,6 +74,7 @@ namespace RouteConfigurator.ViewModel
 
             addModelCommand = new RelayCommand(addModel);
             addOptionCommand = new RelayCommand(addOption);
+            addTimeTrialCommand = new RelayCommand(addTimeTrial);
             loadModelsCommand = new RelayCommand(loadModels);
             loadOptionsCommand = new RelayCommand(loadOptions);
             editTTCommand = new RelayCommand(editTT);
@@ -90,6 +92,12 @@ namespace RouteConfigurator.ViewModel
         {
             AddOptionPopup addOption = new AddOptionPopup();
             addOption.Show();
+        }
+
+        private void addTimeTrial()
+        {
+            AddTimeTrialPopup addTimeTrial = new AddTimeTrialPopup();
+            addTimeTrial.Show();
         }
 
         private void loadModels()

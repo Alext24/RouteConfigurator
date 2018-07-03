@@ -157,7 +157,7 @@
                                 </Button.Content>
                             </Button>
                             
-                            <Button Grid.Column="4" Padding="4" FontSize="16" Command="{Binding addOptionCommand}">
+                            <Button Grid.Column="4" Padding="4" FontSize="16" Command="{Binding addTimeTrialCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="Add"/>        

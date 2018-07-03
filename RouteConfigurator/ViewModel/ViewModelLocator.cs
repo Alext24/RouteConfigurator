@@ -37,6 +37,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<SupervisorViewModel>();
             SimpleIoc.Default.Register<AddModelPopupModel>();
             SimpleIoc.Default.Register<AddOptionPopupModel>();
+            SimpleIoc.Default.Register<AddTimeTrialPopupModel>();
         }
 
         public HomeViewModel Home
@@ -79,6 +80,16 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public AddTimeTrialPopupModel AddTimeTrial 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<AddTimeTrialPopupModel>();
+                SimpleIoc.Default.Register<AddTimeTrialPopupModel>();
+                return ServiceLocator.Current.GetInstance<AddTimeTrialPopupModel>();
+            }
+        }
+
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>
@@ -88,6 +99,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<SupervisorViewModel>();
             SimpleIoc.Default.Unregister<AddModelPopupModel>();
             SimpleIoc.Default.Unregister<AddOptionPopupModel>();
+            SimpleIoc.Default.Unregister<AddTimeTrialPopupModel>();
         }
 
         public static void setupNavigation()
