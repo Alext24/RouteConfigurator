@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:RouteConfigurator.View"
         xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
         mc:Ignorable="d"
-        MinHeight="600"
+        MinHeight="620"
         MinWidth="800"
-        Height="600" 
-        Width="1000"
+        Height="620" 
+        Width="1200"
         Title="Add Time Trial"
         DataContext="{Binding AddTimeTrial, Source={StaticResource Locator}}">
 
@@ -28,34 +28,115 @@
             <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>      <!--Row 0-->
+                        <RowDefinition Height="auto"/>      <!--Row 1-->
+                        <RowDefinition Height="auto"/>      <!--Row 2-->
+                        <RowDefinition Height="40"/>        <!--Row 3-->
+                        <RowDefinition Height="auto"/>      <!--Row 4-->
+                        <RowDefinition Height="auto" MinHeight="100"/>      <!--Row 5-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
                     <!--Row 0 setup: Title-->
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Add Time Trials"
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="9" Text="Add Time Trials"
                                Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center"/>
 
-                    <!--Row 1 setup: Time Trial Table name-->
-                    <TextBlock Grid.Row="1" Text="Time Trials"
+                    <!--Row 1 setup: Input headers-->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Model Base"
                                FontSize="16" Padding="20 0"/>
 
-                    <!--Row 2 setup: Time Trials table-->
-                    <DataGrid  Height="160" CanUserResizeRows="False" CanUserResizeColumns="True"
-                               Grid.Row="2" VerticalAlignment="Top" Margin="10 0"
-                               ItemsSource="{Binding timeTrials}" AutoGenerateColumns="False"
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="Date"
+                               FontSize="16" Padding="20 0"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Sales Order"
+                               FontSize="16" Padding="20 0"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Production #"
+                               FontSize="16" Padding="20 0"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="4" Text="Drive Time"
+                               FontSize="16" Padding="20 0"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="5" Text="AV Time"
+                               FontSize="16" Padding="20 0"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="6" Text="# of Options"
+                               FontSize="16" Padding="20 0"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="7" Text="Options"
+                               FontSize="16" Padding="20 0"
+                               Visibility="{Binding isTTSelected, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <!--Row 2 setup: Input boxes-->
+                    <ComboBox Grid.Row="2" Grid.Column="0" FontSize="14" Margin="10 0"
+                              IsEditable="True" Text="{Binding modelText, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding models}" DisplayMemberPath="Base" SelectedValue="{Binding selectedModel}"/>
+
+                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" MinWidth="80"
+                             Text="{Binding date, StringFormat=d}"/>
+
+                    <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0"
+                             Text="{Binding salesOrder}"/>
+
+                    <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0"
+                             Text="{Binding productionNum}"/>
+
+                    <TextBox Grid.Row="2" Grid.Column="4" FontSize="16" Margin="10 0"
+                             Text="{Binding driveTime}"/>
+
+                    <TextBox Grid.Row="2" Grid.Column="5" FontSize="16" Margin="10 0"
+                             Text="{Binding AVTime}"/>
+
+                    <TextBox Grid.Row="2" Grid.Column="6" FontSize="16" Margin="10 0"
+                             Text="{Binding numOptions}"/>
+
+                    <DataGrid  MinHeight="160" Grid.Row="2" Grid.RowSpan="4" Grid.Column="7" Margin="10 0" VerticalAlignment="Top"
+                               CanUserResizeRows="False" CanUserResizeColumns="True" VerticalScrollBarVisibility="Visible" AutoGenerateColumns="False"
+                               ItemsSource="{Binding TTOptions}" SelectedValue="{Binding selectedTT}"
+                               Visibility="{Binding isTTSelected, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
+                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" MaxWidth="80" FontSize="12" Header="Option"
+                                                Binding="{Binding OptionCode}"/>
+
+                            <DataGridTextColumn Width="auto" MaxWidth="80" FontSize="12" Header="Time"
+                                                Binding="{Binding Time}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button Grid.Row="2" Grid.Column="8" 
+                            Content="Add" FontSize="16" Padding="20 0"
+                            Command="{Binding addTTCommand}"/>
+
+                    <!--Row 3 setup: Blank, Spacing-->
+
+                    <!--Row 4 setup: Table Header-->
+                    <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="Time Trials to Add"
+                               FontSize="16" Padding="20 0"/>
+
+                    <!--Row 5 setup: Table-->
+                    <DataGrid  Height="160" CanUserResizeRows="False" CanUserResizeColumns="False" HorizontalScrollBarVisibility="Visible"
+                               Grid.Row="5" Grid.ColumnSpan="6" VerticalAlignment="Top" Margin="10 0" IsReadOnly="True"
+                               ItemsSource="{Binding timeTrials, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False"
                                SelectedValue="{Binding selectedTT}"
                                ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                         <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="TTHeader1" Width="auto" FontSize="16" Header="Model Base"
+                                                Binding="{Binding Path=Model.Base}" 
+                                                IsReadOnly="True"/>
                             <DataGridTextColumn x:Name="TTHeader2" Width="auto" FontSize="16" Header="Date"
                                                 Binding="{Binding Date, StringFormat=d}"/>
                             <DataGridTextColumn x:Name="TTHeader3" Width="auto" FontSize="16" Header="Sales Order"
@@ -71,48 +152,22 @@
                             <DataGridTextColumn x:Name="TTHeader8" Width="auto" FontSize="16" Header="Total Production Time"
                                                 Binding="{Binding TotalTime, Converter={StaticResource TimeConverter}}"
                                                 IsReadOnly="True"/>
-                            <DataGridTextColumn x:Name="TTHeader1" Width="auto" FontSize="16" Header="Model Base"
-                                                Binding="{Binding Path=Model.Base}" 
-                                                IsReadOnly="True"/>
-                            <!--<DataGridTemplateColumn>
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ComboBox IsEditable="True" ItemsSource="{Binding Path=}">
-                                            
-                                        </ComboBox>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>-->
                         </DataGrid.Columns>
+
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <DataGrid CanUserResizeRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False" IsReadOnly="True"
+                                          ItemsSource="{Binding TTOptionTimes}" AutoGenerateColumns="False" MaxHeight="110">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Width="auto" FontSize="12" Header="Time"
+                                                            Binding="{Binding Time}"/>
+                                        <DataGridTextColumn Width="auto" FontSize="12" Header="Option"
+                                                            Binding="{Binding OptionCod, Converter={StaticResource TimeConverter}}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
                     </DataGrid>
-
-                    <!--Row 3 setup: Option Table name-->
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Options"
-                               FontSize="16" Padding="20 10 20 0"/>
-
-                    <!--Row 4 setup: Options table-->
-                    <DataGrid  Height="140" CanUserResizeRows="False" CanUserResizeColumns="True" 
-                               Grid.Row="4" Grid.Column="0" VerticalAlignment="Top" Margin="10 0"
-                               ItemsSource="{Binding TTOptions}" AutoGenerateColumns="False"
-                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
-
-                        <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="OHeader1" Width="auto" FontSize="16" Header="Option"
-                                                Binding="{Binding OptionCode}"/>
-                            <DataGridTextColumn x:Name="OHeader2" Width="auto" FontSize="16" Header="Time"
-                                                Binding="{Binding Time}"/>
-                            <DataGridTextColumn x:Name="OHeader3" Width="auto" FontSize="16" Header="Name"
-                                                Binding="{Binding Name}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-
-                    <!--Row 1 setup: Column 1: Model header-->
-
-                    <!--Row 2 setup: Column 1: Model selector-->
-                    <ComboBox Grid.Row="2" Grid.Column="1" Visibility="{Binding isTTSelected, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
-                              MinWidth="100" Width="auto" MaxWidth="300" VerticalAlignment="Top" FontSize="14"
-                              ItemsSource="{Binding models}" DisplayMemberPath="Base" IsEditable="True" Text="{Binding modelText}"
-                              SelectedValue="{Binding selectedModel}"/>
 
                 </Grid>
             </Border>

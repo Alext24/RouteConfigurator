@@ -20,7 +20,7 @@ namespace RouteConfigurator
             string averageTimeText = string.Format("{0}:{1:00}", hours, minutes);
             return averageTimeText;
 
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
