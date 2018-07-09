@@ -112,7 +112,9 @@ namespace RouteConfigurator.ViewModel
 
         private void editTT()
         {
-            MessageBox.Show("Not implemented yet");
+            _navigationService.NavigateTo("EditTimeTrialView", selectedTimeTrial);
+            //EditTimeTrialPopup editTimeTrial = new EditTimeTrialPopup();
+            //editTimeTrial.Show();
         }
 
         #endregion

@@ -38,6 +38,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<AddModelPopupModel>();
             SimpleIoc.Default.Register<AddOptionPopupModel>();
             SimpleIoc.Default.Register<AddTimeTrialPopupModel>();
+            SimpleIoc.Default.Register<EditTimeTrialViewModel>();
         }
 
         public HomeViewModel Home
@@ -90,6 +91,16 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public EditTimeTrialViewModel EditTimeTrial 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<EditTimeTrialViewModel>();
+                SimpleIoc.Default.Register<EditTimeTrialViewModel>();
+                return ServiceLocator.Current.GetInstance<EditTimeTrialViewModel>();
+            }
+        }
+
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>
@@ -100,6 +111,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<AddModelPopupModel>();
             SimpleIoc.Default.Unregister<AddOptionPopupModel>();
             SimpleIoc.Default.Unregister<AddTimeTrialPopupModel>();
+            SimpleIoc.Default.Unregister<EditTimeTrialViewModel>();
         }
 
         public static void setupNavigation()
@@ -108,6 +120,7 @@ namespace RouteConfigurator.ViewModel
 
             navigationService.Configure("HomeView", new System.Uri("/View/HomeView.xaml", UriKind.Relative));
             navigationService.Configure("SupervisorView", new System.Uri("/View/SupervisorView.xaml", UriKind.Relative));
+            navigationService.Configure("EditTimeTrialView", new System.Uri("/View/EditTimeTrialView.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);

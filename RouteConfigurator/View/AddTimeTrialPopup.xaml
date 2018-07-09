@@ -84,8 +84,11 @@
                               IsEditable="True" Text="{Binding modelText}"
                               ItemsSource="{Binding models}" DisplayMemberPath="Base" SelectedValue="{Binding selectedModel}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" MinWidth="80"
-                             Text="{Binding date, StringFormat=d}"/>
+                    <DatePicker Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" MinWidth="80"
+                                SelectedDate="{Binding date}"/>
+
+                    <!--<TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" MinWidth="80"
+                             Text="{Binding date, StringFormat=d}"/>-->
 
                     <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0"
                              Text="{Binding salesOrder}"/>

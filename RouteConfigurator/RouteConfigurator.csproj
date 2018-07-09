@@ -102,6 +102,7 @@
     <Compile Include="ViewModel\AddModelPopupModel.cs" />
     <Compile Include="ViewModel\AddOptionPopupModel.cs" />
     <Compile Include="ViewModel\AddTimeTrialPopupModel.cs" />
+    <Compile Include="ViewModel\EditTimeTrialViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\SupervisorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -113,6 +114,9 @@
     </Compile>
     <Compile Include="View\AddTimeTrialPopup.xaml.cs">
       <DependentUpon>AddTimeTrialPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EditTimeTrialView.xaml.cs">
+      <DependentUpon>EditTimeTrialView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
@@ -163,6 +167,10 @@
     <Page Include="View\AddTimeTrialPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\EditTimeTrialView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\HomeView.xaml">
       <SubType>Designer</SubType>

@@ -7,7 +7,7 @@
       xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
       mc:Ignorable="d" 
       MinHeight="850"
-      MinWidth="500"
+      MinWidth="600"
       Title="SupervisorView"
       DataContext="{Binding Supervisor, Source={StaticResource Locator}}">
       
@@ -17,7 +17,7 @@
         </Border.Background>
 
         <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20"
-                HorizontalAlignment="Center" MaxWidth="800" MaxHeight="780">
+                HorizontalAlignment="Center" MaxWidth="900" MaxHeight="780">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -196,7 +196,7 @@
                         <DataGrid  Grid.Row="2" Grid.Column="2" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
                                    ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" AutoGenerateColumns="False"
                                    Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
-                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." x:Name="TimeTrialTable">
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="TTHeader1" Width="auto" FontSize="16" Header="Date"
@@ -209,6 +209,14 @@
                                                     Binding="{Binding TotalTime, Converter={StaticResource TimeConverter}}"/>
                                 <DataGridTextColumn x:Name="TTHeader5" Width="auto" FontSize="16" Header="# of Options"
                                                     Binding="{Binding NumOptions}"/>
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Edit" FontSize="9"
+                                                    Command="{Binding ElementName=TimeTrialTable, Path=DataContext.editTTCommand}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
 
                             <!--Setup the options visibility-->
@@ -228,6 +236,7 @@
                         </DataGrid>
 
                         <!--Row 3 Column 2 setup: Time trial editing buttons-->
+                        <!--
                         <Grid Grid.Row="3" Grid.Column="2" Grid.RowSpan="2" >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -241,7 +250,7 @@
                                     Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
                             
                         </Grid>
-
+                        -->
                     </Grid>
                 </Border>
 
