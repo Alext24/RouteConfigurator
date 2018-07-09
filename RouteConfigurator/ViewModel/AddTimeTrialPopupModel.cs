@@ -29,8 +29,6 @@ namespace RouteConfigurator.ViewModel
 
         private ObservableCollection<TimeTrial> _timeTrials = new ObservableCollection<TimeTrial>();
 
-        private TimeTrial _selectedTT;
-
         private string _modelText = "";
 
         private ObservableCollection<Model.Model> _models = new ObservableCollection<Model.Model>();
@@ -48,6 +46,8 @@ namespace RouteConfigurator.ViewModel
         private decimal? _AVTime;
 
         private int? _numOptions;
+
+        private bool _hasOptions = false;
 
         private ObservableCollection<TimeTrialsOptionTime> _TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
 
@@ -84,47 +84,59 @@ namespace RouteConfigurator.ViewModel
         }
 */
 
+        /// <summary>
+        /// Adds a time trial to the list to be submitted
+        /// Calls checkComplete
+        /// </summary>
         private void addTT()
         {
-            TimeTrial newTT = new TimeTrial()
+            informationText = "";
+            if (checkComplete())
             {
-                ProductionNumber = (int)productionNum,
-                SalesOrder = (int)salesOrder,
-                Date = (DateTime)date,
-                DriveTime = (decimal)driveTime,
-                AVTime = (decimal)AVTime,
-                Model = selectedModel,
-                NumOptions = (int)numOptions,
-                TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(),
+                TimeTrial newTT = new TimeTrial()
+                {
+                    ProductionNumber = (int)productionNum,
+                    SalesOrder = (int)salesOrder,
+                    Date = (DateTime)date,
+                    DriveTime = (decimal)driveTime,
+                    AVTime = (decimal)AVTime,
+                    Model = selectedModel,
+                    NumOptions = numOptions == null ? 0 : (int)numOptions,
+                    TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(),
 
-                TotalTime = calcTotalTime()
-            };
+                    TotalTime = calcTotalTime()
+                };
 
-            foreach(TimeTrialsOptionTime TTOption in TTOptions)
-            {
-                TTOption.OptionCode = TTOption.OptionCode.ToUpper();
-                TTOption.ProductionNumber = (int)productionNum;
-                TTOption.TimeTrial = newTT;
+                foreach (TimeTrialsOptionTime TTOption in TTOptions)
+                {
+                    TTOption.OptionCode = TTOption.OptionCode.ToUpper();
+                    TTOption.ProductionNumber = (int)productionNum;
+                    TTOption.TimeTrial = newTT;
 
-                newTT.TTOptionTimes.Add(TTOption);
+                    newTT.TTOptionTimes.Add(TTOption);
+                }
+
+                timeTrials.Add(newTT);
+
+                //modelText = "";
+                //date = null;
+                //salesOrder = null;
+                productionNum++;
+                driveTime = null;
+                AVTime = null;
+                numOptions = null;
+                TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
+
+                informationText = "Time Trial added";
             }
-
-            timeTrials.Add(newTT);
-
-            modelText = "";
-            date = null;
-            salesOrder = null;
-            productionNum = null;
-            driveTime = null;
-            AVTime = null;
-            numOptions = null;
-            TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
-
-            informationText = "Time Trial added";
         }
 
+        /// <summary>
+        /// Submits the time trials to the database
+        /// </summary>
         private void submit()
         {
+            informationText = "";
             MessageBox.Show("Placeholder for adding time trials to database");
         }
         #endregion
@@ -144,19 +156,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public TimeTrial selectedTT
-        {
-            get
-            {
-                return _selectedTT;
-            }
-            set
-            {
-                _selectedTT = value;
-                RaisePropertyChanged("selectedTT");
-            }
-        }
-
+        /// <summary>
+        /// Updates the model list if empty
+        /// </summary>
         public string modelText
         {
             get
@@ -165,12 +167,15 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                _modelText = value.ToUpper();
-                RaisePropertyChanged("modelText");
+                informationText = "";
+
                 if(models == null || models.Count == 0)
                 {
                     models = _serviceProxy.getModels();
                 }
+
+                _modelText = value.ToUpper();
+                RaisePropertyChanged("modelText");
             }
         }
 
@@ -208,6 +213,7 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                informationText = "";
                 _date = value;
                 RaisePropertyChanged("date");
             }
@@ -221,6 +227,7 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                informationText = "";
                 _salesOrder = value;
                 RaisePropertyChanged("salesOrder");
             }
@@ -234,6 +241,7 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                informationText = "";
                 _productionNum = value;
                 RaisePropertyChanged("productionNum");
             }
@@ -247,6 +255,7 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                informationText = "";
                 _driveTime = value;
                 RaisePropertyChanged("driveTime");
             }
@@ -260,11 +269,16 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                informationText = "";
                 _AVTime = value;
                 RaisePropertyChanged("AVTime");
             }
         }
 
+        /// <summary>
+        /// Updates hasOptions if greater than 0
+        /// Adds or removes list entries from TTOptions as necessary to match the quantity of options
+        /// </summary>
         public int? numOptions
         {
             get
@@ -273,16 +287,53 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                informationText = "";
                 _numOptions = value;
                 RaisePropertyChanged("numOptions");
-                if(value > 0)
+
+                if(value > 0 && value != null)
                 {
-//FIX THIS
-                    for(int i = 0; i < numOptions; i++)
+                    hasOptions = true;
+
+                    int size = (int)(numOptions - TTOptions.Count());
+                    if (size > 0)
                     {
-                        TTOptions.Add(new TimeTrialsOptionTime());
+                        for (int i = 0; i < size; i++)
+                        {
+                            TTOptions.Add(new TimeTrialsOptionTime());
+                        }
+                    }
+                    else
+                    {
+                        size = Math.Abs(size);
+                        for (int i = 0; i < size; i++)
+                        {
+                            TTOptions.RemoveAt(TTOptions.IndexOf(TTOptions.Last()));
+                        }
                     }
                 }
+                else if(value == 0)
+                {
+                    hasOptions = false;
+                    TTOptions.Clear();
+                }
+                else
+                {
+                    hasOptions = false;
+                }
+            }
+        }
+
+        public bool hasOptions
+        {
+            get
+            {
+                return _hasOptions;
+            }
+            set
+            {
+                _hasOptions = value;
+                RaisePropertyChanged("hasOptions");
             }
         }
 
@@ -314,8 +365,14 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions
-        public decimal calcTotalTime()
+        /// <summary>
+        /// Calculates the total time by adding the drive time, AV time, and option times
+        /// </summary>
+        /// <returns>Total time</returns>
+        private decimal calcTotalTime()
         {
+            informationText = "";
+
             decimal totalTime = 0;
 
             totalTime = (decimal)(driveTime + AVTime);
@@ -327,6 +384,45 @@ namespace RouteConfigurator.ViewModel
             return totalTime;
         }
 
+        /// <summary>
+        /// Checks to see if all necessary fields are filled out before the time
+        /// trial can be added.  
+        /// </summary>
+        /// <returns> if the form is complete </returns>
+        private bool checkComplete()
+        {
+            informationText = "";
+            bool complete = true;
+
+            if (string.IsNullOrWhiteSpace(modelText) || selectedModel == null)
+            {
+                complete = false;
+                modelText = "";
+                informationText = "Please select a valid model.";
+            }
+            else if (salesOrder == null || salesOrder <= 0 ||
+               productionNum == null || productionNum <= 0 ||
+               driveTime == null || driveTime <= 0 ||
+               AVTime == null || AVTime <= 0)
+            {
+                complete = false;
+                informationText = "Fill out all fields before adding time trial.";
+            }
+            else
+            {
+                foreach (TimeTrialsOptionTime option in TTOptions)
+                {
+                    if (string.IsNullOrWhiteSpace(option.OptionCode) ||
+                        option.Time <= 0)
+                    {
+                        complete = false;
+                        informationText = "Fill out all options before adding time trial.";
+                    }
+                }
+            }
+
+            return complete;
+        }
         #endregion
     }
 }
