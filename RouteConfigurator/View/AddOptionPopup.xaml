@@ -64,7 +64,7 @@
                              Text="{Binding boxSize}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0"
-                             Text="{Binding time}"
+                             Text="{Binding time, TargetNullValue=''}"
                              ToolTip="Format Example: '12.34' hours"/>
 
                     <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0"
@@ -99,7 +99,7 @@
 
                     <!--Row 5 setup: Columns 2-3: Blank, Spacing-->
 
-                    <!--Row 6 setup: Columns 2-3: -->
+                    <!--Row 6 setup: Columns 2-3: Submit Button-->
                     <Button Grid.Row="6" Grid.Column="3" Content="Submit Options" Command="{Binding submitCommand}"/>
 
                 </Grid>

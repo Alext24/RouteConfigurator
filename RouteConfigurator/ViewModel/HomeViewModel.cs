@@ -454,15 +454,25 @@ namespace RouteConfigurator.ViewModel
 
                 routeText = "501";
 
-                string hoursText = string.Format("{0:00}", (time.Days*24 + time.Hours));
-                routeText = string.Concat(routeText, hoursText);
-
-                string minutesText = "0";
-                if(time.Minutes >= 30)
+                decimal hours = (time.Days * 24 + time.Hours);
+                string hoursText = "";
+                if (hours >= 100)
                 {
-                    minutesText = "1";
+                    hoursText = "999";
+                    routeText = string.Concat(routeText, hoursText);
                 }
-                routeText = string.Concat(routeText, minutesText);
+                else
+                {
+                    hoursText = string.Format("{0:00}", (time.Days * 24 + time.Hours));
+                    routeText = string.Concat(routeText, hoursText);
+
+                    string minutesText = "0";
+                    if (time.Minutes >= 30)
+                    {
+                        minutesText = "1";
+                    }
+                    routeText = string.Concat(routeText, minutesText);
+                }
 
                 routeText = string.Concat(routeText, "00");
             }

@@ -64,11 +64,11 @@
                              Text="{Binding boxSize}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0"
-                             Text="{Binding driveTime}"
+                             Text="{Binding driveTime, TargetNullValue=''}"
                              ToolTip="Format Example: '12.34' hours"/>
 
                     <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0"
-                             Text="{Binding AVTime}"
+                             Text="{Binding AVTime, TargetNullValue=''}"
                              ToolTip="Format Example: '12.34' hours"/>
 
                     <!--Row 3 setup: Blank, Spacing-->

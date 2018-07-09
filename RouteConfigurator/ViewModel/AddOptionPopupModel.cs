@@ -29,7 +29,7 @@ namespace RouteConfigurator.ViewModel
 
         private string _optionCode;
         private string _boxSize;
-        private decimal _time;
+        private decimal? _time;
         private string _name;
 
         private ObservableCollection<Option> _optionsToSubmit = new ObservableCollection<Option>();
@@ -62,15 +62,18 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void addOption()
         {
-            Option option = new Option
+            if (checkValid())
             {
-                OptionCode = optionCode,
-                BoxSize = boxSize,
-                Time = time,
-                Name = name
-            };
-            if(checkValid())
+                Option option = new Option
+                {
+                    OptionCode = optionCode,
+                    BoxSize = boxSize,
+                    Time = (decimal)time,
+                    Name = name
+                };
+
                 optionsToSubmit.Add(option);
+            }
         }
 
         private void submit()
@@ -108,7 +111,7 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public decimal time
+        public decimal? time
         {
             get
             {
@@ -177,7 +180,7 @@ namespace RouteConfigurator.ViewModel
 
             if (!string.IsNullOrWhiteSpace(optionCode) && 
                 !string.IsNullOrWhiteSpace(boxSize) && 
-                time > 0)
+                time != null && time > 0)
             {
                 //Check that the option doesn't already exist in the database
                 ObservableCollection<Option> options = _serviceProxy.getFilteredOptions(optionCode, boxSize);

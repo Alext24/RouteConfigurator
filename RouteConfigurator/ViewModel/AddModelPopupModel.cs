@@ -29,8 +29,8 @@ namespace RouteConfigurator.ViewModel
 
         private string _modelNum;
         private string _boxSize;
-        private decimal _driveTime;
-        private decimal _AVTime;
+        private decimal? _driveTime;
+        private decimal? _AVTime;
 
         private bool _modelEntered = false;
         private bool _boxSizeEntered = false;
@@ -139,7 +139,7 @@ namespace RouteConfigurator.ViewModel
         /// Updates driveTimeEntered boolean if not null
         /// Calls checkForInfo
         /// </summary>
-        public decimal driveTime
+        public decimal? driveTime
         {
             get
             {
@@ -147,7 +147,7 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                if (value > 0)
+                if (value != null & value > 0)
                 {
                     _driveTimeEntered = true;
                 }
@@ -166,7 +166,7 @@ namespace RouteConfigurator.ViewModel
         /// Updates AVTimeEntered boolean if not null
         /// Calls checkForInfo
         /// </summary>
-        public decimal AVTime
+        public decimal? AVTime
         {
             get
             {
@@ -174,7 +174,7 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                if (value > 0)
+                if (value != null & value > 0)
                 {
                     _AVTimeEntered = true;
                 }
@@ -291,36 +291,39 @@ namespace RouteConfigurator.ViewModel
         private List<string> parseOptions(string model)
         {
             List<String> optionsList = new List<string>();
-            string options = model.Substring(8);
-
-            bool isPower = false;
-            bool isControl = false;
-            foreach(char c in options)
+            if (model.Length >= 8)
             {
-                if (c.Equals('P'))
+                string options = model.Substring(8);
+
+                bool isPower = false;
+                bool isControl = false;
+                foreach (char c in options)
                 {
-                    isPower = true;
-                    isControl = false;
-                }
-                else if (c.Equals('T'))
-                {
-                    isControl = true;
-                    isPower = false;
-                }
-                else if (c.Equals('S'))
-                {
-                    //Ignoring software options
-                    break;
-                }
-                else
-                {
-                    if (isPower)
+                    if (c.Equals('P'))
                     {
-                        optionsList.Add(string.Format("P{0}", c));
+                        isPower = true;
+                        isControl = false;
                     }
-                    else if (isControl)
+                    else if (c.Equals('T'))
                     {
-                        optionsList.Add(string.Format("T{0}", c));
+                        isControl = true;
+                        isPower = false;
+                    }
+                    else if (c.Equals('S'))
+                    {
+                        //Ignoring software options
+                        break;
+                    }
+                    else
+                    {
+                        if (isPower)
+                        {
+                            optionsList.Add(string.Format("P{0}", c));
+                        }
+                        else if (isControl)
+                        {
+                            optionsList.Add(string.Format("T{0}", c));
+                        }
                     }
                 }
             }
@@ -338,15 +341,22 @@ namespace RouteConfigurator.ViewModel
             {
                 updateInformation();
             }
+            else
+            {
+                modelTimeText = "";
+                totalTimeText = "";
+                routeText = "";
+                prodSupCodeText = "";
+            }
         }
 
         /// <summary>
-        /// Updates the modle time, total time, route, and product supervisor code for the model
+        /// Updates the model time, total time, route, and product supervisor code for the model
         /// Calls setRoute and setProdSupCode
         /// </summary>
         private void updateInformation()
         {
-            decimal modelTime = driveTime + AVTime;
+            decimal modelTime = (decimal)(driveTime + AVTime);
 
             TimeSpan time = TimeSpan.FromHours((double)modelTime);
             modelTimeText = string.Format("{0}:{1:00}", ((time.Days*24) + time.Hours), time.Minutes);
@@ -440,15 +450,25 @@ namespace RouteConfigurator.ViewModel
 
                 routeText = "501";
 
-                string hoursText = string.Format("{0:00}", (time.Days*24 + time.Hours));
-                routeText = string.Concat(routeText, hoursText);
-
-                string minutesText = "0";
-                if(time.Minutes >= 30)
+                decimal hours = (time.Days * 24 + time.Hours);
+                string hoursText = "";
+                if (hours >= 100)
                 {
-                    minutesText = "1";
+                    hoursText = "999";
+                    routeText = string.Concat(routeText, hoursText);
                 }
-                routeText = string.Concat(routeText, minutesText);
+                else
+                {
+                    hoursText = string.Format("{0:00}", (time.Days * 24 + time.Hours));
+                    routeText = string.Concat(routeText, hoursText);
+
+                    string minutesText = "0";
+                    if (time.Minutes >= 30)
+                    {
+                        minutesText = "1";
+                    }
+                    routeText = string.Concat(routeText, minutesText);
+                }
 
                 routeText = string.Concat(routeText, "00");
             }
