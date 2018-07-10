@@ -7,7 +7,7 @@
       xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
       mc:Ignorable="d" 
       MinHeight="870"
-      MinWidth="1050"
+      MinWidth="1250"
       Title="SupervisorView"
       DataContext="{Binding Supervisor, Source={StaticResource Locator}}">
       
@@ -17,7 +17,7 @@
         </Border.Background>
 
         <Border Background="{StaticResource LightBlue}" Padding="10 10 10 0" CornerRadius="20"
-                HorizontalAlignment="Center" MaxWidth="950" MaxHeight="770">
+                HorizontalAlignment="Center" MaxWidth="1150" MaxHeight="770">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -229,7 +229,11 @@
                                                     Binding="{Binding ProductionNumber}"/>
                                 <DataGridTextColumn x:Name="TTHeader4" Width="auto" FontSize="16" Header="Production Time"
                                                     Binding="{Binding TotalTime, Converter={StaticResource TimeConverter}}"/>
-                                <DataGridTextColumn x:Name="TTHeader5" Width="auto" FontSize="16" Header="# of Options"
+                                <DataGridTextColumn x:Name="TTHeader5" Width="auto" FontSize="16" Header="Drive Time"
+                                                    Binding="{Binding DriveTime, Converter={StaticResource TimeConverter}}"/>
+                                <DataGridTextColumn x:Name="TTHeader6" Width="auto" FontSize="16" Header="AV Time"
+                                                    Binding="{Binding AVTime, Converter={StaticResource TimeConverter}}"/>
+                                <DataGridTextColumn x:Name="TTHeader7" Width="auto" FontSize="16" Header="# of Options"
                                                     Binding="{Binding NumOptions}"/>
                                 <DataGridTemplateColumn Header="Delete">
                                     <DataGridTemplateColumn.CellTemplate>

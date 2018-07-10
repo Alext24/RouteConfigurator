@@ -30,5 +30,7 @@ namespace RouteConfigurator.Model
         ObservableCollection<TimeTrial> getFilteredTimeTrials(string modelBase, string salesFilter, string productionNumFilter);
 
         ObservableCollection<Option> getModelOptions(List<string> optionsList, string boxSize);
+
+        void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);
     }
 }

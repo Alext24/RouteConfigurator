@@ -93,46 +93,49 @@ namespace RouteConfigurator.ViewModel
             informationText = "";
             if (checkComplete())
             {
-                TimeTrial newTT = new TimeTrial()
+                if (checkValid())
                 {
-                    ProductionNumber = (int)productionNum,
-                    SalesOrder = (int)salesOrder,
-                    Date = (DateTime)date,
-                    DriveTime = (decimal)driveTime,
-                    AVTime = (decimal)AVTime,
-                    Model = selectedModel,
-                    NumOptions = numOptions == null ? 0 : (int)numOptions,
-                    TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(),
+                    TimeTrial newTT = new TimeTrial()
+                    {
+                        ProductionNumber = (int)productionNum,
+                        SalesOrder = (int)salesOrder,
+                        Date = (DateTime)date,
+                        DriveTime = (decimal)driveTime,
+                        AVTime = (decimal)AVTime,
+                        Model = selectedModel,
+                        NumOptions = numOptions == null ? 0 : (int)numOptions,
+                        TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(),
 
-                    TotalTime = calcTotalTime()
-                };
+                        TotalTime = calcTotalTime()
+                    };
 
-                foreach (TimeTrialsOptionTime TTOption in TTOptions)
-                {
-                    TTOption.OptionCode = TTOption.OptionCode.ToUpper();
-                    TTOption.ProductionNumber = (int)productionNum;
-                    TTOption.TimeTrial = newTT;
+                    foreach (TimeTrialsOptionTime TTOption in TTOptions)
+                    {
+                        TTOption.OptionCode = TTOption.OptionCode.ToUpper();
+                        TTOption.ProductionNumber = (int)productionNum;
+                        TTOption.TimeTrial = newTT;
 
-                    newTT.TTOptionTimes.Add(TTOption);
+                        newTT.TTOptionTimes.Add(TTOption);
+                    }
+
+                    //Sort list alphabetically
+                    newTT.TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(newTT.TTOptionTimes.OrderBy(i => i.OptionCode));
+
+                    newTT.OptionsText = getOptionsText(newTT.TTOptionTimes);
+
+                    timeTrials.Add(newTT);
+
+                    //modelText = "";
+                    //date = null;
+                    //salesOrder = null;
+                    productionNum++;
+                    driveTime = null;
+                    AVTime = null;
+                    numOptions = null;
+                    TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
+
+                    informationText = "Time Trial added";
                 }
-
-                //Sort list alphabetically
-                newTT.TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(newTT.TTOptionTimes.OrderBy(i => i.OptionCode));
-
-                newTT.OptionsText = getOptionsText(newTT.TTOptionTimes);
-
-                timeTrials.Add(newTT);
-
-                //modelText = "";
-                //date = null;
-                //salesOrder = null;
-                productionNum++;
-                driveTime = null;
-                AVTime = null;
-                numOptions = null;
-                TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
-
-                informationText = "Time Trial added";
             }
         }
 
@@ -142,7 +145,19 @@ namespace RouteConfigurator.ViewModel
         private void submit()
         {
             informationText = "";
-            MessageBox.Show("Placeholder for adding time trials to database");
+
+            try
+            {
+                _serviceProxy.addTimeTrials(timeTrials);
+                informationText = "Time Trials submitted to database.";
+                timeTrials.Clear();
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+                return;
+            }
         }
         #endregion
 
@@ -389,6 +404,33 @@ namespace RouteConfigurator.ViewModel
             return totalTime;
         }
 
+        private bool checkValid()
+        {
+            bool valid = checkComplete();
+            if (valid)
+            {
+                //If everything is filled out
+                using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+                {
+                    //Check if time trial production number exists in the database
+                    if (context.TimeTrials.Find(productionNum) != null)
+                    {
+                        informationText = string.Format("Time Trial for Production Number {0} already exists.", productionNum);
+                        valid = false;
+                    }
+                }
+                foreach(TimeTrial TT in timeTrials)
+                {
+                    if(productionNum == TT.ProductionNumber)
+                    {
+                        informationText = string.Format("Time Trial for Production Number {0} is already ready to submit", productionNum);
+                        valid = false;
+                    }
+                }
+            }
+            return valid;
+        }
+
         /// <summary>
         /// Checks to see if all necessary fields are filled out before the time
         /// trial can be added.  
@@ -437,48 +479,56 @@ namespace RouteConfigurator.ViewModel
         /// <returns> options text </returns>
         private string getOptionsText(ICollection<TimeTrialsOptionTime> options)
         {
-            List<char> powerOptions = new List<char>();
-            List<char> controlOptions = new List<char>();
-
-            foreach(TimeTrialsOptionTime option in options)
+            if (options.Count > 0)
             {
-                char optionType = option.OptionCode.ElementAt(0);
 
-                switch (optionType)
+                List<char> powerOptions = new List<char>();
+                List<char> controlOptions = new List<char>();
+
+                foreach (TimeTrialsOptionTime option in options)
                 {
-                    case 'P':
-                        {
-                            powerOptions.Add(option.OptionCode.ElementAt(1));
-                            break;
-                        }
-                    case 'T':
-                        {
-                            controlOptions.Add(option.OptionCode.ElementAt(1));
-                            break;
-                        }
-                    default :
-                        {
-                            break;
-                        }
+                    char optionType = option.OptionCode.ElementAt(0);
+
+                    switch (optionType)
+                    {
+                        case 'P':
+                            {
+                                powerOptions.Add(option.OptionCode.ElementAt(1));
+                                break;
+                            }
+                        case 'T':
+                            {
+                                controlOptions.Add(option.OptionCode.ElementAt(1));
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+                    }
                 }
+
+                powerOptions.Sort();
+                controlOptions.Sort();
+
+                string optionsText = "P";
+                foreach (char c in powerOptions)
+                {
+                    optionsText = string.Concat(optionsText, c);
+                }
+
+                optionsText = string.Concat(optionsText, "T");
+                foreach (char c in controlOptions)
+                {
+                    optionsText = string.Concat(optionsText, c);
+                }
+
+                return optionsText;
             }
-
-            powerOptions.Sort();
-            controlOptions.Sort();
-
-            string optionsText = "P";
-            foreach(char c in powerOptions)
+            else
             {
-                optionsText = string.Concat(optionsText, c);
+                return "";
             }
-
-            optionsText = string.Concat(optionsText, "T");
-            foreach(char c in controlOptions)
-            {
-                optionsText = string.Concat(optionsText, c);
-            }
-
-            return optionsText;
         }
         #endregion
     }

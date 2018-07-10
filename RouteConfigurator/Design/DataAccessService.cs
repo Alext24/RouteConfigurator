@@ -260,5 +260,15 @@ namespace RouteConfigurator.Design
 
             return options;
         }
+
+
+        public void addTimeTrials(ObservableCollection<TimeTrial> timeTrials)
+        {
+            foreach (TimeTrial TT in timeTrials)
+            {
+                context.TimeTrials.Add(TT);
+            }
+            context.SaveChanges();
+        }
     }
 }
