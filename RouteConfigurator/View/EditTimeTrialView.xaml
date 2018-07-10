@@ -117,20 +117,30 @@
                     </DataGrid>
 
                     <!--Row 6 setup: Buttons-->
-                    <Button Grid.Row="6" Grid.Column="1" Content="Add" FontSize="16" Padding="20 0"
-                            Command="{Binding addTTCommand}"/>
+                    <Grid Grid.Row="6" Grid.ColumnSpan="8" Width="auto">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-                    <Button Grid.Row="6" Grid.Column="4" FontSize="16" Command="{Binding submitCommand}">
-                        <Button.Content>
-                            <StackPanel>
-                                <TextBlock TextAlignment="Center" Text="Submit"/>
-                                <TextBlock TextAlignment="Center" Text="Time Trials"/>
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
+                        <Button Grid.Column="0" Content="Add" FontSize="16"
+                                Command="{Binding addTTCommand}"/>
 
-                    <Button Grid.Row="6" Grid.Column="7" Content="Cancel" FontSize="16" Padding="20 0"
-                            Command="{Binding cancelCommand}"/>
+                        <Button Grid.Column="2" FontSize="16" Command="{Binding submitCommand}">
+                            <Button.Content>
+                                <StackPanel>
+                                    <TextBlock TextAlignment="Center" Text="Submit"/>
+                                    <TextBlock TextAlignment="Center" Text="Time Trials"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button Grid.Column="4" Content="Cancel" FontSize="16"
+                                Command="{Binding cancelCommand}"/>
+                    </Grid>
 
                 </Grid>
             </Border>

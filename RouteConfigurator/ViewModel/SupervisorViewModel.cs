@@ -29,7 +29,7 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
-        private ObservableCollection<Model.Model> _models;
+        private static ObservableCollection<Model.Model> _models;
 
         private Model.Model _selectedModel;
 
@@ -37,7 +37,7 @@ namespace RouteConfigurator.ViewModel
 
         private string _boxSizeFilter = "";
 
-        private ObservableCollection<Option> _options;
+        private static ObservableCollection<Option> _options;
 
         private string _optionFilter = "";
 
@@ -53,6 +53,8 @@ namespace RouteConfigurator.ViewModel
         private string _salesFilter = "";
 
         private string _productionNumFilter = "";
+
+        private string _informationText = "";
         #endregion
 
         #region RelayCommands
@@ -61,7 +63,11 @@ namespace RouteConfigurator.ViewModel
         public RelayCommand addTimeTrialCommand { get; set; }
         public RelayCommand loadModelsCommand { get; set; }
         public RelayCommand loadOptionsCommand { get; set; }
-        public RelayCommand editTTCommand { get; set; }
+        public RelayCommand modifyModelCommand { get; set; }
+        public RelayCommand overrideModelCommand { get; set; }
+        public RelayCommand deleteTTCommand { get; set; }
+//        public RelayCommand editTTCommand { get; set; }
+        public RelayCommand goBackCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -77,7 +83,11 @@ namespace RouteConfigurator.ViewModel
             addTimeTrialCommand = new RelayCommand(addTimeTrial);
             loadModelsCommand = new RelayCommand(loadModels);
             loadOptionsCommand = new RelayCommand(loadOptions);
-            editTTCommand = new RelayCommand(editTT);
+            modifyModelCommand = new RelayCommand(modifyModel);
+            overrideModelCommand = new RelayCommand(overrideModel);
+            deleteTTCommand = new RelayCommand(deleteTT);
+            //            editTTCommand = new RelayCommand(editTT);
+            goBackCommand = new RelayCommand(goBack);
         }
         #endregion
 
@@ -110,11 +120,48 @@ namespace RouteConfigurator.ViewModel
             options = _serviceProxy.getOptions();
         }
 
+        private void modifyModel()
+        {
+            if (selectedModel != null)
+            {
+                MessageBox.Show(
+                    string.Format("Placeholder for modifying model: {0}\n" +
+                    "Not implemented yet", selectedModel.Base));
+            }
+        }
+
+        private void overrideModel()
+        {
+            if (selectedModel != null)
+            {
+                MessageBox.Show(
+                    string.Format("Placeholder for overriding model: {0}\n" +
+                    "Not implemented yet", selectedModel.Base));
+            }
+        }
+
+        private void deleteTT()
+        {
+            if (selectedTimeTrial != null)
+            {
+                MessageBox.Show(
+                    string.Format("Placeholder for deleting: Time Trial {0} {1} \n" +
+                    "Not implemented yet", selectedTimeTrial.Model.Base, selectedTimeTrial.ProductionNumber));
+            }
+        }
+
+/*
         private void editTT()
         {
             _navigationService.NavigateTo("EditTimeTrialView", selectedTimeTrial);
             //EditTimeTrialPopup editTimeTrial = new EditTimeTrialPopup();
             //editTimeTrial.Show();
+        }
+*/
+
+        private void goBack()
+        {
+            _navigationService.GoBack();
         }
 
         #endregion
@@ -135,6 +182,7 @@ namespace RouteConfigurator.ViewModel
 
         /// <summary>
         /// Sets TTVisible based on if model is null
+        /// Updates time trials list
         /// </summary>
         public Model.Model selectedModel
         {
@@ -155,6 +203,7 @@ namespace RouteConfigurator.ViewModel
                 else
                 {
                     TTVisible = false;
+                    timeTrials.Clear();
                 }
             }
         }
@@ -310,6 +359,19 @@ namespace RouteConfigurator.ViewModel
                 _productionNumFilter = value;
                 RaisePropertyChanged("productionNumFilter");
                 updateTTFilter();
+            }
+        }
+
+        public string informationText 
+        {
+            get
+            {
+                return _informationText;
+            }
+            set
+            {
+                _informationText = value;
+                RaisePropertyChanged("informationText");
             }
         }
         #endregion

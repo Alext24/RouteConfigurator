@@ -5,6 +5,7 @@ using RouteConfigurator.Design;
 using RouteConfigurator.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,9 +26,25 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        private string _modelText = "";
+
         private Model.Model _selectedModel;
 
         private DateTime? _date;
+
+        private int? _salesOrder;
+
+        private int? _productionNum;
+
+        private decimal? _driveTime;
+
+        private decimal? _AVTime;
+
+        private int? _numOptions;
+
+        private bool _hasOptions = false;
+
+        private ObservableCollection<TimeTrialsOptionTime> _TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
 
         private TimeTrial _timeTrial;
 
@@ -51,7 +68,18 @@ namespace RouteConfigurator.ViewModel
             timeTrial = navigationService.Parameter as TimeTrial;
 
             selectedModel = timeTrial.Model;
+            modelText = timeTrial.Model.Base;
             date = timeTrial.Date;
+            salesOrder = timeTrial.SalesOrder;
+            productionNum = timeTrial.ProductionNumber;
+            driveTime = timeTrial.DriveTime;
+            AVTime = timeTrial.AVTime;
+            numOptions = timeTrial.NumOptions;
+
+            foreach(TimeTrialsOptionTime TTOption in timeTrial.TTOptionTimes)
+            {
+                TTOptions.Add(TTOption);
+            }
 
             cancelCommand = new RelayCommand(cancel);
 
@@ -89,6 +117,19 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public string modelText
+        {
+            get
+            {
+                return _modelText;
+            }
+            set
+            {
+                _modelText = value.ToUpper();
+                RaisePropertyChanged("modelText");
+            }
+        }
+
         public Model.Model selectedModel
         {
             get
@@ -113,6 +154,137 @@ namespace RouteConfigurator.ViewModel
                 informationText = "";
                 _date = value;
                 RaisePropertyChanged("date");
+            }
+        }
+
+        public int? salesOrder
+        {
+            get
+            {
+                return _salesOrder;
+            }
+            set
+            {
+                informationText = "";
+                _salesOrder = value;
+                RaisePropertyChanged("salesOrder");
+            }
+        }
+
+        public int? productionNum
+        {
+            get
+            {
+                return _productionNum;
+            }
+            set
+            {
+                informationText = "";
+                _productionNum = value;
+                RaisePropertyChanged("productionNum");
+            }
+        }
+
+        public decimal? driveTime
+        {
+            get
+            {
+                return _driveTime;
+            }
+            set
+            {
+                informationText = "";
+                _driveTime = value;
+                RaisePropertyChanged("driveTime");
+            }
+        }
+
+        public decimal? AVTime
+        {
+            get
+            {
+                return _AVTime;
+            }
+            set
+            {
+                informationText = "";
+                _AVTime = value;
+                RaisePropertyChanged("AVTime");
+            }
+        }
+
+        /// <summary>
+        /// Updates hasOptions if greater than 0
+        /// Adds or removes list entries from TTOptions as necessary to match the quantity of options
+        /// </summary>
+        public int? numOptions
+        {
+            get
+            {
+                return _numOptions;
+            }
+            set
+            {
+                informationText = "";
+                _numOptions = value;
+                RaisePropertyChanged("numOptions");
+
+                if(value > 0 && value != null)
+                {
+                    hasOptions = true;
+
+                    int size = (int)(numOptions - TTOptions.Count());
+                    if (size > 0)
+                    {
+                        for (int i = 0; i < size; i++)
+                        {
+                            TTOptions.Add(new TimeTrialsOptionTime());
+                        }
+                    }
+                    else
+                    {
+                        size = Math.Abs(size);
+                        for (int i = 0; i < size; i++)
+                        {
+                            TTOptions.RemoveAt(TTOptions.IndexOf(TTOptions.Last()));
+                        }
+                    }
+                }
+                else if(value == 0)
+                {
+                    hasOptions = false;
+                    TTOptions.Clear();
+                }
+                else
+                {
+                    hasOptions = false;
+                }
+            }
+        }
+
+        public bool hasOptions
+        {
+            get
+            {
+                return _hasOptions;
+            }
+            set
+            {
+                _hasOptions = value;
+                RaisePropertyChanged("hasOptions");
+            }
+        }
+
+        public ObservableCollection<TimeTrialsOptionTime> TTOptions
+        {
+            get
+            {
+                return _TTOptions;
+            }
+            set
+            {
+                _TTOptions = value;
+                RaisePropertyChanged("TTOptions");
             }
         }
 
