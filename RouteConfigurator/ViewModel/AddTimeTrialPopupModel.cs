@@ -116,6 +116,11 @@ namespace RouteConfigurator.ViewModel
                     newTT.TTOptionTimes.Add(TTOption);
                 }
 
+                //Sort list alphabetically
+                newTT.TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(newTT.TTOptionTimes.OrderBy(i => i.OptionCode));
+
+                newTT.OptionsText = getOptionsText(newTT.TTOptionTimes);
+
                 timeTrials.Add(newTT);
 
                 //modelText = "";
@@ -422,6 +427,58 @@ namespace RouteConfigurator.ViewModel
             }
 
             return complete;
+        }
+
+        /// <summary>
+        /// Concatentates the option codes together to form the options 
+        /// text part of the model number
+        /// </summary>
+        /// <param name="options"> list of options for the model </param>
+        /// <returns> options text </returns>
+        private string getOptionsText(ICollection<TimeTrialsOptionTime> options)
+        {
+            List<char> powerOptions = new List<char>();
+            List<char> controlOptions = new List<char>();
+
+            foreach(TimeTrialsOptionTime option in options)
+            {
+                char optionType = option.OptionCode.ElementAt(0);
+
+                switch (optionType)
+                {
+                    case 'P':
+                        {
+                            powerOptions.Add(option.OptionCode.ElementAt(1));
+                            break;
+                        }
+                    case 'T':
+                        {
+                            controlOptions.Add(option.OptionCode.ElementAt(1));
+                            break;
+                        }
+                    default :
+                        {
+                            break;
+                        }
+                }
+            }
+
+            powerOptions.Sort();
+            controlOptions.Sort();
+
+            string optionsText = "P";
+            foreach(char c in powerOptions)
+            {
+                optionsText = string.Concat(optionsText, c);
+            }
+
+            optionsText = string.Concat(optionsText, "T");
+            foreach(char c in controlOptions)
+            {
+                optionsText = string.Concat(optionsText, c);
+            }
+
+            return optionsText;
         }
         #endregion
     }

@@ -136,19 +136,21 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="TTHeader1" Width="auto" FontSize="16" Header="Model Base"            IsReadOnly="True"
                                                 Binding="{Binding Path=Model.Base}"/>
-                            <DataGridTextColumn x:Name="TTHeader2" Width="auto" FontSize="16" Header="Date"                  IsReadOnly="True"
+                            <DataGridTextColumn x:Name="TTHeader2" Width="auto" FontSize="16" Header="Options Text"          IsReadOnly="True"
+                                                Binding="{Binding OptionsText}"/>
+                            <DataGridTextColumn x:Name="TTHeader3" Width="auto" FontSize="16" Header="Date"                  IsReadOnly="True"
                                                 Binding="{Binding Date, StringFormat=d}"/>
-                            <DataGridTextColumn x:Name="TTHeader3" Width="auto" FontSize="16" Header="Sales Order"           IsReadOnly="True"
+                            <DataGridTextColumn x:Name="TTHeader4" Width="auto" FontSize="16" Header="Sales Order"           IsReadOnly="True"
                                                 Binding="{Binding SalesOrder}"/>
-                            <DataGridTextColumn x:Name="TTHeader4" Width="auto" FontSize="16" Header="Production #"          IsReadOnly="True"
+                            <DataGridTextColumn x:Name="TTHeader5" Width="auto" FontSize="16" Header="Production #"          IsReadOnly="True"
                                                 Binding="{Binding ProductionNumber}"/>
-                            <DataGridTextColumn x:Name="TTHeader5" Width="auto" FontSize="16" Header="Drive Time"            IsReadOnly="True"
+                            <DataGridTextColumn x:Name="TTHeader6" Width="auto" FontSize="16" Header="Drive Time"            IsReadOnly="True"
                                                 Binding="{Binding DriveTime, Converter={StaticResource TimeConverter}}"/>
-                            <DataGridTextColumn x:Name="TTHeader6" Width="auto" FontSize="16" Header="AV Time"               IsReadOnly="True"
+                            <DataGridTextColumn x:Name="TTHeader7" Width="auto" FontSize="16" Header="AV Time"               IsReadOnly="True"
                                                 Binding="{Binding AVTime, Converter={StaticResource TimeConverter}}"/>
-                            <DataGridTextColumn x:Name="TTHeader7" Width="auto" FontSize="16" Header="# of Options"          IsReadOnly="True"
+                            <DataGridTextColumn x:Name="TTHeader8" Width="auto" FontSize="16" Header="# of Options"          IsReadOnly="True"
                                                 Binding="{Binding NumOptions}"/>
-                            <DataGridTextColumn x:Name="TTHeader8" Width="auto" FontSize="16" Header="Total Production Time" IsReadOnly="True"
+                            <DataGridTextColumn x:Name="TTHeader9" Width="auto" FontSize="16" Header="Total Production Time" IsReadOnly="True"
                                                 Binding="{Binding TotalTime, Converter={StaticResource TimeConverter}}"/>
                         </DataGrid.Columns>
 

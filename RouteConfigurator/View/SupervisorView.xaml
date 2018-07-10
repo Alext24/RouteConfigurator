@@ -86,6 +86,7 @@
                                                     Binding="{Binding DriveTime}"/>
                                 <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
                                                     Binding="{Binding AVTime}"/>
+                            <!--
                                 <DataGridTemplateColumn Header="Modify">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -103,6 +104,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
+                            -->
                             </DataGrid.Columns>
                         </DataGrid>
 
@@ -197,6 +199,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="6"/>   <!--Datagrid first column width-->
+                                    <ColumnDefinition Width="{Binding ElementName=TTHeader0, Path=ActualWidth}"/>
                                     <ColumnDefinition Width="{Binding ElementName=TTHeader1, Path=ActualWidth}"/>
                                     <ColumnDefinition Width="{Binding ElementName=TTHeader2, Path=ActualWidth}"/>
                                     <ColumnDefinition Width="{Binding ElementName=TTHeader3, Path=ActualWidth}"/>
@@ -211,11 +214,13 @@
                         </Border>
 
                         <!--Row 2 setup: Time Trial Table-->
-                        <DataGrid  Grid.Row="2" Grid.Column="2" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                        <DataGrid  Grid.Row="2" Grid.Column="2" x:Name="TimeTrialTable" Grid.RowSpan="5" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
                                    CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible"
                                    ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="TTHeader0" Width="auto" MinWidth="80" FontSize="16" Header="Options Text"
+                                                    Binding="{Binding OptionsText}"/>
                                 <DataGridTextColumn x:Name="TTHeader1" Width="auto" MinWidth="80" FontSize="16" Header="Date"
                                                     Binding="{Binding Date, StringFormat=d}"/>
                                 <DataGridTextColumn x:Name="TTHeader2" Width="auto" FontSize="16" Header="Sales Order"
@@ -253,8 +258,36 @@
                             </DataGrid.RowDetailsTemplate>
                         </DataGrid>
 
-                        <!--Go back button-->
-                        <Button Grid.Column="2" Grid.Row="8" Content="Go back" Command="{Binding goBackCommand}"/>
+                        <!--Row 8 setup: Buttons-->
+                        <Grid Grid.Row="8" Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>             <!--Col 0-->
+                                <ColumnDefinition Width="5"/>   <!--Col 1-->
+                                <ColumnDefinition/>             <!--Col 2-->
+                                <ColumnDefinition Width="5"/>   <!--Col 3-->
+                                <ColumnDefinition/>             <!--Col 4-->
+                            </Grid.ColumnDefinitions>
+                            
+                            <Button Grid.Column="0" Padding="4" FontSize="16" Command="{Binding modifyModelCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Modify"/>        
+                                        <TextBlock TextAlignment="Center" Text="Models"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            
+                            <Button Grid.Column="2" Padding="4" FontSize="16" Command="{Binding overrideModelCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Override"/>        
+                                        <TextBlock TextAlignment="Center" Text="Models"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <Button Grid.Column="4" Content="Go back" FontSize="16" Command="{Binding goBackCommand}"/>
+                        </Grid>
 
                     </Grid>
                 </Border>

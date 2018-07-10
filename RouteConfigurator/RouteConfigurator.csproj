@@ -90,6 +90,10 @@
     <Compile Include="Migrations\201807021503090_NumOptionsInTimeTrial.Designer.cs">
       <DependentUpon>201807021503090_NumOptionsInTimeTrial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807101921013_OptionsTextInTimeTrial.cs" />
+    <Compile Include="Migrations\201807101921013_OptionsTextInTimeTrial.Designer.cs">
+      <DependentUpon>201807101921013_OptionsTextInTimeTrial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\IDataAccessService.cs" />
     <Compile Include="Model\IFrameNavigationService.cs" />
@@ -102,8 +106,9 @@
     <Compile Include="ViewModel\AddModelPopupModel.cs" />
     <Compile Include="ViewModel\AddOptionPopupModel.cs" />
     <Compile Include="ViewModel\AddTimeTrialPopupModel.cs" />
-    <Compile Include="ViewModel\EditTimeTrialViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
+    <Compile Include="ViewModel\ModifyModelViewModel.cs" />
+    <Compile Include="ViewModel\OverrideModelViewModel.cs" />
     <Compile Include="ViewModel\SupervisorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AddModelPopup.xaml.cs">
@@ -115,11 +120,14 @@
     <Compile Include="View\AddTimeTrialPopup.xaml.cs">
       <DependentUpon>AddTimeTrialPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\EditTimeTrialView.xaml.cs">
-      <DependentUpon>EditTimeTrialView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ModifyModelView.xaml.cs">
+      <DependentUpon>ModifyModelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OverrideModelView.xaml.cs">
+      <DependentUpon>OverrideModelView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SupervisorView.xaml.cs">
       <DependentUpon>SupervisorView.xaml</DependentUpon>
@@ -168,11 +176,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\EditTimeTrialView.xaml">
+    <Page Include="View\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\HomeView.xaml">
+    <Page Include="View\ModifyModelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OverrideModelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -200,6 +212,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201807021503090_NumOptionsInTimeTrial.resx">
       <DependentUpon>201807021503090_NumOptionsInTimeTrial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807101921013_OptionsTextInTimeTrial.resx">
+      <DependentUpon>201807101921013_OptionsTextInTimeTrial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

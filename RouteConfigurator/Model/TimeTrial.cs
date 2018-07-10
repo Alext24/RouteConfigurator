@@ -27,6 +27,8 @@ namespace RouteConfigurator.Model
 
         public int NumOptions { get; set; }
 
+        public string OptionsText { get; set; }
+
         public virtual ICollection<TimeTrialsOptionTime> TTOptionTimes { get; set; }
 
         public virtual Model Model { get; set; }

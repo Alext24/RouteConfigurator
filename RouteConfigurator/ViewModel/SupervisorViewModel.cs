@@ -122,22 +122,12 @@ namespace RouteConfigurator.ViewModel
 
         private void modifyModel()
         {
-            if (selectedModel != null)
-            {
-                MessageBox.Show(
-                    string.Format("Placeholder for modifying model: {0}\n" +
-                    "Not implemented yet", selectedModel.Base));
-            }
+            _navigationService.NavigateTo("ModifyModelView");
         }
 
         private void overrideModel()
         {
-            if (selectedModel != null)
-            {
-                MessageBox.Show(
-                    string.Format("Placeholder for overriding model: {0}\n" +
-                    "Not implemented yet", selectedModel.Base));
-            }
+            _navigationService.NavigateTo("OverrideModelView");
         }
 
         private void deleteTT()
