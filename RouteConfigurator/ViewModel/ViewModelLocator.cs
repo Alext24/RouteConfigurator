@@ -38,7 +38,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<AddModelPopupModel>();
             SimpleIoc.Default.Register<AddOptionPopupModel>();
             SimpleIoc.Default.Register<AddTimeTrialPopupModel>();
-            SimpleIoc.Default.Register<EditTimeTrialViewModel>();
+            SimpleIoc.Default.Register<ModifyModelViewModel>();
         }
 
         public HomeViewModel Home
@@ -91,13 +91,23 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public EditTimeTrialViewModel EditTimeTrial 
+        public ModifyModelViewModel ModifyModel 
         {
             get
             {
-                SimpleIoc.Default.Unregister<EditTimeTrialViewModel>();
-                SimpleIoc.Default.Register<EditTimeTrialViewModel>();
-                return ServiceLocator.Current.GetInstance<EditTimeTrialViewModel>();
+                SimpleIoc.Default.Unregister<ModifyModelViewModel>();
+                SimpleIoc.Default.Register<ModifyModelViewModel>();
+                return ServiceLocator.Current.GetInstance<ModifyModelViewModel>();
+            }
+        }
+
+        public OverrideModelViewModel OverrideModel 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<OverrideModelViewModel>();
+                SimpleIoc.Default.Register<OverrideModelViewModel>();
+                return ServiceLocator.Current.GetInstance<OverrideModelViewModel>();
             }
         }
 
@@ -111,7 +121,8 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<AddModelPopupModel>();
             SimpleIoc.Default.Unregister<AddOptionPopupModel>();
             SimpleIoc.Default.Unregister<AddTimeTrialPopupModel>();
-            SimpleIoc.Default.Unregister<EditTimeTrialViewModel>();
+            SimpleIoc.Default.Unregister<ModifyModelViewModel>();
+            SimpleIoc.Default.Unregister<OverrideModelViewModel>();
         }
 
         public static void setupNavigation()
@@ -120,7 +131,8 @@ namespace RouteConfigurator.ViewModel
 
             navigationService.Configure("HomeView", new System.Uri("/View/HomeView.xaml", UriKind.Relative));
             navigationService.Configure("SupervisorView", new System.Uri("/View/SupervisorView.xaml", UriKind.Relative));
-            navigationService.Configure("EditTimeTrialView", new System.Uri("/View/EditTimeTrialView.xaml", UriKind.Relative));
+            navigationService.Configure("ModifyModelView", new System.Uri("/View/ModifyModelView.xaml", UriKind.Relative));
+            navigationService.Configure("OverrideModelView", new System.Uri("/View/OverrideModelView.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
