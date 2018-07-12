@@ -82,7 +82,7 @@
                         <!--Row 5 setup: Blank, Spacing-->
 
                         <!--Row 6 setup: Model search-->
-                        <TextBox   Grid.Row="6" Grid.Column="0" Margin="0 5"
+                        <TextBox   Grid.Row="6" Grid.Column="0" Margin="0 5" MaxWidth="239"
                                    FontSize="20" 
                                    Text="{Binding timeSearchModelNumber}"/>
                         <Button    Grid.Row="6" Grid.Column="1" Content="Search" Padding="5" Margin="10 0 0 0"
