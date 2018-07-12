@@ -35,6 +35,10 @@ namespace RouteConfigurator.Model
 
         ObservableCollection<Model> getNumModelsFound(string drive, string av, string boxSize);
 
+        ObservableCollection<Override> getActiveOverrides();
+
+        ObservableCollection<Override> getFilteredOverrides(string overrideFilter);
+
         void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);
     }
 }

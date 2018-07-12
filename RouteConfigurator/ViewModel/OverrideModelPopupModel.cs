@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RouteConfigurator.ViewModel
 {
@@ -28,33 +29,25 @@ namespace RouteConfigurator.ViewModel
 
         private string _modelText = "";
 
-        private Model.Model _selectedModel;
+        private Model.Model _model;
 
-        private DateTime? _date;
+        private decimal? _overrideTime;
 
-        private int? _salesOrder;
+        private int? _overrideRoute;
 
-        private int? _productionNum;
+        private decimal _modelTime;
 
-        private decimal? _driveTime;
+        private string _modelRoute;
 
-        private decimal? _AVTime;
-
-        private int? _numOptions;
-
-        private bool _hasOptions = false;
-
-        private ObservableCollection<TimeTrialsOptionTime> _TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
-
-        private TimeTrial _timeTrial;
+        private ObservableCollection<Override> _overridesToSubmit = new ObservableCollection<Override>();
 
         private string _informationText;
         #endregion
 
         #region RelayCommands
-        public RelayCommand goBackCommand { get; set; }
-        public RelayCommand addTTCommand { get; set; }
+        public RelayCommand addOverrideCommand { get; set; }
         public RelayCommand submitCommand { get; set; }
+        public RelayCommand goBackCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -64,40 +57,35 @@ namespace RouteConfigurator.ViewModel
         public OverrideModelPopupModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
-            /*
-            timeTrial = navigationService.Parameter as TimeTrial;
 
-            selectedModel = timeTrial.Model;
-            modelText = timeTrial.Model.Base;
-            date = timeTrial.Date;
-            salesOrder = timeTrial.SalesOrder;
-            productionNum = timeTrial.ProductionNumber;
-            driveTime = timeTrial.DriveTime;
-            AVTime = timeTrial.AVTime;
-            numOptions = timeTrial.NumOptions;
-
-            foreach(TimeTrialsOptionTime TTOption in timeTrial.TTOptionTimes)
-            {
-                TTOptions.Add(TTOption);
-            }
-            */
-
+            addOverrideCommand = new RelayCommand(addOverride);
+            submitCommand = new RelayCommand(submit);
             goBackCommand = new RelayCommand(goBack);
-            
-
-//            loadedCommand = new RelayCommand(loaded);
-            //addTTCommand = new RelayCommand(addTT);
-            //submitCommand = new RelayCommand(submit);
         }
         #endregion
 
         #region Commands
-        /*
-                private void loaded()
+        private void addOverride()
+        {
+            if (checkValid())
+            {
+                Override ov = new Override
                 {
-                    models = _serviceProxy.getModels();
-                }
-        */
+                    ModelNum = modelText,
+                    OverrideTime = (decimal)overrideTime,
+                    OverrideRoute = (int)overrideRoute,
+                    Model = model,
+                    IsOverrideActive = true
+                };
+                
+                _overridesToSubmit.Add(ov);
+            }
+        }
+
+        private void submit()
+        {
+            MessageBox.Show("Placeholder");
+        }
 
         private void goBack()
         {
@@ -106,19 +94,6 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Public Variables
-        public TimeTrial timeTrial 
-        {
-            get
-            {
-                return _timeTrial;
-            }
-            set
-            {
-                _timeTrial = value;
-                RaisePropertyChanged("timeTrial");
-            }
-        }
-
         public string modelText
         {
             get
@@ -129,164 +104,101 @@ namespace RouteConfigurator.ViewModel
             {
                 _modelText = value.ToUpper();
                 RaisePropertyChanged("modelText");
-            }
-        }
 
-        public Model.Model selectedModel
-        {
-            get
-            {
-                return _selectedModel;
-            }
-            set
-            {
-                _selectedModel = value;
-                RaisePropertyChanged("selectedModel");
-            }
-        }
-
-        public DateTime? date
-        {
-            get
-            {
-                return _date;
-            }
-            set
-            {
-                informationText = "";
-                _date = value;
-                RaisePropertyChanged("date");
-            }
-        }
-
-        public int? salesOrder
-        {
-            get
-            {
-                return _salesOrder;
-            }
-            set
-            {
-                informationText = "";
-                _salesOrder = value;
-                RaisePropertyChanged("salesOrder");
-            }
-        }
-
-        public int? productionNum
-        {
-            get
-            {
-                return _productionNum;
-            }
-            set
-            {
-                informationText = "";
-                _productionNum = value;
-                RaisePropertyChanged("productionNum");
-            }
-        }
-
-        public decimal? driveTime
-        {
-            get
-            {
-                return _driveTime;
-            }
-            set
-            {
-                informationText = "";
-                _driveTime = value;
-                RaisePropertyChanged("driveTime");
-            }
-        }
-
-        public decimal? AVTime
-        {
-            get
-            {
-                return _AVTime;
-            }
-            set
-            {
-                informationText = "";
-                _AVTime = value;
-                RaisePropertyChanged("AVTime");
-            }
-        }
-
-        /// <summary>
-        /// Updates hasOptions if greater than 0
-        /// Adds or removes list entries from TTOptions as necessary to match the quantity of options
-        /// </summary>
-        public int? numOptions
-        {
-            get
-            {
-                return _numOptions;
-            }
-            set
-            {
-                informationText = "";
-                _numOptions = value;
-                RaisePropertyChanged("numOptions");
-
-                if(value > 0 && value != null)
+                if(modelText.Length >= 8)
                 {
-                    hasOptions = true;
-
-                    int size = (int)(numOptions - TTOptions.Count());
-                    if (size > 0)
-                    {
-                        for (int i = 0; i < size; i++)
-                        {
-                            TTOptions.Add(new TimeTrialsOptionTime());
-                        }
-                    }
-                    else
-                    {
-                        size = Math.Abs(size);
-                        for (int i = 0; i < size; i++)
-                        {
-                            TTOptions.RemoveAt(TTOptions.IndexOf(TTOptions.Last()));
-                        }
-                    }
-                }
-                else if(value == 0)
-                {
-                    hasOptions = false;
-                    TTOptions.Clear();
+                    model = _serviceProxy.getModel(modelText.Substring(0, 8));
+                    updateModelTime();
+                    updateModelRoute();
                 }
                 else
                 {
-                    hasOptions = false;
+                    model = null;
+                    modelTime = 0;
+                    modelRoute = "";
                 }
             }
         }
 
-        public bool hasOptions
+        public Model.Model model
         {
             get
             {
-                return _hasOptions;
+                return _model;
             }
             set
             {
-                _hasOptions = value;
-                RaisePropertyChanged("hasOptions");
+                _model = value;
+                RaisePropertyChanged("model");
             }
         }
 
-        public ObservableCollection<TimeTrialsOptionTime> TTOptions
+        public decimal? overrideTime
         {
             get
             {
-                return _TTOptions;
+                return _overrideTime;
             }
             set
             {
-                _TTOptions = value;
-                RaisePropertyChanged("TTOptions");
+                informationText = "";
+                _overrideTime = value;
+                RaisePropertyChanged("overrideTime");
+            }
+        }
+
+        public int? overrideRoute 
+        {
+            get
+            {
+                return _overrideRoute;
+            }
+            set
+            {
+                informationText = "";
+                _overrideRoute = value;
+                RaisePropertyChanged("overrideRoute");
+            }
+        }
+
+        public decimal modelTime
+        {
+            get
+            {
+                return _modelTime;
+            }
+            set
+            {
+                informationText = "";
+                _modelTime = value;
+                RaisePropertyChanged("modelTime");
+            }
+        }
+
+        public string modelRoute 
+        {
+            get
+            {
+                return _modelRoute;
+            }
+            set
+            {
+                informationText = "";
+                _modelRoute = value;
+                RaisePropertyChanged("modelRoute");
+            }
+        }
+
+        public ObservableCollection<Override> overridesToSubmit 
+        {
+            get
+            {
+                return _overridesToSubmit;
+            }
+            set
+            {
+                _overridesToSubmit = value;
+                RaisePropertyChanged("overridesToSubmit");
             }
         }
 
@@ -302,6 +214,138 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+        #endregion
+
+        #region Private Functions
+        private List<string> parseOptions()
+        {
+            List<string> optionsList = new List<string>();
+
+            if (modelText.Length > 8)
+            {
+                string options = modelText.Substring(8);
+
+                bool isPower = false;
+                bool isControl = false;
+                foreach (char c in options)
+                {
+                    if (c.Equals('P'))
+                    {
+                        isPower = true;
+                        isControl = false;
+                    }
+                    else if (c.Equals('T'))
+                    {
+                        isControl = true;
+                        isPower = false;
+                    }
+                    else if (c.Equals('S'))
+                    {
+                        //Ignoring software options
+                        break;
+                    }
+                    else
+                    {
+                        if (isPower)
+                        {
+                            optionsList.Add(string.Format("P{0}", c));
+                        }
+                        else if (isControl)
+                        {
+                            optionsList.Add(string.Format("T{0}", c));
+                        }
+                    }
+                }
+            }
+            return optionsList;
+        }
+
+        private void updateModelTime()
+        {
+            decimal totalTime = 0;
+            totalTime += model.DriveTime;
+            totalTime += model.AVTime;
+
+            totalTime += _serviceProxy.getTotalOptionsTime(model.BoxSize, parseOptions());
+
+            modelTime = totalTime;
+        }
+
+        private void updateModelRoute()
+        {
+            TimeSpan time = TimeSpan.FromHours((double)modelTime);
+
+            if (time.TotalMinutes <= 0)
+            {
+                modelRoute = "0";
+            }
+            else
+            {
+                //Format for route is "501",
+                //      2 digit hour,
+                //      0 if minutes < 30; 1 if > 30,
+                //      extra 2 digits for unique route if necessary
+
+                modelRoute = "501";
+
+                decimal hours = (time.Days * 24 + time.Hours);
+                string hoursText = "";
+                if (hours >= 100)
+                {
+                    hoursText = "999";
+                    modelRoute = string.Concat(modelRoute, hoursText);
+                }
+                else
+                {
+                    hoursText = string.Format("{0:00}", (time.Days * 24 + time.Hours));
+                    modelRoute = string.Concat(modelRoute, hoursText);
+
+                    string minutesText = "0";
+                    if (time.Minutes >= 30)
+                    {
+                        minutesText = "1";
+                    }
+                    modelRoute = string.Concat(modelRoute, minutesText);
+                }
+
+                modelRoute = string.Concat(modelRoute, "00");
+            }
+
+        }
+
+        private bool checkValid()
+        {
+            bool valid = true;
+
+            if (!string.IsNullOrWhiteSpace(modelText) && modelText.Length >= 8)
+            {
+                if(model == null)
+                {
+                    valid = false;
+                    informationText = "Model does not exist, enter a different model";
+                }
+
+                if(valid && overrideTime == null || overrideTime <= 0)
+                {
+                    valid = false;
+                    informationText = "Invalid override time";
+                }
+
+                if (valid && overrideRoute == null || overrideRoute <= 0)
+                {
+                    valid = false;
+                    informationText = "Invalid override route";
+                }
+            }
+            else
+            {
+                valid = false;
+                informationText = "Invalid model";
+            }
+
+            return valid;
+        }
+
         #endregion
     }
 }

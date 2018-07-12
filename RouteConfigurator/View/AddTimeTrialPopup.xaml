@@ -98,19 +98,19 @@
                              Text="{Binding date, StringFormat=d}"/>-->
 
                     <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
-                             Text="{Binding salesOrder}"/>
+                             Text="{Binding salesOrder, TargetNullValue=''}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
-                             Text="{Binding productionNum}"/>
+                             Text="{Binding productionNum, TargetNullValue=''}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="4" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
-                             Text="{Binding driveTime}"/>
+                             Text="{Binding driveTime, TargetNullValue=''}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="5" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
-                             Text="{Binding AVTime}"/>
+                             Text="{Binding AVTime, TargetNullValue=''}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="6" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
-                             Text="{Binding numOptions, UpdateSourceTrigger=PropertyChanged}"/>
+                             Text="{Binding numOptions, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}"/>
 
                     <DataGrid  Grid.Row="2" Grid.RowSpan="4" Grid.Column="7" Height="200" Margin="10 0" VerticalAlignment="Top" AutoGenerateColumns="False"
                                CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible" 

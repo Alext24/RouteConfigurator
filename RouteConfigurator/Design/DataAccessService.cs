@@ -301,6 +301,35 @@ namespace RouteConfigurator.Design
             return models;
         }
 
+        public ObservableCollection<Override> getActiveOverrides()
+        {
+            ObservableCollection<Override> overrides = new ObservableCollection<Override>();
+
+            var result = context.Overrides.Where(item => item.IsOverrideActive == true).ToList();
+
+            foreach(Override item in result)
+            {
+                overrides.Add(item);
+            }
+
+            return overrides;
+        }
+
+        public ObservableCollection<Override> getFilteredOverrides(string overrideFilter)
+        {
+            ObservableCollection<Override> overrides = new ObservableCollection<Override>();
+
+            var result = context.Overrides.Where(item => item.IsOverrideActive == true &&
+                                                         item.ModelNum.Contains(overrideFilter)).ToList();
+
+            foreach(Override item in result)
+            {
+                overrides.Add(item);
+            }
+
+            return overrides;
+        }
+
         public void addTimeTrials(ObservableCollection<TimeTrial> timeTrials)
         {
             foreach (TimeTrial TT in timeTrials)

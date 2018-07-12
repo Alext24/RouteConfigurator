@@ -178,8 +178,8 @@
                         </Border>
 
                         <!--Row 2 setup: Time Trial Table-->
-                        <DataGrid  Grid.Row="2" Grid.RowSpan="5" Grid.Column="2" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
-                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible" Height="574" VerticalAlignment="Top"
+                        <DataGrid  Grid.Row="2" Grid.Column="2" Height="250" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible" 
                                    ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
@@ -224,6 +224,48 @@
                                     </DataGrid>
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
+                        </DataGrid>
+
+                        <!--Row 4 setup: Options table name-->
+                        <TextBlock Grid.Row="4" Grid.Column="2" Text="Active Overrides"/>
+
+                        <!--Row 5 setup: Override Table Filter-->
+                        <Border Grid.Row="5" Grid.Column="2" BorderBrush="LightGray" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="6"/>   <!--Datagrid first column width-->
+                                    <ColumnDefinition Width="{Binding ElementName=OverrideHeader0, Path=ActualWidth}"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="1" FontSize="16" VerticalContentAlignment="Center" 
+                                         Text="{Binding overrideFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button  Grid.Column="2" FontSize="16" HorizontalAlignment="Right" Content="Load Overrides" 
+                                         Command="{Binding loadOverridesCommand}"/>
+                            </Grid>
+                        </Border>
+
+                        <!--Row -->
+                        <DataGrid  Grid.Row="6" Grid.Column="2" Height="250" x:Name="OverrideTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible"
+                                   ItemsSource="{Binding activeOverrides}" SelectedValue="{Binding selectedOverride}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="OverrideHeader0" Width="auto" MinWidth="100" FontSize="16" Header="Model Number"
+                                                    Binding="{Binding ModelNum}"/>
+                                <DataGridTextColumn x:Name="OverrideHeader1" Width="auto" MinWidth="80" FontSize="16" Header="Override Route"
+                                                    Binding="{Binding OverrideRoute}"/>
+                                <DataGridTextColumn x:Name="OverrideHeader2" Width="auto" FontSize="16" Header="Override Time"
+                                                    Binding="{Binding OverrideTime}"/>
+                                <DataGridTemplateColumn Header="Deactivate">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Deactivate" FontSize="9"
+                                                    Command="{Binding ElementName=OverrideTable, Path=DataContext.deactivateOverrideCommand}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
                         </DataGrid>
 
                         <!--Row 8 setup: Buttons-->

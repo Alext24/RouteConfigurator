@@ -56,6 +56,12 @@ namespace RouteConfigurator.ViewModel
 
         private string _optionTextFilter = "";
 
+        private ObservableCollection<Override> _activeOverrides;
+
+        private Override _selectedOverride;
+
+        private string _overrideFilter = "";
+
         private string _informationText = "";
         #endregion
 
@@ -65,10 +71,11 @@ namespace RouteConfigurator.ViewModel
         public RelayCommand addTimeTrialCommand { get; set; }
         public RelayCommand loadModelsCommand { get; set; }
         public RelayCommand loadOptionsCommand { get; set; }
+        public RelayCommand loadOverridesCommand { get; set; }
         public RelayCommand modifyModelCommand { get; set; }
         public RelayCommand overrideModelCommand { get; set; }
         public RelayCommand deleteTTCommand { get; set; }
-//        public RelayCommand editTTCommand { get; set; }
+        public RelayCommand deactivateOverrideCommand { get; set; }
         public RelayCommand goBackCommand { get; set; }
         #endregion
 
@@ -85,10 +92,11 @@ namespace RouteConfigurator.ViewModel
             addTimeTrialCommand = new RelayCommand(addTimeTrial);
             loadModelsCommand = new RelayCommand(loadModels);
             loadOptionsCommand = new RelayCommand(loadOptions);
+            loadOverridesCommand = new RelayCommand(loadOverrides);
             modifyModelCommand = new RelayCommand(modifyModel);
             overrideModelCommand = new RelayCommand(overrideModel);
             deleteTTCommand = new RelayCommand(deleteTT);
-            //            editTTCommand = new RelayCommand(editTT);
+            deactivateOverrideCommand = new RelayCommand(deactivateOverride);
             goBackCommand = new RelayCommand(goBack);
         }
         #endregion
@@ -126,6 +134,11 @@ namespace RouteConfigurator.ViewModel
             optionBoxSizeFilter = "";
         }
 
+        private void loadOverrides()
+        {
+            activeOverrides = _serviceProxy.getActiveOverrides();
+        }
+
         private void modifyModel()
         {
             ModifyModelPopup modifyModel = new ModifyModelPopup();
@@ -146,6 +159,11 @@ namespace RouteConfigurator.ViewModel
                     string.Format("Placeholder for deleting: Time Trial {0} {1} \n" +
                     "Not implemented yet", selectedTimeTrial.Model.Base, selectedTimeTrial.ProductionNumber));
             }
+        }
+
+        private void deactivateOverride()
+        {
+            MessageBox.Show(string.Format("Placeholder for deactivating override for {0}", selectedOverride.ModelNum));
         }
 
         private void goBack()
@@ -369,6 +387,46 @@ namespace RouteConfigurator.ViewModel
                 _optionTextFilter = value.ToUpper();
                 RaisePropertyChanged("optionTextFilter");
                 updateTTFilter();
+            }
+        }
+
+        public ObservableCollection<Override> activeOverrides
+        {
+            get
+            {
+                return _activeOverrides;
+            }
+            set
+            {
+                _activeOverrides = value;
+                RaisePropertyChanged("activeOverrides");
+            }
+        }
+
+        public Override selectedOverride
+        {
+            get
+            {
+                return _selectedOverride;
+            }
+            set
+            {
+                _selectedOverride = value;
+                RaisePropertyChanged("selectedOverride");
+            }
+        }
+
+        public string overrideFilter
+        {
+            get
+            {
+                return _overrideFilter;
+            }
+            set
+            {
+                _overrideFilter = value.ToUpper();
+                RaisePropertyChanged("overrideFilter");
+                activeOverrides = _serviceProxy.getFilteredOverrides(overrideFilter);
             }
         }
 
