@@ -1,0 +1,93 @@
+﻿<Window x:Class="RouteConfigurator.View.ModifyModelPopup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RouteConfigurator.View"
+        xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        mc:Ignorable="d" 
+        MinHeight="500"
+        MinWidth="500"
+        Height="500"
+        Width="500"
+        Title="Modify Model"
+        DataContext="{Binding ModifyModel, Source={StaticResource Locator}}">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding loadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Border Padding="40" Background="{StaticResource LightBlue}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.Resources>
+                <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
+                <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
+            </Grid.Resources>
+
+            <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>      <!--Row 0-->
+                        <RowDefinition Height="auto"/>      <!--Row 1-->
+                        <RowDefinition Height="auto"/>      <!--Row 2-->
+                        <RowDefinition Height="auto"/>      <!--Row 3-->
+                        <RowDefinition Height="auto"/>      <!--Row 4-->
+                        <RowDefinition Height="auto"/>      <!--Row 5-->
+                        <RowDefinition Height="20"/>      <!--Row 6-->
+                        <RowDefinition Height="auto"/>      <!--Row 7-->
+                        <RowDefinition Height="auto"/>      <!--Row 8-->
+                        <RowDefinition Height="auto"/>      <!--Row 9-->
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>    <!--Col 0-->
+                        <ColumnDefinition/>    <!--Col 1-->
+                        <ColumnDefinition/>    <!--Col 2-->
+                    </Grid.ColumnDefinitions>
+
+                    <!--Row 0 setup: Title-->
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Modify Model"
+                               Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center"/>
+
+                    <!--Row 1 setup: Search Criteria-->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Criteria" FontSize="16"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Drive Type" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" IsTextSearchEnabled="True" ItemsSource="{Binding driveTypes}" SelectedValue="{Binding selectedDrive}"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="AV" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding AVText}" FontSize="16" IsReadOnly="{Binding driveNotSelected}"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Box Size" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding boxSize}" FontSize="16" IsReadOnly="{Binding driveNotSelected}"/>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Models found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBlock Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding modelsFound}" FontSize="16"/>
+
+
+                    <!--Row 6 setup: Blank, Spacing-->
+
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="New Drive Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding newDriveTime}" FontSize="16"/>
+
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="New AV Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBox Grid.Row="8" Grid.Column="1" Margin="5" Text="{Binding newAVTime}" FontSize="16"/>
+
+                    <Button Grid.Row="9" Grid.Column="2" Content="Submit" Margin="0 5 0 0"/>
+                </Grid>
+            </Border>
+
+            <!--Information text-->
+            <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
+                       FontSize="12" Text="{Binding informationText}"/>
+        </Grid>
+    </Border>
+</Window>

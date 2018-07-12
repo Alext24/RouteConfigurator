@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RouteConfigurator.ViewModel
 {
-    public class OverrideModelViewModel : ViewModelBase
+    public class OverrideModelPopupModel : ViewModelBase
     {
         #region PrivateVariables
 
@@ -61,7 +61,7 @@ namespace RouteConfigurator.ViewModel
         /// <summary>
         /// initializes view components
         /// </summary>
-        public OverrideModelViewModel(IFrameNavigationService navigationService)
+        public OverrideModelPopupModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
             /*

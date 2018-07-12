@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace RouteConfigurator.View
 {
     /// <summary>
-    /// Interaction logic for ModifyModelView.xaml
+    /// Interaction logic for OverrideModelPopup.xaml
     /// </summary>
-    public partial class ModifyModelView : Page
+    public partial class OverrideModelPopup : Window
     {
-        public ModifyModelView()
+        public OverrideModelPopup()
         {
             InitializeComponent();
         }
