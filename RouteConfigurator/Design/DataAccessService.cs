@@ -274,25 +274,31 @@ namespace RouteConfigurator.Design
             return driveTypes;
         }
 
-        public int getNumModelsFound(string drive, string av, string boxSize)
+        public ObservableCollection<Model.Model> getNumModelsFound(string drive, string av, string boxSize)
         {
-            int returnNum = 0;
+            ObservableCollection<Model.Model> models = new ObservableCollection<Model.Model>();
 
             if (string.IsNullOrWhiteSpace(boxSize))
             {
                 var result = context.Models.Where(model => model.Base.Contains(drive) &&
                                                             model.Base.Contains(av)).ToList();
-                returnNum = result.Count();
+                foreach(Model.Model model in result)
+                {
+                    models.Add(model);
+                }
             }
             else
             {
                 var result = context.Models.Where(model => model.Base.Contains(drive) &&
                                                            model.Base.Contains(av) &&
                                                            model.BoxSize.Equals(boxSize)).ToList();
-                returnNum = result.Count();
+                foreach(Model.Model model in result)
+                {
+                    models.Add(model);
+                }
             }
 
-            return returnNum;
+            return models;
         }
 
         public void addTimeTrials(ObservableCollection<TimeTrial> timeTrials)

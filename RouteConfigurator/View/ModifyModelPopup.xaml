@@ -8,9 +8,9 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d" 
         MinHeight="500"
-        MinWidth="500"
+        MinWidth="700"
         Height="500"
-        Width="500"
+        Width="700"
         Title="Modify Model"
         DataContext="{Binding ModifyModel, Source={StaticResource Locator}}">
 
@@ -48,9 +48,9 @@
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>    <!--Col 0-->
-                        <ColumnDefinition/>    <!--Col 1-->
-                        <ColumnDefinition/>    <!--Col 2-->
+                        <ColumnDefinition Width="auto"/>    <!--Col 0-->
+                        <ColumnDefinition Width="145"/>     <!--Col 1-->
+                        <ColumnDefinition/>                 <!--Col 2-->
                     </Grid.ColumnDefinitions>
 
                     <!--Row 0 setup: Title-->
@@ -70,7 +70,24 @@
                     <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding boxSize}" FontSize="16" IsReadOnly="{Binding driveNotSelected}"/>
 
                     <TextBlock Grid.Row="5" Grid.Column="0" Text="Models found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBlock Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding modelsFound}" FontSize="16"/>
+                    <TextBlock Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding modelsFound.Count}" FontSize="16"/>
+
+                    <!--Row ? setup: Model Table-->
+                    <DataGrid  Grid.Row="2" Grid.Column="2" Grid.RowSpan="4" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                               CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible"
+                               ItemsSource="{Binding modelsFound}">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="Header1" Width="auto" MinWidth="100" FontSize="16" Header="Model"
+                                                    Binding="{Binding Base}"/>
+                            <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size"
+                                                    Binding="{Binding BoxSize}"/>
+                            <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Drive Time"
+                                                    Binding="{Binding DriveTime}"/>
+                            <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
+                                                    Binding="{Binding AVTime}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
 
                     <!--Row 6 setup: Blank, Spacing-->
@@ -81,7 +98,8 @@
                     <TextBlock Grid.Row="8" Grid.Column="0" Text="New AV Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
                     <TextBox Grid.Row="8" Grid.Column="1" Margin="5" Text="{Binding newAVTime}" FontSize="16"/>
 
-                    <Button Grid.Row="9" Grid.Column="2" Content="Submit" Margin="0 5 0 0"/>
+                    <Button Grid.Row="9" Grid.Column="2" Content="Submit" Margin="0 5 0 0" HorizontalAlignment="Right"
+                            Command="{Binding submitCommand}"/>
                 </Grid>
             </Border>
 

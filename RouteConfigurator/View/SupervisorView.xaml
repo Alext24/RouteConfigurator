@@ -151,44 +151,6 @@
 
                         <!--Row 7 setup: Blank, Spacing-->
 
-                        <!--Row 8 setup: Buttons-->
-                        <Grid Grid.Row="8">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>             <!--Col 0-->
-                                <ColumnDefinition Width="5"/>   <!--Col 1-->
-                                <ColumnDefinition/>             <!--Col 2-->
-                                <ColumnDefinition Width="5"/>   <!--Col 3-->
-                                <ColumnDefinition/>             <!--Col 4-->
-                            </Grid.ColumnDefinitions>
-                            
-                            <Button Grid.Column="0" Padding="4" FontSize="16" Command="{Binding addModelCommand}">
-                                <Button.Content>
-                                    <StackPanel>
-                                        <TextBlock TextAlignment="Center" Text="Add"/>        
-                                        <TextBlock TextAlignment="Center" Text="Model"/>
-                                    </StackPanel>
-                                </Button.Content>
-                            </Button>
-                            
-                            <Button Grid.Column="2" Padding="4" FontSize="16" Command="{Binding addOptionCommand}">
-                                <Button.Content>
-                                    <StackPanel>
-                                        <TextBlock TextAlignment="Center" Text="Add"/>        
-                                        <TextBlock TextAlignment="Center" Text="Options"/>
-                                    </StackPanel>
-                                </Button.Content>
-                            </Button>
-                            
-                            <Button Grid.Column="4" Padding="4" FontSize="16" Command="{Binding addTimeTrialCommand}">
-                                <Button.Content>
-                                    <StackPanel>
-                                        <TextBlock TextAlignment="Center" Text="Add"/>        
-                                        <TextBlock TextAlignment="Center" Text="Time Trials"/>
-                                    </StackPanel>
-                                </Button.Content>
-                            </Button>
-                        </Grid>
-
                         <!--Main Grid Column 2-->
                         <!--Row 0 setup: Time Trial Table Header-->
                         <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding selectedModel.Base, StringFormat=Time Trials for {0}}" 
@@ -265,16 +227,49 @@
                         </DataGrid>
 
                         <!--Row 8 setup: Buttons-->
-                        <Grid Grid.Row="8" Grid.Column="2">
+                        <Grid Grid.Row="8" Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>             <!--Col 0-->
                                 <ColumnDefinition Width="5"/>   <!--Col 1-->
                                 <ColumnDefinition/>             <!--Col 2-->
                                 <ColumnDefinition Width="5"/>   <!--Col 3-->
                                 <ColumnDefinition/>             <!--Col 4-->
+                                <ColumnDefinition Width="5"/>   <!--Col 5-->
+                                <ColumnDefinition/>             <!--Col 6-->
+                                <ColumnDefinition Width="5"/>   <!--Col 7-->
+                                <ColumnDefinition/>             <!--Col 8-->
+                                <ColumnDefinition Width="5"/>   <!--Col 9-->
+                                <ColumnDefinition/>             <!--Col 10-->
                             </Grid.ColumnDefinitions>
                             
-                            <Button Grid.Column="0" Padding="4" FontSize="16" Command="{Binding modifyModelCommand}">
+                            <Button Grid.Column="0" Padding="4" FontSize="16" Command="{Binding addModelCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Add"/>        
+                                        <TextBlock TextAlignment="Center" Text="Model"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            
+                            <Button Grid.Column="2" Padding="4" FontSize="16" Command="{Binding addOptionCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Add"/>        
+                                        <TextBlock TextAlignment="Center" Text="Options"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            
+                            <Button Grid.Column="4" Padding="4" FontSize="16" Command="{Binding addTimeTrialCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Add"/>        
+                                        <TextBlock TextAlignment="Center" Text="Time Trials"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            
+                            <Button Grid.Column="6" Padding="4" FontSize="16" Command="{Binding modifyModelCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="Modify"/>        
@@ -283,7 +278,7 @@
                                 </Button.Content>
                             </Button>
                             
-                            <Button Grid.Column="2" Padding="4" FontSize="16" Command="{Binding overrideModelCommand}">
+                            <Button Grid.Column="8" Padding="4" FontSize="16" Command="{Binding overrideModelCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="Override"/>        
@@ -292,9 +287,8 @@
                                 </Button.Content>
                             </Button>
 
-                            <Button Grid.Column="4" Content="Go back" FontSize="16" Command="{Binding goBackCommand}"/>
+                            <Button Grid.Column="10" Content="Go back" FontSize="16" Command="{Binding goBackCommand}"/>
                         </Grid>
-
                     </Grid>
                 </Border>
 

@@ -33,7 +33,7 @@ namespace RouteConfigurator.Model
 
         ObservableCollection<string> getDriveTypes();
 
-        int getNumModelsFound(string drive, string av, string boxSize);
+        ObservableCollection<Model> getNumModelsFound(string drive, string av, string boxSize);
 
         void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);
     }

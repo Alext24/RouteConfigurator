@@ -408,7 +408,10 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateTTFilter()
         {
-            timeTrials = _serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter);
+            if (selectedModel != null)
+            {
+                timeTrials = _serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter);
+            }
         }
         #endregion
     }

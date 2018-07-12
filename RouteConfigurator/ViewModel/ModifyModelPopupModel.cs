@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RouteConfigurator.ViewModel
 {
@@ -36,15 +37,13 @@ namespace RouteConfigurator.ViewModel
 
         private string _boxSize = "";
 
-        private int _modelsFound;
+        private ObservableCollection<Model.Model> _modelsFound;
 
         private string _informationText;
         #endregion
 
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
-        public RelayCommand goBackCommand { get; set; }
-        public RelayCommand addTTCommand { get; set; }
         public RelayCommand submitCommand { get; set; }
         #endregion
 
@@ -56,11 +55,8 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
-            goBackCommand = new RelayCommand(goBack);
             loadedCommand = new RelayCommand(loaded);
-
-            //addTTCommand = new RelayCommand(addTT);
-            //submitCommand = new RelayCommand(submit);
+            submitCommand = new RelayCommand(submit);
         }
         #endregion
 
@@ -70,9 +66,9 @@ namespace RouteConfigurator.ViewModel
             driveTypes = _serviceProxy.getDriveTypes();
         }
 
-        private void goBack()
+        private void submit()
         {
-            _navigationService.GoBack();
+            MessageBox.Show("Placeholder for sending updates to director");
         }
         #endregion
 
@@ -153,7 +149,7 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public int modelsFound
+        public ObservableCollection<Model.Model> modelsFound
         {
             get
             {
@@ -181,12 +177,6 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions 
-        private int getModelsFound()
-        {
-           int num = 0;
-
-            return num;
-        }
         #endregion
     }
 }
