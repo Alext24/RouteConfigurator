@@ -27,9 +27,13 @@ namespace RouteConfigurator.Model
 
         ObservableCollection<TimeTrial> getTimeTrials(string modelBase, List<string> options);
 
-        ObservableCollection<TimeTrial> getFilteredTimeTrials(string modelBase, string salesFilter, string productionNumFilter);
+        ObservableCollection<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter);
 
         ObservableCollection<Option> getModelOptions(List<string> optionsList, string boxSize);
+
+        ObservableCollection<string> getDriveTypes();
+
+        int getNumModelsFound(string drive, string av, string boxSize);
 
         void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);
     }

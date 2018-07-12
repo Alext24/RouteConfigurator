@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:RouteConfigurator.View"
         mc:Ignorable="d"
         MinHeight="500"
-        MinWidth="800"
+        MinWidth="870"
         Height="500"
-        Width="800"
+        Width="870"
         Title="Add Model"
         DataContext="{Binding AddModel, Source={StaticResource Locator}}">
 
@@ -27,14 +27,14 @@
                         <RowDefinition Height="auto"/>      <!--Row 2-->
                         <RowDefinition Height="20"/>        <!--Row 3-->
                         <RowDefinition Height="auto"/>      <!--Row 4-->
-                        <RowDefinition/>                    <!--Row 5-->
+                        <RowDefinition Height="auto"/>      <!--Row 5-->
                         <RowDefinition Height="30"/>        <!--Row 6-->
                         <RowDefinition Height="auto"/>      <!--Row 7-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto" MaxWidth="100"/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
@@ -60,7 +60,7 @@
                     <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0"
                              Text="{Binding modelNum}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0"
+                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" Width="80"
                              Text="{Binding boxSize}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0"
@@ -141,7 +141,7 @@
                     </Grid>
 
                     <!--Row 6 setup: Blank, Spacing-->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 0"
+                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 5 10 0"
                                Text="*Options are not necessary and will be removed when submitted."
                                FontSize="10" TextWrapping="WrapWithOverflow"/>
 

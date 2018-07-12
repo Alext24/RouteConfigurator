@@ -66,7 +66,11 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void submit()
         {
-            MessageBox.Show("Hi\nPlaceholder for sending model to director");
+            if (isValid())
+            {
+                MessageBox.Show("Hi\nPlaceholder for sending model to director");
+                informationText = "Model has been submitted.  Waiting for director approval.";
+            }
         }
         #endregion
 
@@ -84,20 +88,26 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                if (!string.IsNullOrWhiteSpace(value))
+                _modelNum = value.ToUpper();
+                RaisePropertyChanged("modelNum");
+
+                informationText = "";
+
+                //Model number has to have 4 characters for drive type and 4 characters for AV size
+                if (!string.IsNullOrWhiteSpace(value) && value.Length >= 8)
                 {
                     _modelEntered = true;
                 }
                 else
                 {
                     _modelEntered = false;
+                    informationText = "Invalid Model format.";
                 }
 
-                _modelNum = value.ToUpper();
-                RaisePropertyChanged("modelNum");
-
                 if (_modelEntered && _boxSizeEntered)
+                {
                     updateOptions();
+                }
 
                 checkForInfo();
             }
@@ -116,6 +126,11 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                _boxSize = value.ToUpper();
+                RaisePropertyChanged("boxSize");
+
+                informationText = "";
+
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     _boxSizeEntered = true;
@@ -125,11 +140,10 @@ namespace RouteConfigurator.ViewModel
                     _boxSizeEntered = false;
                 }
 
-                _boxSize = value.ToUpper();
-                RaisePropertyChanged("boxSize");
-
                 if (_modelEntered && _boxSizeEntered)
+                {
                     updateOptions();
+                }
 
                 checkForInfo();
             }
@@ -147,6 +161,11 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                _driveTime = value;
+                RaisePropertyChanged("driveTime");
+
+                informationText = "";
+
                 if (value != null & value > 0)
                 {
                     _driveTimeEntered = true;
@@ -156,8 +175,6 @@ namespace RouteConfigurator.ViewModel
                     _driveTimeEntered = false;
                 }
 
-                _driveTime = value;
-                RaisePropertyChanged("driveTime");
                 checkForInfo();
             }
         }
@@ -174,6 +191,11 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                _AVTime = value;
+                RaisePropertyChanged("AVTime");
+
+                informationText = "";
+
                 if (value != null & value > 0)
                 {
                     _AVTimeEntered = true;
@@ -183,8 +205,6 @@ namespace RouteConfigurator.ViewModel
                     _AVTimeEntered = false;
                 }
 
-                _AVTime = value;
-                RaisePropertyChanged("AVTime");
                 checkForInfo();
             }
         }
@@ -200,7 +220,6 @@ namespace RouteConfigurator.ViewModel
                 _options = value;
                 RaisePropertyChanged("options");
             }
-
         }
 
         public string modelTimeText
@@ -371,8 +390,42 @@ namespace RouteConfigurator.ViewModel
             totalTimeText = string.Format("{0}:{1:00}", ((time.Days*24) + time.Hours), time.Minutes);
 
             setRoute(time);
-
             setProdSupCode(totalTime);
+        }
+
+        /// <summary>
+        /// Checks if all information is entered and that the model doesn't
+        /// already exist in the database.
+        /// </summary>
+        /// <returns> true if information is valid and can be submitted, false otherwise</returns>
+        private bool isValid()
+        {
+            bool valid = false;
+
+            if (_modelEntered)
+            {
+                if (_boxSizeEntered && _driveTimeEntered && _AVTimeEntered)
+                {
+                    valid = true;
+                }
+                else
+                {
+                    informationText = "Enter all information before submitting.";
+                }
+
+                if (valid && _serviceProxy.getModel(modelNum.Substring(0, 8)) != null)
+                {
+                    informationText = "Model already exists.";
+                    valid = false;
+                }
+            }
+            else
+            {
+                informationText = "Invalid Model";
+            }
+
+
+            return valid;
         }
 
         /// <summary>

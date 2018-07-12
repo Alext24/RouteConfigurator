@@ -85,17 +85,11 @@ namespace RouteConfigurator.Design
 
         /// <param name="modelName"> base name for a model </param>
         /// <returns> returns the model specified by the model name </returns>
-        /// throws Exception if model does not exist
         public Model.Model getModel(string modelName)
         {
             Model.Model returnModel = null;
 
             var model = context.Models.Find(modelName);
-
-            if(model == null)
-            {
-                throw new Exception("Model not found");
-            }
 
             returnModel = model as Model.Model;
 
@@ -224,14 +218,16 @@ namespace RouteConfigurator.Design
         }
 
         /// <param name="modelBase"> base model name </param>
+        /// <param name="optionTextFilter"> option text for the model number </param>
         /// <param name="salesFilter"> sales number for the time trials</param>
         /// <param name="productionNumFilter"> production number for the time trials</param>
         /// <returns> a list of time trials that meet the filters</returns>
-        public ObservableCollection<TimeTrial> getFilteredTimeTrials(string modelBase, string salesFilter, string productionNumFilter)
+        public ObservableCollection<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter)
         {
             ObservableCollection<TimeTrial> timeTrials = new ObservableCollection<TimeTrial>();
 
             var result = context.TimeTrials.Where(tt => tt.Model.Base.Contains(modelBase) &&
+                                                        tt.OptionsText.Contains(optionTextFilter) &&
                                                         tt.SalesOrder.ToString().Contains(salesFilter) &&
                                                         tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
 
@@ -261,6 +257,43 @@ namespace RouteConfigurator.Design
             return options;
         }
 
+        public ObservableCollection<string> getDriveTypes()
+        {
+            ObservableCollection<string> driveTypes = new ObservableCollection<string>();
+
+            string driveType = "";
+            foreach(Model.Model model in context.Models)
+            {
+                driveType = model.Base.Substring(0, 4);
+                if (!driveTypes.Contains(driveType))
+                {
+                    driveTypes.Add(driveType);
+                }
+            }
+
+            return driveTypes;
+        }
+
+        public int getNumModelsFound(string drive, string av, string boxSize)
+        {
+            int returnNum = 0;
+
+            if (string.IsNullOrWhiteSpace(boxSize))
+            {
+                var result = context.Models.Where(model => model.Base.Contains(drive) &&
+                                                            model.Base.Contains(av)).ToList();
+                returnNum = result.Count();
+            }
+            else
+            {
+                var result = context.Models.Where(model => model.Base.Contains(drive) &&
+                                                           model.Base.Contains(av) &&
+                                                           model.BoxSize.Equals(boxSize)).ToList();
+                returnNum = result.Count();
+            }
+
+            return returnNum;
+        }
 
         public void addTimeTrials(ObservableCollection<TimeTrial> timeTrials)
         {

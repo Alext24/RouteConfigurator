@@ -38,7 +38,8 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<AddModelPopupModel>();
             SimpleIoc.Default.Register<AddOptionPopupModel>();
             SimpleIoc.Default.Register<AddTimeTrialPopupModel>();
-            SimpleIoc.Default.Register<ModifyModelViewModel>();
+            SimpleIoc.Default.Register<ModifyModelPopupModel>();
+            SimpleIoc.Default.Register<OverrideModelPopupModel>();
         }
 
         public HomeViewModel Home
@@ -91,23 +92,23 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public ModifyModelViewModel ModifyModel 
+        public ModifyModelPopupModel ModifyModel 
         {
             get
             {
-                SimpleIoc.Default.Unregister<ModifyModelViewModel>();
-                SimpleIoc.Default.Register<ModifyModelViewModel>();
-                return ServiceLocator.Current.GetInstance<ModifyModelViewModel>();
+                SimpleIoc.Default.Unregister<ModifyModelPopupModel>();
+                SimpleIoc.Default.Register<ModifyModelPopupModel>();
+                return ServiceLocator.Current.GetInstance<ModifyModelPopupModel>();
             }
         }
 
-        public OverrideModelViewModel OverrideModel 
+        public OverrideModelPopupModel OverrideModel 
         {
             get
             {
-                SimpleIoc.Default.Unregister<OverrideModelViewModel>();
-                SimpleIoc.Default.Register<OverrideModelViewModel>();
-                return ServiceLocator.Current.GetInstance<OverrideModelViewModel>();
+                SimpleIoc.Default.Unregister<OverrideModelPopupModel>();
+                SimpleIoc.Default.Register<OverrideModelPopupModel>();
+                return ServiceLocator.Current.GetInstance<OverrideModelPopupModel>();
             }
         }
 
@@ -121,8 +122,8 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<AddModelPopupModel>();
             SimpleIoc.Default.Unregister<AddOptionPopupModel>();
             SimpleIoc.Default.Unregister<AddTimeTrialPopupModel>();
-            SimpleIoc.Default.Unregister<ModifyModelViewModel>();
-            SimpleIoc.Default.Unregister<OverrideModelViewModel>();
+            SimpleIoc.Default.Unregister<ModifyModelPopupModel>();
+            SimpleIoc.Default.Unregister<OverrideModelPopupModel>();
         }
 
         public static void setupNavigation()
@@ -131,8 +132,6 @@ namespace RouteConfigurator.ViewModel
 
             navigationService.Configure("HomeView", new System.Uri("/View/HomeView.xaml", UriKind.Relative));
             navigationService.Configure("SupervisorView", new System.Uri("/View/SupervisorView.xaml", UriKind.Relative));
-            navigationService.Configure("ModifyModelView", new System.Uri("/View/ModifyModelView.xaml", UriKind.Relative));
-            navigationService.Configure("OverrideModelView", new System.Uri("/View/OverrideModelView.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);

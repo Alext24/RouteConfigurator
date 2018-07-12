@@ -54,6 +54,8 @@ namespace RouteConfigurator.ViewModel
 
         private string _productionNumFilter = "";
 
+        private string _optionTextFilter = "";
+
         private string _informationText = "";
         #endregion
 
@@ -113,21 +115,27 @@ namespace RouteConfigurator.ViewModel
         private void loadModels()
         {
             models = _serviceProxy.getModels();
+            modelFilter = "";
+            boxSizeFilter = "";
         }
 
         private void loadOptions()
         {
             options = _serviceProxy.getOptions();
+            optionFilter = "";
+            optionBoxSizeFilter = "";
         }
 
         private void modifyModel()
         {
-            _navigationService.NavigateTo("ModifyModelView");
+            ModifyModelPopup modifyModel = new ModifyModelPopup();
+            modifyModel.Show();
         }
 
         private void overrideModel()
         {
-            _navigationService.NavigateTo("OverrideModelView");
+            OverrideModelPopup overrideModel = new OverrideModelPopup();
+            overrideModel.Show();
         }
 
         private void deleteTT()
@@ -139,15 +147,6 @@ namespace RouteConfigurator.ViewModel
                     "Not implemented yet", selectedTimeTrial.Model.Base, selectedTimeTrial.ProductionNumber));
             }
         }
-
-/*
-        private void editTT()
-        {
-            _navigationService.NavigateTo("EditTimeTrialView", selectedTimeTrial);
-            //EditTimeTrialPopup editTimeTrial = new EditTimeTrialPopup();
-            //editTimeTrial.Show();
-        }
-*/
 
         private void goBack()
         {
@@ -184,6 +183,10 @@ namespace RouteConfigurator.ViewModel
             {
                 _selectedModel = value;
                 RaisePropertyChanged("selectedModel");
+
+                optionTextFilter = "";
+                salesFilter = "";
+                productionNumFilter = "";
 
                 if (value != null)
                 {
@@ -352,6 +355,23 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateTTFilter
+        /// </summary>
+        public string optionTextFilter
+        {
+            get
+            {
+                return _optionTextFilter;
+            }
+            set
+            {
+                _optionTextFilter = value.ToUpper();
+                RaisePropertyChanged("optionTextFilter");
+                updateTTFilter();
+            }
+        }
+
         public string informationText 
         {
             get
@@ -388,7 +408,7 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateTTFilter()
         {
-            timeTrials = _serviceProxy.getFilteredTimeTrials(selectedModel.Base, salesFilter, productionNumFilter);
+            timeTrials = _serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter);
         }
         #endregion
     }

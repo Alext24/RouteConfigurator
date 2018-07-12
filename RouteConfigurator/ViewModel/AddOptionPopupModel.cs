@@ -78,7 +78,15 @@ namespace RouteConfigurator.ViewModel
 
         private void submit()
         {
-            MessageBox.Show("Hi\nPlaceholder for sending options to director");
+            if (optionsToSubmit.Count > 0)
+            {
+                MessageBox.Show("Hi\nPlaceholder for sending options to director");
+                //optionsToSubmit.Clear();
+            }
+            else
+            {
+                informationText = "No options to submit.";
+            }
         }
         #endregion
 

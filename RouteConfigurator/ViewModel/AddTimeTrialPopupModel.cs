@@ -55,7 +55,7 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region RelayCommands
-//        public RelayCommand loadedCommand { get; set; }
+        public RelayCommand loadedCommand { get; set; }
         public RelayCommand addTTCommand { get; set; }
         public RelayCommand submitCommand { get; set; }
         #endregion
@@ -70,19 +70,17 @@ namespace RouteConfigurator.ViewModel
 
             //models = _serviceProxy.getModels();
 
-//            loadedCommand = new RelayCommand(loaded);
+            loadedCommand = new RelayCommand(loaded);
             addTTCommand = new RelayCommand(addTT);
             submitCommand = new RelayCommand(submit);
         }
         #endregion
 
         #region Commands
-/*
         private void loaded()
         {
             models = _serviceProxy.getModels();
         }
-*/
 
         /// <summary>
         /// Adds a time trial to the list to be submitted
@@ -146,17 +144,24 @@ namespace RouteConfigurator.ViewModel
         {
             informationText = "";
 
-            try
+            if (timeTrials.Count > 0)
             {
-                _serviceProxy.addTimeTrials(timeTrials);
-                informationText = "Time Trials submitted to database.";
-                timeTrials.Clear();
+                try
+                {
+                    _serviceProxy.addTimeTrials(timeTrials);
+                    informationText = "Time Trials submitted to database.";
+                    timeTrials.Clear();
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                    return;
+                }
             }
-            catch (Exception e)
+            else
             {
-                informationText = "There was a problem accessing the database";
-                Console.WriteLine(e);
-                return;
+                informationText = "No time trials to submit.";
             }
         }
         #endregion

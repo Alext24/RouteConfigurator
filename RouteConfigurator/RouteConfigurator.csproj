@@ -54,11 +54,14 @@
     <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.1.0, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.4.1\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.5.4.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -107,8 +110,8 @@
     <Compile Include="ViewModel\AddOptionPopupModel.cs" />
     <Compile Include="ViewModel\AddTimeTrialPopupModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
-    <Compile Include="ViewModel\ModifyModelViewModel.cs" />
-    <Compile Include="ViewModel\OverrideModelViewModel.cs" />
+    <Compile Include="ViewModel\ModifyModelPopupModel.cs" />
+    <Compile Include="ViewModel\OverrideModelPopupModel.cs" />
     <Compile Include="ViewModel\SupervisorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AddModelPopup.xaml.cs">
@@ -123,11 +126,11 @@
     <Compile Include="View\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ModifyModelView.xaml.cs">
-      <DependentUpon>ModifyModelView.xaml</DependentUpon>
+    <Compile Include="View\ModifyModelPopup.xaml.cs">
+      <DependentUpon>ModifyModelPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OverrideModelView.xaml.cs">
-      <DependentUpon>OverrideModelView.xaml</DependentUpon>
+    <Compile Include="View\OverrideModelPopup.xaml.cs">
+      <DependentUpon>OverrideModelPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SupervisorView.xaml.cs">
       <DependentUpon>SupervisorView.xaml</DependentUpon>
@@ -180,11 +183,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ModifyModelView.xaml">
+    <Page Include="View\ModifyModelPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OverrideModelView.xaml">
+    <Page Include="View\OverrideModelPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

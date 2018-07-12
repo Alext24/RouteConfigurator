@@ -206,16 +206,18 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBox Grid.Column="2" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding salesFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Grid.Column="1" FontSize="16" VerticalContentAlignment="Center" 
+                                         Text="{Binding optionTextFilter, UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBox Grid.Column="3" FontSize="16" VerticalContentAlignment="Center" 
+                                         Text="{Binding salesFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Grid.Column="4" FontSize="16" VerticalContentAlignment="Center" 
                                          Text="{Binding productionNumFilter, UpdateSourceTrigger=PropertyChanged}"/>
                             </Grid>
                         </Border>
 
                         <!--Row 2 setup: Time Trial Table-->
-                        <DataGrid  Grid.Row="2" Grid.Column="2" x:Name="TimeTrialTable" Grid.RowSpan="5" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
-                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible"
+                        <DataGrid  Grid.Row="2" Grid.RowSpan="5" Grid.Column="2" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible" Height="574" VerticalAlignment="Top"
                                    ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>

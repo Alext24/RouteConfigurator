@@ -92,7 +92,7 @@
                                                 Binding="{Binding BoxSize}"/>
                             <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Time"
                                                 Binding="{Binding Time}"/>
-                            <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="Name" MaxWidth="150"
+                            <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="Name"
                                                 Binding="{Binding Name}"/>
                         </DataGrid.Columns>
                     </DataGrid>

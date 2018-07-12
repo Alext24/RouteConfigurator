@@ -249,16 +249,18 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void searchModel()
         {
-            try
+            //Retrieves a model from the database
+            model = _serviceProxy.getModel(_modelBase);
+
+            if(model != null)
             {
-                //Retrieves a model from the database
-                model = _serviceProxy.getModel(_modelBase);
                 updateModelText();
 
                 informationText = "Model loaded";
-            }catch(Exception e)
+            }
+            else
             {
-                informationText = e.Message;
+                informationText = "Model not found";
 
                 routeText = string.Format("N/A");
                 prodSupCodeText = string.Format("N/A");

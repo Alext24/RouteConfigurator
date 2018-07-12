@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RouteConfigurator.View"
         xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         MinHeight="550"
         MinWidth="1200"
@@ -12,6 +13,12 @@
         Width="1200"
         Title="Add Time Trial"
         DataContext="{Binding AddTimeTrial, Source={StaticResource Locator}}">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding loadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Border Padding="40" Background="{StaticResource LightBlue}">
         <Grid>
@@ -81,7 +88,7 @@
 
                     <!--Row 2 setup: Input boxes-->
                     <ComboBox Grid.Row="2" Grid.Column="0" FontSize="14" Margin="10 0"
-                              IsEditable="True" Text="{Binding modelText}"
+                              IsEditable="True" Text="{Binding modelText}" VerticalContentAlignment="Center"
                               ItemsSource="{Binding models}" DisplayMemberPath="Base" SelectedValue="{Binding selectedModel}"/>
 
                     <DatePicker Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" MinWidth="80"
@@ -90,19 +97,19 @@
                     <!--<TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" MinWidth="80"
                              Text="{Binding date, StringFormat=d}"/>-->
 
-                    <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0"
+                    <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
                              Text="{Binding salesOrder}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0"
+                    <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
                              Text="{Binding productionNum}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="4" FontSize="16" Margin="10 0"
+                    <TextBox Grid.Row="2" Grid.Column="4" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
                              Text="{Binding driveTime}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="5" FontSize="16" Margin="10 0"
+                    <TextBox Grid.Row="2" Grid.Column="5" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
                              Text="{Binding AVTime}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="6" FontSize="16" Margin="10 0"
+                    <TextBox Grid.Row="2" Grid.Column="6" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
                              Text="{Binding numOptions, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <DataGrid  Grid.Row="2" Grid.RowSpan="4" Grid.Column="7" Height="200" Margin="10 0" VerticalAlignment="Top" AutoGenerateColumns="False"
