@@ -59,7 +59,6 @@
                                     <ColumnDefinition Width="6"/>   <!--Datagrid first column width-->
                                     <ColumnDefinition Width="{Binding ElementName=Header1, Path=ActualWidth}"/>
                                     <ColumnDefinition Width="{Binding ElementName=Header2, Path=ActualWidth}"/>
-                                    <ColumnDefinition Width="{Binding ElementName=Header3, Path=ActualWidth}"/>
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
@@ -67,7 +66,7 @@
                                          Text="{Binding modelFilter, UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBox Grid.Column="2" FontSize="16" VerticalContentAlignment="Center" 
                                          Text="{Binding boxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Button  Grid.Column="4" FontSize="16" Content="Load Models" HorizontalAlignment="Right" 
+                                <Button  Grid.Column="3" FontSize="16" Content="Load Models" HorizontalAlignment="Right" 
                                          Command="{Binding loadModelsCommand}"/>
                             </Grid>
                         </Border>
@@ -86,32 +85,13 @@
                                                     Binding="{Binding DriveTime}"/>
                                 <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
                                                     Binding="{Binding AVTime}"/>
-                            <!--
-                                <DataGridTemplateColumn Header="Modify">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button Content="Modify" FontSize="9"
-                                                    Command="{Binding ElementName=ModelTable, Path=DataContext.modifyModelCommand}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTemplateColumn Header="Override">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button Content="Override" FontSize="9"
-                                                    Command="{Binding ElementName=ModelTable, Path=DataContext.overrideModelCommand}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            -->
                             </DataGrid.Columns>
                         </DataGrid>
 
                         <!--Row 3 setup: Blank, Spacing-->
 
                         <!--Row 4 setup: Options table name-->
-                        <TextBlock Grid.Row="4" Text="All Options"/>
+                        <TextBlock Grid.Row="4" Text="All Options" FontSize="12"/>
 
                         <!--Row 5 setup: Options table filters-->
                         <Border Grid.Row="5" BorderBrush="LightGray" BorderThickness="1">
@@ -178,8 +158,8 @@
                         </Border>
 
                         <!--Row 2 setup: Time Trial Table-->
-                        <DataGrid  Grid.Row="2" Grid.Column="2" Height="250" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
-                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible" 
+                        <DataGrid  Grid.Row="2" Grid.Column="2" Height="250" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" 
+                                   AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible" 
                                    ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
@@ -246,8 +226,8 @@
                         </Border>
 
                         <!--Row -->
-                        <DataGrid  Grid.Row="6" Grid.Column="2" Height="250" x:Name="OverrideTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
-                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible"
+                        <DataGrid  Grid.Row="6" Grid.Column="2" Height="250" x:Name="OverrideTable" BorderBrush="LightGray" IsReadOnly="True" 
+                                   AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible"
                                    ItemsSource="{Binding activeOverrides}" SelectedValue="{Binding selectedOverride}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>

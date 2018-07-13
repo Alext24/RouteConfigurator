@@ -257,6 +257,7 @@ namespace RouteConfigurator.Design
             return options;
         }
 
+        /// <returns> list of unique drive types</returns>
         public ObservableCollection<string> getDriveTypes()
         {
             ObservableCollection<string> driveTypes = new ObservableCollection<string>();
@@ -274,6 +275,10 @@ namespace RouteConfigurator.Design
             return driveTypes;
         }
 
+        /// <param name="drive"></param>
+        /// <param name="av"></param>
+        /// <param name="boxSize"></param>
+        /// <returns> a list of models that meet the filters</returns>
         public ObservableCollection<Model.Model> getNumModelsFound(string drive, string av, string boxSize)
         {
             ObservableCollection<Model.Model> models = new ObservableCollection<Model.Model>();
@@ -301,6 +306,7 @@ namespace RouteConfigurator.Design
             return models;
         }
 
+        /// <returns> list of active overrides</returns>
         public ObservableCollection<Override> getActiveOverrides()
         {
             ObservableCollection<Override> overrides = new ObservableCollection<Override>();
@@ -315,6 +321,8 @@ namespace RouteConfigurator.Design
             return overrides;
         }
 
+        /// <param name="overrideFilter"> model number to filter overrides by</param>
+        /// <returns> list of active overrides that contain the model number</returns>
         public ObservableCollection<Override> getFilteredOverrides(string overrideFilter)
         {
             ObservableCollection<Override> overrides = new ObservableCollection<Override>();
@@ -330,6 +338,10 @@ namespace RouteConfigurator.Design
             return overrides;
         }
 
+        /// <summary>
+        /// Adds a list of time trials to the database
+        /// </summary>
+        /// <param name="timeTrials"> list of new time trials </param>
         public void addTimeTrials(ObservableCollection<TimeTrial> timeTrials)
         {
             foreach (TimeTrial TT in timeTrials)

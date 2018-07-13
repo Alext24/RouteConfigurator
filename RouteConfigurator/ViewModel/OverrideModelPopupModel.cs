@@ -47,7 +47,6 @@ namespace RouteConfigurator.ViewModel
         #region RelayCommands
         public RelayCommand addOverrideCommand { get; set; }
         public RelayCommand submitCommand { get; set; }
-        public RelayCommand goBackCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -60,21 +59,23 @@ namespace RouteConfigurator.ViewModel
 
             addOverrideCommand = new RelayCommand(addOverride);
             submitCommand = new RelayCommand(submit);
-            goBackCommand = new RelayCommand(goBack);
         }
         #endregion
 
         #region Commands
+        /// <summary>
+        /// Adds the information as an override to the ready to submit list
+        /// </summary>
         private void addOverride()
         {
             if (checkValid())
             {
                 Override ov = new Override
                 {
+                    Model = model,
                     ModelNum = modelText,
                     OverrideTime = (decimal)overrideTime,
                     OverrideRoute = (int)overrideRoute,
-                    Model = model,
                     IsOverrideActive = true
                 };
                 
@@ -86,14 +87,13 @@ namespace RouteConfigurator.ViewModel
         {
             MessageBox.Show("Placeholder");
         }
-
-        private void goBack()
-        {
-            _navigationService.GoBack();
-        }
         #endregion
 
         #region Public Variables
+        /// <summary>
+        /// Updates the model if the text has 8 or more characters
+        /// Calls updateModelTime and updateModelRoute
+        /// </summary>
         public string modelText
         {
             get
@@ -104,6 +104,8 @@ namespace RouteConfigurator.ViewModel
             {
                 _modelText = value.ToUpper();
                 RaisePropertyChanged("modelText");
+
+                informationText = "";
 
                 if(modelText.Length >= 8)
                 {
@@ -141,9 +143,10 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _overrideTime = value;
                 RaisePropertyChanged("overrideTime");
+
+                informationText = "";
             }
         }
 
@@ -155,9 +158,10 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _overrideRoute = value;
                 RaisePropertyChanged("overrideRoute");
+
+                informationText = "";
             }
         }
 
@@ -169,7 +173,6 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _modelTime = value;
                 RaisePropertyChanged("modelTime");
             }
@@ -183,7 +186,6 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _modelRoute = value;
                 RaisePropertyChanged("modelRoute");
             }
@@ -202,7 +204,7 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public string informationText 
+        public string informationText
         {
             get
             {
@@ -217,6 +219,10 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions
+        /// <summary>
+        /// Parses the model and creates a list of the options
+        /// </summary>
+        /// <returns> list of the options</returns>
         private List<string> parseOptions()
         {
             List<string> optionsList = new List<string>();
@@ -260,6 +266,9 @@ namespace RouteConfigurator.ViewModel
             return optionsList;
         }
 
+        /// <summary>
+        /// Updates the model time with the calculated time for the model
+        /// </summary>
         private void updateModelTime()
         {
             decimal totalTime = 0;
@@ -271,6 +280,9 @@ namespace RouteConfigurator.ViewModel
             modelTime = totalTime;
         }
 
+        /// <summary>
+        /// Updates the model route based on the model time
+        /// </summary>
         private void updateModelRoute()
         {
             TimeSpan time = TimeSpan.FromHours((double)modelTime);
@@ -310,13 +322,17 @@ namespace RouteConfigurator.ViewModel
 
                 modelRoute = string.Concat(modelRoute, "00");
             }
-
         }
 
+        /// <summary>
+        /// Checks if the information is valid
+        /// </summary>
+        /// <returns> true if valid, false otherwise</returns>
         private bool checkValid()
         {
             bool valid = true;
 
+            // Model needs 4 characters for the drive and 4 characters for voltage and amperage
             if (!string.IsNullOrWhiteSpace(modelText) && modelText.Length >= 8)
             {
                 if(model == null)
@@ -342,7 +358,6 @@ namespace RouteConfigurator.ViewModel
                 valid = false;
                 informationText = "Invalid model";
             }
-
             return valid;
         }
 

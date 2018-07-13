@@ -29,37 +29,28 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        // Model Table
         private static ObservableCollection<Model.Model> _models;
-
         private Model.Model _selectedModel;
-
         private string _modelFilter = "";
-
         private string _boxSizeFilter = "";
 
+        // Options Table
         private static ObservableCollection<Option> _options;
-
         private string _optionFilter = "";
-
         private string _optionBoxSizeFilter = "";
 
-//Set to true for visual in SupervisorView
-        private bool _TTVisible = true;
-
+        // Time Trial Table
+        private bool _TTVisible = false;
         private ObservableCollection<TimeTrial> _timeTrials;
-
         private TimeTrial _selectedTimeTrial;
-
+        private string _optionTextFilter = "";
         private string _salesFilter = "";
-
         private string _productionNumFilter = "";
 
-        private string _optionTextFilter = "";
-
-        private ObservableCollection<Override> _activeOverrides;
-
+        // Override Table
+        private static ObservableCollection<Override> _activeOverrides;
         private Override _selectedOverride;
-
         private string _overrideFilter = "";
 
         private string _informationText = "";
@@ -122,21 +113,17 @@ namespace RouteConfigurator.ViewModel
 
         private void loadModels()
         {
-            models = _serviceProxy.getModels();
-            modelFilter = "";
-            boxSizeFilter = "";
+            models = _serviceProxy.getFilteredModels(modelFilter, boxSizeFilter);
         }
 
         private void loadOptions()
         {
-            options = _serviceProxy.getOptions();
-            optionFilter = "";
-            optionBoxSizeFilter = "";
+            options = _serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter);
         }
 
         private void loadOverrides()
         {
-            activeOverrides = _serviceProxy.getActiveOverrides();
+            activeOverrides = _serviceProxy.getFilteredOverrides(overrideFilter);
         }
 
         private void modifyModel()
@@ -202,6 +189,7 @@ namespace RouteConfigurator.ViewModel
                 _selectedModel = value;
                 RaisePropertyChanged("selectedModel");
 
+                // Reset Time Trial Filters
                 optionTextFilter = "";
                 salesFilter = "";
                 productionNumFilter = "";
@@ -342,6 +330,23 @@ namespace RouteConfigurator.ViewModel
         /// <summary>
         /// Calls updateTTFilter
         /// </summary>
+        public string optionTextFilter
+        {
+            get
+            {
+                return _optionTextFilter;
+            }
+            set
+            {
+                _optionTextFilter = value.ToUpper();
+                RaisePropertyChanged("optionTextFilter");
+                updateTTFilter();
+            }
+        }
+
+        /// <summary>
+        /// Calls updateTTFilter
+        /// </summary>
         public string salesFilter
         {
             get
@@ -373,23 +378,6 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        /// <summary>
-        /// Calls updateTTFilter
-        /// </summary>
-        public string optionTextFilter
-        {
-            get
-            {
-                return _optionTextFilter;
-            }
-            set
-            {
-                _optionTextFilter = value.ToUpper();
-                RaisePropertyChanged("optionTextFilter");
-                updateTTFilter();
-            }
-        }
-
         public ObservableCollection<Override> activeOverrides
         {
             get
@@ -416,6 +404,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Updates active overrides list
+        /// </summary>
         public string overrideFilter
         {
             get
@@ -426,7 +417,8 @@ namespace RouteConfigurator.ViewModel
             {
                 _overrideFilter = value.ToUpper();
                 RaisePropertyChanged("overrideFilter");
-                activeOverrides = _serviceProxy.getFilteredOverrides(overrideFilter);
+
+                updateOverrideFilter();
             }
         }
 
@@ -470,6 +462,11 @@ namespace RouteConfigurator.ViewModel
             {
                 timeTrials = _serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter);
             }
+        }
+
+        private void updateOverrideFilter()
+        {
+            activeOverrides = _serviceProxy.getFilteredOverrides(overrideFilter);
         }
         #endregion
     }

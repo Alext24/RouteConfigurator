@@ -30,25 +30,17 @@ namespace RouteConfigurator.ViewModel
         private ObservableCollection<TimeTrial> _timeTrials = new ObservableCollection<TimeTrial>();
 
         private string _modelText = "";
-
         private ObservableCollection<Model.Model> _models = new ObservableCollection<Model.Model>();
-
         private Model.Model _selectedModel;
 
         private DateTime? _date;
-
         private int? _salesOrder;
-
         private int? _productionNum;
-
         private decimal? _driveTime;
-
         private decimal? _AVTime;
 
         private int? _numOptions;
-
         private bool _hasOptions = false;
-
         private ObservableCollection<TimeTrialsOptionTime> _TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
 
         private string _informationText;
@@ -84,7 +76,7 @@ namespace RouteConfigurator.ViewModel
 
         /// <summary>
         /// Adds a time trial to the list to be submitted
-        /// Calls checkComplete
+        /// Calls checkComplete and checkValid
         /// </summary>
         private void addTT()
         {
@@ -122,6 +114,8 @@ namespace RouteConfigurator.ViewModel
                     newTT.OptionsText = getOptionsText(newTT.TTOptionTimes);
 
                     timeTrials.Add(newTT);
+
+                    // Clear input boxes
 
                     //modelText = "";
                     //date = null;
@@ -175,7 +169,6 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                //Set(ref _timeTrials, value);
                 _timeTrials = value;
                 RaisePropertyChanged("timeTrials");
             }
@@ -192,15 +185,15 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
+                _modelText = value.ToUpper();
+                RaisePropertyChanged("modelText");
+
                 informationText = "";
 
                 if(models == null || models.Count == 0)
                 {
                     models = _serviceProxy.getModels();
                 }
-
-                _modelText = value.ToUpper();
-                RaisePropertyChanged("modelText");
             }
         }
 
@@ -238,9 +231,10 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _date = value;
                 RaisePropertyChanged("date");
+
+                informationText = "";
             }
         }
 
@@ -252,9 +246,10 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _salesOrder = value;
                 RaisePropertyChanged("salesOrder");
+
+                informationText = "";
             }
         }
 
@@ -266,9 +261,10 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _productionNum = value;
                 RaisePropertyChanged("productionNum");
+
+                informationText = "";
             }
         }
 
@@ -280,9 +276,10 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _driveTime = value;
                 RaisePropertyChanged("driveTime");
+
+                informationText = "";
             }
         }
 
@@ -294,14 +291,15 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _AVTime = value;
                 RaisePropertyChanged("AVTime");
+
+                informationText = "";
             }
         }
 
         /// <summary>
-        /// Updates hasOptions if greater than 0
+        /// Updates hasOptions if number of options is greater than 0
         /// Adds or removes list entries from TTOptions as necessary to match the quantity of options
         /// </summary>
         public int? numOptions
@@ -312,11 +310,12 @@ namespace RouteConfigurator.ViewModel
             }
             set
             {
-                informationText = "";
                 _numOptions = value;
                 RaisePropertyChanged("numOptions");
 
-                if(value > 0 && value != null)
+                informationText = "";
+
+                if(value != null && value > 0)
                 {
                     hasOptions = true;
 
@@ -337,14 +336,10 @@ namespace RouteConfigurator.ViewModel
                         }
                     }
                 }
-                else if(value == 0)
-                {
-                    hasOptions = false;
-                    TTOptions.Clear();
-                }
                 else
                 {
                     hasOptions = false;
+                    TTOptions.Clear();
                 }
             }
         }
@@ -409,6 +404,11 @@ namespace RouteConfigurator.ViewModel
             return totalTime;
         }
 
+        /// <summary>
+        /// 
+        /// Calls checkComplete
+        /// </summary>
+        /// <returns></returns>
         private bool checkValid()
         {
             bool valid = checkComplete();
@@ -440,7 +440,7 @@ namespace RouteConfigurator.ViewModel
         /// Checks to see if all necessary fields are filled out before the time
         /// trial can be added.  
         /// </summary>
-        /// <returns> if the form is complete </returns>
+        /// <returns> true if the form is complete, otherwise false </returns>
         private bool checkComplete()
         {
             informationText = "";
@@ -486,7 +486,6 @@ namespace RouteConfigurator.ViewModel
         {
             if (options.Count > 0)
             {
-
                 List<char> powerOptions = new List<char>();
                 List<char> controlOptions = new List<char>();
 
@@ -516,6 +515,7 @@ namespace RouteConfigurator.ViewModel
                 powerOptions.Sort();
                 controlOptions.Sort();
 
+                //Form the options text
                 string optionsText = "P";
                 foreach (char c in powerOptions)
                 {

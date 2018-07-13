@@ -31,20 +31,20 @@
                         <RowDefinition Height="auto"/>      <!--Row 0-->
                         <RowDefinition Height="auto"/>      <!--Row 1-->
                         <RowDefinition Height="auto"/>      <!--Row 2-->
-                        <RowDefinition Height="10"/>      <!--Row 3-->
+                        <RowDefinition Height="10"/>        <!--Row 3-->
                         <RowDefinition Height="auto"/>      <!--Row 4-->
                         <RowDefinition Height="auto"/>      <!--Row 5-->
-                        <RowDefinition Height="10"/>      <!--Row 6-->
+                        <RowDefinition Height="10"/>        <!--Row 6-->
                         <RowDefinition Height="auto"/>      <!--Row 7-->
-                        <RowDefinition Height="1"/>      <!--Row 8-->
+                        <RowDefinition Height="1"/>         <!--Row 8-->
                         <RowDefinition Height="auto"/>      <!--Row 9-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>    <!--Col 0-->
+                        <ColumnDefinition/>                 <!--Col 0-->
                         <ColumnDefinition Width="auto"/>    <!--Col 1-->
                         <ColumnDefinition Width="auto"/>    <!--Col 2-->
-                        <ColumnDefinition Width="10"/>    <!--Col 3-->
+                        <ColumnDefinition Width="10"/>      <!--Col 3-->
                         <ColumnDefinition Width="auto"/>    <!--Col 4-->
                     </Grid.ColumnDefinitions>
 
@@ -102,11 +102,9 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <!--Row 4 setup: Go Back Button-->
-                    <Button Grid.Row="9" Grid.Column="4" Content="Submit"
-                            VerticalAlignment="Center"
+                    <!--Row 4 setup: Submit Button-->
+                    <Button Grid.Row="9" Grid.Column="4" Content="Submit" VerticalAlignment="Center"
                             Command="{Binding submitCommand}"/>
-
                 </Grid>
             </Border>
 
