@@ -291,6 +291,10 @@ namespace RouteConfigurator.ViewModel
                 _modelBase = "";
                 _options = "";
             }
+            else if(model.Length < 8)
+            {
+                informationText = "Invalid Model Format";
+            }
             else
             {
                 _modelBase = model.Substring(0, 8);
@@ -343,7 +347,7 @@ namespace RouteConfigurator.ViewModel
 
             Override modelOverride = _serviceProxy.getModelOverride(modelNumber);
 
-            if (modelOverride != null && modelOverride.IsOverrideActive)
+            if (modelOverride != null)
             {
                 //Model's information is currently overriden
                 routeText = modelOverride.OverrideRoute.ToString();

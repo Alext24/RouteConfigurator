@@ -307,13 +307,11 @@ namespace RouteConfigurator.Design
         }
 
         /// <returns> list of active overrides</returns>
-        public ObservableCollection<Override> getActiveOverrides()
+        public ObservableCollection<Override> getOverrides()
         {
             ObservableCollection<Override> overrides = new ObservableCollection<Override>();
 
-            var result = context.Overrides.Where(item => item.IsOverrideActive == true).ToList();
-
-            foreach(Override item in result)
+            foreach(Override item in context.Overrides)
             {
                 overrides.Add(item);
             }
@@ -327,8 +325,7 @@ namespace RouteConfigurator.Design
         {
             ObservableCollection<Override> overrides = new ObservableCollection<Override>();
 
-            var result = context.Overrides.Where(item => item.IsOverrideActive == true &&
-                                                         item.ModelNum.Contains(overrideFilter)).ToList();
+            var result = context.Overrides.Where(item => item.ModelNum.Contains(overrideFilter)).ToList();
 
             foreach(Override item in result)
             {

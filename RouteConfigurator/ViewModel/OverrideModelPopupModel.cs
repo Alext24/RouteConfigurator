@@ -76,7 +76,6 @@ namespace RouteConfigurator.ViewModel
                     ModelNum = modelText,
                     OverrideTime = (decimal)overrideTime,
                     OverrideRoute = (int)overrideRoute,
-                    IsOverrideActive = true
                 };
                 
                 _overridesToSubmit.Add(ov);
@@ -357,6 +356,17 @@ namespace RouteConfigurator.ViewModel
             {
                 valid = false;
                 informationText = "Invalid model";
+            }
+            if (valid)
+            {
+                foreach (Override ov in overridesToSubmit)
+                {
+                    if (modelText.Equals(ov.ModelNum))
+                    {
+                        informationText = string.Format("Override for model {0} is already ready to submit", modelText);
+                        valid = false;
+                    }
+                }
             }
             return valid;
         }

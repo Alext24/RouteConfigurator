@@ -49,7 +49,7 @@ namespace RouteConfigurator.ViewModel
         private string _productionNumFilter = "";
 
         // Override Table
-        private static ObservableCollection<Override> _activeOverrides;
+        private static ObservableCollection<Override> _overrides;
         private Override _selectedOverride;
         private string _overrideFilter = "";
 
@@ -66,7 +66,7 @@ namespace RouteConfigurator.ViewModel
         public RelayCommand modifyModelCommand { get; set; }
         public RelayCommand overrideModelCommand { get; set; }
         public RelayCommand deleteTTCommand { get; set; }
-        public RelayCommand deactivateOverrideCommand { get; set; }
+        public RelayCommand deleteOverrideCommand { get; set; }
         public RelayCommand goBackCommand { get; set; }
         #endregion
 
@@ -87,7 +87,7 @@ namespace RouteConfigurator.ViewModel
             modifyModelCommand = new RelayCommand(modifyModel);
             overrideModelCommand = new RelayCommand(overrideModel);
             deleteTTCommand = new RelayCommand(deleteTT);
-            deactivateOverrideCommand = new RelayCommand(deactivateOverride);
+            deleteOverrideCommand = new RelayCommand(deleteOverride);
             goBackCommand = new RelayCommand(goBack);
         }
         #endregion
@@ -123,7 +123,7 @@ namespace RouteConfigurator.ViewModel
 
         private void loadOverrides()
         {
-            activeOverrides = _serviceProxy.getFilteredOverrides(overrideFilter);
+            overrides = _serviceProxy.getFilteredOverrides(overrideFilter);
         }
 
         private void modifyModel()
@@ -148,9 +148,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        private void deactivateOverride()
+        private void deleteOverride()
         {
-            MessageBox.Show(string.Format("Placeholder for deactivating override for {0}", selectedOverride.ModelNum));
+            MessageBox.Show(string.Format("Placeholder for deleting override for {0}", selectedOverride.ModelNum));
         }
 
         private void goBack()
@@ -378,16 +378,16 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public ObservableCollection<Override> activeOverrides
+        public ObservableCollection<Override> overrides
         {
             get
             {
-                return _activeOverrides;
+                return _overrides;
             }
             set
             {
-                _activeOverrides = value;
-                RaisePropertyChanged("activeOverrides");
+                _overrides = value;
+                RaisePropertyChanged("overrides");
             }
         }
 
@@ -466,7 +466,7 @@ namespace RouteConfigurator.ViewModel
 
         private void updateOverrideFilter()
         {
-            activeOverrides = _serviceProxy.getFilteredOverrides(overrideFilter);
+            overrides = _serviceProxy.getFilteredOverrides(overrideFilter);
         }
         #endregion
     }

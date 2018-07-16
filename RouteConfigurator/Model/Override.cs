@@ -12,13 +12,16 @@ namespace RouteConfigurator.Model
     public class Override
     {
         [Key]
-        [StringLength(30)]
+        [StringLength(64, MinimumLength = 8)]
+        [Display(Name = "Model Number")]
         public string ModelNum { get; set; }
 
-        public bool IsOverrideActive { get; set; }
-
+        [Required(ErrorMessage = "Override Route is Required")]
+        [Display(Name = "Override Route")]
         public int OverrideRoute { get; set; }
 
+        [Required(ErrorMessage = "Override Time is Required")]
+        [Display(Name = "Override Time")]
         public decimal OverrideTime { get; set; }
         
         public virtual Model Model { get; set; }

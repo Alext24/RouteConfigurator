@@ -87,7 +87,7 @@
                                Visibility="{Binding hasOptions, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
 
                     <!--Row 2 setup: Input boxes-->
-                    <ComboBox Grid.Row="2" Grid.Column="0" FontSize="14" Margin="10 0"
+                    <ComboBox Grid.Row="2" Grid.Column="0" FontSize="14" Margin="10 0" MaxDropDownHeight="120"
                               IsEditable="True" Text="{Binding modelText}" VerticalContentAlignment="Center"
                               ItemsSource="{Binding models}" DisplayMemberPath="Base" SelectedValue="{Binding selectedModel}"/>
 
@@ -112,7 +112,7 @@
                     <TextBox Grid.Row="2" Grid.Column="6" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
                              Text="{Binding numOptions, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <DataGrid  Grid.Row="2" Grid.RowSpan="4" Grid.Column="7" Height="200" Margin="10 0" VerticalAlignment="Top" AutoGenerateColumns="False"
+                    <DataGrid  Grid.Row="2" Grid.RowSpan="4" Grid.Column="7" Height="auto" MaxHeight="150" Margin="10 0" VerticalAlignment="Top" AutoGenerateColumns="False"
                                CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible" 
                                Visibility="{Binding hasOptions, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"
                                ItemsSource="{Binding TTOptions}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">

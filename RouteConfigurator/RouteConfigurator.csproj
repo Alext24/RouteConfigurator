@@ -85,17 +85,9 @@
     <Compile Include="Converters\DecimalTimeToStringConverter.cs" />
     <Compile Include="Design\DataAccessService.cs" />
     <Compile Include="Design\FrameNavigationService.cs" />
-    <Compile Include="Migrations\201806281357472_initial2.cs" />
-    <Compile Include="Migrations\201806281357472_initial2.Designer.cs">
-      <DependentUpon>201806281357472_initial2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201807021503090_NumOptionsInTimeTrial.cs" />
-    <Compile Include="Migrations\201807021503090_NumOptionsInTimeTrial.Designer.cs">
-      <DependentUpon>201807021503090_NumOptionsInTimeTrial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201807101921013_OptionsTextInTimeTrial.cs" />
-    <Compile Include="Migrations\201807101921013_OptionsTextInTimeTrial.Designer.cs">
-      <DependentUpon>201807101921013_OptionsTextInTimeTrial.cs</DependentUpon>
+    <Compile Include="Migrations\201807161826584_initialDatabase3.cs" />
+    <Compile Include="Migrations\201807161826584_initialDatabase3.Designer.cs">
+      <DependentUpon>201807161826584_initialDatabase3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\IDataAccessService.cs" />
@@ -210,14 +202,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\201806281357472_initial2.resx">
-      <DependentUpon>201806281357472_initial2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201807021503090_NumOptionsInTimeTrial.resx">
-      <DependentUpon>201807021503090_NumOptionsInTimeTrial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201807101921013_OptionsTextInTimeTrial.resx">
-      <DependentUpon>201807101921013_OptionsTextInTimeTrial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201807161826584_initialDatabase3.resx">
+      <DependentUpon>201807161826584_initialDatabase3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

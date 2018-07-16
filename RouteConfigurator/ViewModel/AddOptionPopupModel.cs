@@ -73,6 +73,10 @@ namespace RouteConfigurator.ViewModel
                 };
 
                 optionsToSubmit.Add(option);
+
+                //Clear input boxes
+                boxSize = "";
+                time = null;
             }
         }
 

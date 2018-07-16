@@ -3,7 +3,7 @@ namespace RouteConfigurator.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class initial2 : DbMigration
+    public partial class initialDatabase3 : DbMigration
     {
         public override void Up()
         {
@@ -11,37 +11,21 @@ namespace RouteConfigurator.Migrations
                 "dbo.Model",
                 c => new
                     {
-                        Base = c.String(nullable: false, maxLength: 30),
-                        BoxSize = c.String(maxLength: 5),
+                        Base = c.String(nullable: false, maxLength: 8),
+                        BoxSize = c.String(nullable: false, maxLength: 5),
                         DriveTime = c.Decimal(nullable: false, precision: 18, scale: 2),
                         AVTime = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        ExtraTime = c.Decimal(nullable: false, precision: 18, scale: 2),
                     })
                 .PrimaryKey(t => t.Base);
-            
-            CreateTable(
-                "dbo.Option",
-                c => new
-                    {
-                        OptionCode = c.String(nullable: false, maxLength: 2),
-                        BoxSize = c.String(nullable: false, maxLength: 5),
-                        Time = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Name = c.String(maxLength: 45),
-                        Model_Base = c.String(maxLength: 30),
-                    })
-                .PrimaryKey(t => new { t.OptionCode, t.BoxSize })
-                .ForeignKey("dbo.Model", t => t.Model_Base)
-                .Index(t => t.Model_Base);
             
             CreateTable(
                 "dbo.Override",
                 c => new
                     {
-                        ModelNum = c.String(nullable: false, maxLength: 30),
-                        IsOverrideActive = c.Boolean(nullable: false),
+                        ModelNum = c.String(nullable: false, maxLength: 64),
                         OverrideRoute = c.Int(nullable: false),
                         OverrideTime = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Model_Base = c.String(maxLength: 30),
+                        Model_Base = c.String(maxLength: 8),
                     })
                 .PrimaryKey(t => t.ModelNum)
                 .ForeignKey("dbo.Model", t => t.Model_Base)
@@ -57,7 +41,9 @@ namespace RouteConfigurator.Migrations
                         TotalTime = c.Decimal(nullable: false, precision: 18, scale: 2),
                         DriveTime = c.Decimal(nullable: false, precision: 18, scale: 2),
                         AVTime = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Model_Base = c.String(maxLength: 30),
+                        NumOptions = c.Int(nullable: false),
+                        OptionsText = c.String(),
+                        Model_Base = c.String(maxLength: 8),
                     })
                 .PrimaryKey(t => t.ProductionNumber)
                 .ForeignKey("dbo.Model", t => t.Model_Base)
@@ -75,6 +61,17 @@ namespace RouteConfigurator.Migrations
                 .ForeignKey("dbo.TimeTrial", t => t.ProductionNumber, cascadeDelete: true)
                 .Index(t => t.ProductionNumber);
             
+            CreateTable(
+                "dbo.Option",
+                c => new
+                    {
+                        OptionCode = c.String(nullable: false, maxLength: 2),
+                        BoxSize = c.String(nullable: false, maxLength: 5),
+                        Time = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        Name = c.String(maxLength: 100),
+                    })
+                .PrimaryKey(t => new { t.OptionCode, t.BoxSize });
+            
         }
         
         public override void Down()
@@ -82,15 +79,13 @@ namespace RouteConfigurator.Migrations
             DropForeignKey("dbo.TimeTrialsOptionTime", "ProductionNumber", "dbo.TimeTrial");
             DropForeignKey("dbo.TimeTrial", "Model_Base", "dbo.Model");
             DropForeignKey("dbo.Override", "Model_Base", "dbo.Model");
-            DropForeignKey("dbo.Option", "Model_Base", "dbo.Model");
             DropIndex("dbo.TimeTrialsOptionTime", new[] { "ProductionNumber" });
             DropIndex("dbo.TimeTrial", new[] { "Model_Base" });
             DropIndex("dbo.Override", new[] { "Model_Base" });
-            DropIndex("dbo.Option", new[] { "Model_Base" });
+            DropTable("dbo.Option");
             DropTable("dbo.TimeTrialsOptionTime");
             DropTable("dbo.TimeTrial");
             DropTable("dbo.Override");
-            DropTable("dbo.Option");
             DropTable("dbo.Model");
         }
     }

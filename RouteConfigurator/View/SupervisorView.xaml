@@ -235,7 +235,7 @@
                         <!--Row 6 setup: Overrides Table-->
                         <DataGrid  Grid.Row="6" Grid.Column="4" Height="250" x:Name="OverrideTable" BorderBrush="LightGray" IsReadOnly="True" 
                                    AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible"
-                                   ItemsSource="{Binding activeOverrides}" SelectedValue="{Binding selectedOverride}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                                   ItemsSource="{Binding overrides}" SelectedValue="{Binding selectedOverride}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="OverrideModelNumHeader" Width="auto" MinWidth="100" FontSize="16" Header="Model Number"
@@ -248,7 +248,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button Content="Delete" FontSize="9"
-                                                    Command="{Binding ElementName=OverrideTable, Path=DataContext.deactivateOverrideCommand}"/>
+                                                    Command="{Binding ElementName=OverrideTable, Path=DataContext.deleteOverrideCommand}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
