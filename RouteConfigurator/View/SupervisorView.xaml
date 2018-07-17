@@ -163,7 +163,7 @@
                         </Border>
 
                         <!--Row 2 setup: Time Trial Table-->
-                        <DataGrid  Grid.Row="2" Grid.Column="4" Height="250" MaxWidth="475" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" 
+                        <DataGrid  Grid.Row="2" Grid.Column="4" Height="230" MaxWidth="475" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" VerticalAlignment="Top"
                                    AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"
                                    ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
@@ -210,6 +210,29 @@
                                 </DataTemplate>
                             </DataGrid.RowDetailsTemplate>
                         </DataGrid>
+
+                        <Grid Grid.Row="2" Grid.Column="4" VerticalAlignment="Bottom" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Right" Text="Avg Prod Time:" FontSize="16" Margin="0 0 5 0"/>
+                            <TextBlock Grid.Column="1" HorizontalAlignment="Left"  Text="{Binding averageProdTime, Converter={StaticResource TimeConverter}}" FontSize="16"/>
+                            <TextBlock Grid.Column="2" HorizontalAlignment="Right" Text="Avg Drive Time:" FontSize="16" Margin="5 0 5 0"/>
+                            <TextBlock Grid.Column="3" HorizontalAlignment="Left"  Text="{Binding averageDriveTime, Converter={StaticResource TimeConverter}}" FontSize="16"/>
+                            <TextBlock Grid.Column="4" HorizontalAlignment="Right" Text="Avg AV Time:" FontSize="16" Margin="5 0 5 0"/>
+                            <TextBlock Grid.Column="5" HorizontalAlignment="Left"  Text="{Binding averageAVTime, Converter={StaticResource TimeConverter}}" FontSize="16"/>
+                            
+                        </Grid>
 
                         <!--Row 4 setup: Options table name-->
                         <TextBlock Grid.Row="4" Grid.Column="4" Text="Active Overrides" FontSize="16"/>
@@ -288,8 +311,7 @@
                                 </Button.Content>
                             </Button>
                             
-                            <!--
-                            <Button Margin="0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding modifyOptionsCommand}">
+                            <Button Margin="0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding modifyOptionCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="Modify"/>        
@@ -297,7 +319,6 @@
                                     </StackPanel>
                                 </Button.Content>
                             </Button>
-                            -->
                         </StackPanel>
 
                         <!--Time Trial Buttons-->

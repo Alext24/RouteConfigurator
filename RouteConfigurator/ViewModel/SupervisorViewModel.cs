@@ -47,6 +47,9 @@ namespace RouteConfigurator.ViewModel
         private string _optionTextFilter = "";
         private string _salesFilter = "";
         private string _productionNumFilter = "";
+        private decimal _averageProdTime;
+        private decimal _averageDriveTime;
+        private decimal _averageAVTime;
 
         // Override Table
         private static ObservableCollection<Override> _overrides;
@@ -57,16 +60,21 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region RelayCommands
-        public RelayCommand addModelCommand { get; set; }
-        public RelayCommand addOptionCommand { get; set; }
-        public RelayCommand addTimeTrialCommand { get; set; }
         public RelayCommand loadModelsCommand { get; set; }
-        public RelayCommand loadOptionsCommand { get; set; }
-        public RelayCommand loadOverridesCommand { get; set; }
+        public RelayCommand addModelCommand { get; set; }
         public RelayCommand modifyModelCommand { get; set; }
-        public RelayCommand overrideModelCommand { get; set; }
+
+        public RelayCommand addTimeTrialCommand { get; set; }
         public RelayCommand deleteTTCommand { get; set; }
+
+        public RelayCommand loadOptionsCommand { get; set; }
+        public RelayCommand addOptionCommand { get; set; }
+        public RelayCommand modifyOptionCommand { get; set; }
+
+        public RelayCommand loadOverridesCommand { get; set; }
+        public RelayCommand overrideModelCommand { get; set; }
         public RelayCommand deleteOverrideCommand { get; set; }
+
         public RelayCommand goBackCommand { get; set; }
         #endregion
 
@@ -78,52 +86,35 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
-            addModelCommand = new RelayCommand(addModel);
-            addOptionCommand = new RelayCommand(addOption);
-            addTimeTrialCommand = new RelayCommand(addTimeTrial);
             loadModelsCommand = new RelayCommand(loadModels);
-            loadOptionsCommand = new RelayCommand(loadOptions);
-            loadOverridesCommand = new RelayCommand(loadOverrides);
+            addModelCommand = new RelayCommand(addModel);
             modifyModelCommand = new RelayCommand(modifyModel);
-            overrideModelCommand = new RelayCommand(overrideModel);
+
+            addTimeTrialCommand = new RelayCommand(addTimeTrial);
             deleteTTCommand = new RelayCommand(deleteTT);
+
+            loadOptionsCommand = new RelayCommand(loadOptions);
+            addOptionCommand = new RelayCommand(addOption);
+            modifyOptionCommand = new RelayCommand(modifyOption);
+
+            loadOverridesCommand = new RelayCommand(loadOverrides);
+            overrideModelCommand = new RelayCommand(overrideModel);
             deleteOverrideCommand = new RelayCommand(deleteOverride);
+
             goBackCommand = new RelayCommand(goBack);
         }
         #endregion
 
         #region Commands
-        private void addModel()
-        {
-            AddModelPopup addModel = new AddModelPopup();
-            addModel.Show();
-        }
-
-        private void addOption()
-        {
-            AddOptionPopup addOption = new AddOptionPopup();
-            addOption.Show();
-        }
-
-        private void addTimeTrial()
-        {
-            AddTimeTrialPopup addTimeTrial = new AddTimeTrialPopup();
-            addTimeTrial.Show();
-        }
-
         private void loadModels()
         {
             models = _serviceProxy.getFilteredModels(modelFilter, boxSizeFilter);
         }
 
-        private void loadOptions()
+        private void addModel()
         {
-            options = _serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter);
-        }
-
-        private void loadOverrides()
-        {
-            overrides = _serviceProxy.getFilteredOverrides(overrideFilter);
+            AddModelPopup addModel = new AddModelPopup();
+            addModel.Show();
         }
 
         private void modifyModel()
@@ -132,10 +123,10 @@ namespace RouteConfigurator.ViewModel
             modifyModel.Show();
         }
 
-        private void overrideModel()
+        private void addTimeTrial()
         {
-            OverrideModelPopup overrideModel = new OverrideModelPopup();
-            overrideModel.Show();
+            AddTimeTrialPopup addTimeTrial = new AddTimeTrialPopup();
+            addTimeTrial.Show();
         }
 
         private void deleteTT()
@@ -146,6 +137,34 @@ namespace RouteConfigurator.ViewModel
                     string.Format("Placeholder for deleting: Time Trial {0} {1} \n" +
                     "Not implemented yet", selectedTimeTrial.Model.Base, selectedTimeTrial.ProductionNumber));
             }
+        }
+
+        private void loadOptions()
+        {
+            options = _serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter);
+        }
+
+        private void addOption()
+        {
+            AddOptionPopup addOption = new AddOptionPopup();
+            addOption.Show();
+        }
+
+        private void modifyOption()
+        {
+            ModifyOptionPopup modifyOption = new ModifyOptionPopup();
+            modifyOption.Show();
+        }
+
+        private void loadOverrides()
+        {
+            overrides = _serviceProxy.getFilteredOverrides(overrideFilter);
+        }
+
+        private void overrideModel()
+        {
+            OverrideModelPopup overrideModel = new OverrideModelPopup();
+            overrideModel.Show();
         }
 
         private void deleteOverride()
@@ -190,14 +209,19 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("selectedModel");
 
                 // Reset Time Trial Filters
-                optionTextFilter = "";
-                salesFilter = "";
-                productionNumFilter = "";
+                if(!string.IsNullOrWhiteSpace(optionTextFilter))
+                    optionTextFilter = "";
+                if(!string.IsNullOrWhiteSpace(salesFilter))
+                    salesFilter = "";
+                if(!string.IsNullOrWhiteSpace(productionNumFilter))
+                    productionNumFilter = "";
 
                 if (value != null)
                 {
                     TTVisible = true;
                     timeTrials = _serviceProxy.getTimeTrials(selectedModel.Base);
+
+                    calcTTAverages();
                 }
                 else
                 {
@@ -385,6 +409,45 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public decimal averageProdTime
+        {
+            get
+            {
+                return _averageProdTime;
+            }
+            set
+            {
+                _averageProdTime = value;
+                RaisePropertyChanged("averageProdTime");
+            }
+        }
+
+        public decimal averageDriveTime
+        {
+            get
+            {
+                return _averageDriveTime;
+            }
+            set
+            {
+                _averageDriveTime = value;
+                RaisePropertyChanged("averageDriveTime");
+            }
+        }
+
+        public decimal averageAVTime
+        {
+            get
+            {
+                return _averageAVTime;
+            }
+            set
+            {
+                _averageAVTime = value;
+                RaisePropertyChanged("averageAVTime");
+            }
+        }
+
         public ObservableCollection<Override> overrides
         {
             get
@@ -463,13 +526,36 @@ namespace RouteConfigurator.ViewModel
 
         /// <summary>
         /// Updates the time trials list to only show time trials with the specified filters
+        /// Calls calcTTAverages
         /// </summary>
         private void updateTTFilter()
         {
             if (selectedModel != null)
             {
                 timeTrials = _serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter);
+                calcTTAverages();
             }
+        }
+
+        private void calcTTAverages()
+        {
+            averageProdTime = 0;
+            averageDriveTime = 0;
+            averageAVTime = 0;
+
+            decimal count = 0;
+
+            foreach(TimeTrial timeTrial in timeTrials)
+            {
+                averageProdTime += timeTrial.TotalTime;
+                averageDriveTime += timeTrial.DriveTime;
+                averageAVTime += timeTrial.AVTime;
+                count++;
+            }
+
+            averageProdTime = averageProdTime / count;
+            averageDriveTime = averageDriveTime / count;
+            averageAVTime = averageAVTime / count;
         }
 
         private void updateOverrideFilter()

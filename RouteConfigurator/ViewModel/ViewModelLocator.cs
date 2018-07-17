@@ -40,6 +40,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<AddTimeTrialPopupModel>();
             SimpleIoc.Default.Register<ModifyModelPopupModel>();
             SimpleIoc.Default.Register<OverrideModelPopupModel>();
+            SimpleIoc.Default.Register<ModifyOptionPopupModel>();
         }
 
         public HomeViewModel Home
@@ -112,6 +113,16 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public ModifyOptionPopupModel ModifyOption
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<ModifyOptionPopupModel>();
+                SimpleIoc.Default.Register<ModifyOptionPopupModel>();
+                return ServiceLocator.Current.GetInstance<ModifyOptionPopupModel>();
+            }
+        }
+
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>
@@ -124,6 +135,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<AddTimeTrialPopupModel>();
             SimpleIoc.Default.Unregister<ModifyModelPopupModel>();
             SimpleIoc.Default.Unregister<OverrideModelPopupModel>();
+            SimpleIoc.Default.Unregister<ModifyOptionPopupModel>();
         }
 
         public static void setupNavigation()
