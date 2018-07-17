@@ -113,8 +113,9 @@ namespace RouteConfigurator.ViewModel
             set
             {
                 _modelNumber = value.ToUpper();
-                timeSearchModelNumber = modelNumber;
                 RaisePropertyChanged("modelNumber");
+                informationText = "";
+                timeSearchModelNumber = modelNumber;
                 searchModel();
             }
         }
@@ -171,6 +172,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _timeSearchModelNumber = value.ToUpper();
                 RaisePropertyChanged("timeSearchModelNumber");
+                informationText = "";
                 modelNumberSections(timeSearchModelNumber);
             }
         }

@@ -470,6 +470,23 @@ namespace RouteConfigurator.ViewModel
                         complete = false;
                         informationText = "Fill out all options before adding time trial.";
                     }
+                    else
+                    {
+                        if (option.OptionCode.Length != 2)
+                        {
+                            informationText = "Invalid Option Code Format.  Must be 2 letters";
+                            complete = false;
+                        }
+                        else
+                        {
+                            if (!option.OptionCode.ElementAt(0).Equals('P') && !option.OptionCode.ElementAt(0).Equals('T') &&
+                                !option.OptionCode.ElementAt(0).Equals('p') && !option.OptionCode.ElementAt(0).Equals('t'))
+                            {
+                                informationText = "Option Code must start with a 'P' or 'T'";
+                                complete = false;
+                            }
+                        }
+                    }
                 }
             }
 

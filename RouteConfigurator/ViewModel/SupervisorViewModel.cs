@@ -220,6 +220,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _modelFilter = value.ToUpper();
                 RaisePropertyChanged("modelFilter");
+                informationText = "";
                 updateFilter();
             }
         }
@@ -237,6 +238,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _boxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("boxSizeFilter");
+                informationText = "";
                 updateFilter();
             }
         }
@@ -267,6 +269,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _optionFilter = value.ToUpper();
                 RaisePropertyChanged("optionFilter");
+                informationText = "";
                 updateOptionFilter();
             }
         }
@@ -284,6 +287,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _optionBoxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("optionBoxSizeFilter");
+                informationText = "";
                 updateOptionFilter();
             }
         }
@@ -340,6 +344,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _optionTextFilter = value.ToUpper();
                 RaisePropertyChanged("optionTextFilter");
+                informationText = "";
                 updateTTFilter();
             }
         }
@@ -357,6 +362,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _salesFilter = value;
                 RaisePropertyChanged("salesFilter");
+                informationText = "";
                 updateTTFilter();
             }
         }
@@ -374,6 +380,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _productionNumFilter = value;
                 RaisePropertyChanged("productionNumFilter");
+                informationText = "";
                 updateTTFilter();
             }
         }
@@ -417,6 +424,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _overrideFilter = value.ToUpper();
                 RaisePropertyChanged("overrideFilter");
+                informationText = "";
 
                 updateOverrideFilter();
             }

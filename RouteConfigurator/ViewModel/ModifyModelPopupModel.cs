@@ -39,11 +39,24 @@ namespace RouteConfigurator.ViewModel
 
         private ObservableCollection<Model.Model> _modelsFound;
 
+        private Model.Model _selectedModel;
+
+        private string _renameDrive;
+
+        private bool _canRenameDrive = false;
+
+        private bool _renameActive = false;
+
+        private string _renameModel;
+
         private string _informationText;
         #endregion
 
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
+        public RelayCommand renameCommand { get; set; }
+        public RelayCommand acceptCommand { get; set; }
+        public RelayCommand cancelCommand { get; set; }
         public RelayCommand submitCommand { get; set; }
         #endregion
 
@@ -56,6 +69,9 @@ namespace RouteConfigurator.ViewModel
             _navigationService = navigationService;
 
             loadedCommand = new RelayCommand(loaded);
+            renameCommand = new RelayCommand(rename);
+            acceptCommand = new RelayCommand(accept);
+            cancelCommand = new RelayCommand(cancel);
             submitCommand = new RelayCommand(submit);
         }
         #endregion
@@ -64,6 +80,26 @@ namespace RouteConfigurator.ViewModel
         private void loaded()
         {
             driveTypes = _serviceProxy.getDriveTypes();
+        }
+
+        private void rename()
+        {
+            renameActive = true;
+        }
+
+        private void accept()
+        {
+            //Check if name is valid
+            //Send to director
+
+        }
+
+        private void cancel()
+        {
+            renameModel = "";
+            renameActive = false;
+            selectedModel = null;
+            informationText = "Rename canceled";
         }
 
         private void submit()
@@ -96,8 +132,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _selectedDrive = value;
                 RaisePropertyChanged("selectedDrive");
+                informationText = "";
 
-                modelsFound = _serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize); 
+                updateModelsTable();
 
                 driveNotSelected = value != null ? false : true;
 
@@ -129,8 +166,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _AVText = value.ToUpper();
                 RaisePropertyChanged("AVText");
+                informationText = "";
 
-                modelsFound = _serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize); 
+                updateModelsTable();
             }
         }
 
@@ -144,8 +182,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _boxSize = value.ToUpper();
                 RaisePropertyChanged("boxSize");
+                informationText = "";
 
-                modelsFound = _serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize); 
+                updateModelsTable();
             }
         }
 
@@ -159,6 +198,80 @@ namespace RouteConfigurator.ViewModel
             {
                 _modelsFound = value;
                 RaisePropertyChanged("modelsFound");
+            }
+        }
+
+        /// <summary>
+        /// Turns off rename
+        /// </summary>
+        public Model.Model selectedModel
+        {
+            get
+            {
+                return _selectedModel;
+            }
+            set
+            {
+                _selectedModel = value;
+                RaisePropertyChanged("selectedModel");
+                informationText = "";
+
+                renameActive = false;
+            }
+        }
+
+        public string renameDrive
+        {
+            get
+            {
+                return _renameDrive;
+            }
+            set
+            {
+                _renameDrive = value.ToUpper();
+                RaisePropertyChanged("renameDrive");
+                informationText = "";
+            }
+        }
+
+        public bool canRenameDrive
+        {
+            get
+            {
+                return _canRenameDrive;
+            }
+            set
+            {
+                _canRenameDrive = value;
+                RaisePropertyChanged("canRenameDrive");
+                renameDrive = "";
+            }
+        }
+
+        public bool renameActive
+        {
+            get
+            {
+                return _renameActive;
+            }
+            set
+            {
+                _renameActive = value;
+                RaisePropertyChanged("renameActive");
+            }
+        }
+
+        public string renameModel
+        {
+            get
+            {
+                return _renameModel;
+            }
+            set
+            {
+                _renameModel = value.ToUpper();
+                RaisePropertyChanged("renameModel");
+                informationText = "";
             }
         }
 
@@ -177,6 +290,19 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions 
+        private void updateModelsTable()
+        {
+            modelsFound = _serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize);
+
+            if(string.IsNullOrWhiteSpace(AVText) && string.IsNullOrWhiteSpace(boxSize))
+            {
+                canRenameDrive = true;
+            }
+            else
+            {
+                canRenameDrive = false;
+            }
+        }
         #endregion
     }
 }

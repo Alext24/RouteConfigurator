@@ -185,40 +185,64 @@ namespace RouteConfigurator.ViewModel
         /// Checks that all necessary fields for the option are entered
         /// Also checks that the option does not already exist
         /// </summary>
-        /// <returns> true if the option is valid and doesn't already exist </returns>
+        /// <returns> true if the option is valid and doesn't already exist, false otherwise </returns>
         private bool checkValid()
         {
-            bool isValid = false;
+            bool isValid = true;
 
-            if (!string.IsNullOrWhiteSpace(optionCode) && 
-                !string.IsNullOrWhiteSpace(boxSize) && 
-                time != null && time > 0)
+            if (!string.IsNullOrWhiteSpace(optionCode))
             {
-                //Check that the option doesn't already exist in the database
-                ObservableCollection<Option> options = _serviceProxy.getFilteredOptions(optionCode, boxSize);
-                if(options.Count < 1)
+                if (optionCode.Length != 2)
                 {
-                    isValid = true;
+                    informationText = "Invalid Option Code Format.  Must be 2 letters";
+                    isValid = false;
                 }
                 else
                 {
-                    informationText = "This option already exists";
-                }
-
-                //Check that the option isn't a duplicate in the ready to submit list
-                foreach(Option option in optionsToSubmit)
-                {
-                    if (option.OptionCode.Equals(optionCode) && option.BoxSize.Equals(boxSize))
+                    if (!optionCode.ElementAt(0).Equals('P') && !optionCode.ElementAt(0).Equals('T'))
                     {
+                        informationText = "Option Code must start with a 'P' or 'T'";
                         isValid = false;
-                        informationText = "This option is already ready to submit";
-                        break;
                     }
                 }
             }
             else
             {
-                informationText = "Necessary information missing";
+                informationText = "Option Code missing";
+                isValid = false;
+            }
+
+            if (isValid)
+            {
+                if (!string.IsNullOrWhiteSpace(boxSize) &&
+                time != null && time > 0)
+                {
+                    //Check that the option doesn't already exist in the database
+                    ObservableCollection<Option> options = _serviceProxy.getFilteredOptions(optionCode, boxSize);
+                    if (options.Count > 0)
+                    {
+                        informationText = "This option already exists";
+                        isValid = false;
+                    }
+                    else
+                    {
+                        //Check that the option isn't a duplicate in the ready to submit list
+                        foreach (Option option in optionsToSubmit)
+                        {
+                            if (option.OptionCode.Equals(optionCode) && option.BoxSize.Equals(boxSize))
+                            {
+                                informationText = "This option is already ready to submit";
+                                isValid = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    informationText = "Necessary information missing";
+                    isValid = false;
+                }
             }
 
             return isValid;

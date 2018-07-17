@@ -7,10 +7,10 @@
         xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d" 
-        MinHeight="500"
-        MinWidth="700"
-        Height="500"
-        Width="700"
+        MinHeight="515"
+        MinWidth="775"
+        Height="515"
+        Width="1000"
         Title="Modify Model"
         DataContext="{Binding ModifyModel, Source={StaticResource Locator}}">
 
@@ -32,77 +32,123 @@
                 <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
             </Grid.Resources>
 
-            <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>      <!--Row 0-->
-                        <RowDefinition Height="auto"/>      <!--Row 1-->
-                        <RowDefinition Height="auto"/>      <!--Row 2-->
-                        <RowDefinition Height="auto"/>      <!--Row 3-->
-                        <RowDefinition Height="auto"/>      <!--Row 4-->
-                        <RowDefinition Height="auto"/>      <!--Row 5-->
-                        <RowDefinition Height="20"/>      <!--Row 6-->
-                        <RowDefinition Height="auto"/>      <!--Row 7-->
-                        <RowDefinition Height="auto"/>      <!--Row 8-->
-                        <RowDefinition Height="auto"/>      <!--Row 9-->
-                    </Grid.RowDefinitions>
+            <Border x:Name="content" Background="White" Padding="20" CornerRadius="20" Grid.Row="0" Width="auto" HorizontalAlignment="Center">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Center">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <!--Row 0-->
+                            <RowDefinition Height="auto"/>
+                            <!--Row 1-->
+                            <RowDefinition Height="auto"/>
+                            <!--Row 2-->
+                            <RowDefinition Height="auto"/>
+                            <!--Row 3-->
+                            <RowDefinition Height="auto"/>
+                            <!--Row 4-->
+                            <RowDefinition Height="auto"/>
+                            <!--Row 5-->
+                            <RowDefinition Height="20"/>
+                            <!--Row 6-->
+                            <RowDefinition Height="auto"/>
+                            <!--Row 7-->
+                            <RowDefinition Height="auto"/>
+                            <!--Row 8-->
+                            <RowDefinition Height="auto"/>
+                            <!--Row 9-->
+                        </Grid.RowDefinitions>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>    <!--Col 0-->
-                        <ColumnDefinition Width="145"/>     <!--Col 1-->
-                        <ColumnDefinition/>                 <!--Col 2-->
-                    </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <!--Col 0-->
+                            <ColumnDefinition Width="145"/>
+                            <!--Col 1-->
+                            <ColumnDefinition Width="auto"/>
+                            <!--Col 2-->
+                            <ColumnDefinition MinWidth="110"/>
+                            <!--Col 3-->
+                            <ColumnDefinition Width="auto"/>
+                            <!--Col 4-->
+                            <ColumnDefinition Width="auto"/>
+                            <!--Col 5-->
+                        </Grid.ColumnDefinitions>
 
-                    <!--Row 0 setup: Title-->
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Modify Model"
+                        <!--Row 0 setup: Title-->
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="6" Text="Modify Model"
                                Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center"/>
 
-                    <!--Row 1 setup: Search Criteria-->
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Criteria" FontSize="16"/>
+                        <!--Row 1 setup: Search Criteria-->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Criteria" FontSize="16"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Drive Type" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" IsTextSearchEnabled="True" ItemsSource="{Binding driveTypes}" SelectedValue="{Binding selectedDrive}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Drive Type" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" IsTextSearchEnabled="True" ItemsSource="{Binding driveTypes}" SelectedValue="{Binding selectedDrive}"/>
 
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="AV" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding AVText}" FontSize="16" IsReadOnly="{Binding driveNotSelected}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="AV" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding AVText}" FontSize="16" IsReadOnly="{Binding driveNotSelected}"/>
 
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Box Size" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding boxSize}" FontSize="16" IsReadOnly="{Binding driveNotSelected}"/>
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Box Size" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding boxSize}" FontSize="16" IsReadOnly="{Binding driveNotSelected}"/>
 
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Models found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBlock Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding modelsFound.Count}" FontSize="16"/>
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Models found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                        <TextBlock Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding modelsFound.Count}" FontSize="16"/>
 
-                    <!--Row ? setup: Model Table-->
-                    <DataGrid  Grid.Row="2" Grid.Column="2" Grid.RowSpan="4" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
-                               CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible"
-                               ItemsSource="{Binding modelsFound}">
+                        <!--Row 2 setup: Model Table-->
+                        <DataGrid  Grid.Row="2" Grid.Column="2" Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                               CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" SelectionMode="Single"
+                               ItemsSource="{Binding modelsFound}" SelectedValue="{Binding selectedModel}">
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="Header1" Width="auto" MinWidth="100" FontSize="16" Header="Model"
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="Rename" x:Name="Header0">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Rename" FontSize="9" 
+                                                    Command="{Binding ElementName=ModelTable, Path=DataContext.renameCommand}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn x:Name="Header1" Width="auto" MinWidth="100" FontSize="16" Header="Model"
                                                     Binding="{Binding Base}"/>
-                            <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size"
+                                <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size"
                                                     Binding="{Binding BoxSize}"/>
-                            <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Drive Time"
+                                <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Drive Time"
                                                     Binding="{Binding DriveTime}"/>
-                            <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
+                                <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
                                                     Binding="{Binding AVTime}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
+                        <!--Row 6 setup: Blank, Spacing-->
 
-                    <!--Row 6 setup: Blank, Spacing-->
+                        <TextBlock Grid.Row="7" Grid.Column="0" Text="New Drive Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                        <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding newDriveTime}" FontSize="16"/>
 
-                    <TextBlock Grid.Row="7" Grid.Column="0" Text="New Drive Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding newDriveTime}" FontSize="16"/>
+                        <TextBlock Grid.Row="8" Grid.Column="0" Text="New AV Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                        <TextBox Grid.Row="8" Grid.Column="1" Margin="5" Text="{Binding newAVTime}" FontSize="16"/>
 
-                    <TextBlock Grid.Row="8" Grid.Column="0" Text="New AV Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBox Grid.Row="8" Grid.Column="1" Margin="5" Text="{Binding newAVTime}" FontSize="16"/>
+                        <TextBlock Grid.Row="7" Grid.Column="2" Text="Rename Drive for Selected Models" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                        <TextBox Grid.Row="7" Grid.Column="3" Margin="5" MaxWidth="100" Text="{Binding renameDrive}" FontSize="16" IsEnabled="{Binding canRenameDrive, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <Button Grid.Row="9" Grid.Column="2" Content="Submit" Margin="0 5 0 0" HorizontalAlignment="Right"
+                        <Button Grid.Row="9" Grid.Column="3" Content="Submit" Margin="0 5 0 0" HorizontalAlignment="Right"
                             Command="{Binding submitCommand}"/>
-                </Grid>
-            </Border>
 
+                        <!--Rename Section-->
+                        <TextBlock Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" FontSize="16" Text="{Binding selectedModel.Base, StringFormat='Rename {0}'}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="4" Text="New Name:" FontSize="16" Margin="20 0 5 0" VerticalAlignment="Center"
+                               Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+                        <TextBox Grid.Row="3" Grid.Column="5" MinWidth="100" Margin="5" Text="{Binding renameModel}" FontSize="16" MaxWidth="125"
+                             Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+
+                        <Button Grid.Row="4" Grid.Column="4" Content="Cancel" HorizontalAlignment="Center" Margin="10 0"
+                                Command="{Binding cancelCommand}"
+                            Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+                        <Button Grid.Row="4" Grid.Column="5" Content="Accept" HorizontalAlignment="Center" Margin="10 0"
+                                Command="{Binding acceptCommand}"
+                            Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+                    </Grid>
+                </ScrollViewer>
+            </Border>
             <!--Information text-->
             <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
                        FontSize="12" Text="{Binding informationText}"/>
