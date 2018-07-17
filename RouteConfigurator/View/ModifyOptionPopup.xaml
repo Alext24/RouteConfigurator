@@ -1,0 +1,150 @@
+﻿<Window x:Class="RouteConfigurator.View.ModifyOptionPopup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RouteConfigurator.View"
+        xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        mc:Ignorable="d" 
+        MinHeight="460"
+        MinWidth="700"
+        Height="460"
+        Width="700"
+        Title="Modify Option"
+        DataContext="{Binding ModifyOption, Source={StaticResource Locator}}">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding loadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Border Padding="40" Background="{StaticResource LightBlue}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.Resources>
+                <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
+                <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
+            </Grid.Resources>
+
+            <Border x:Name="content" Background="White" Padding="20" CornerRadius="20" Grid.Row="0" Width="auto" HorizontalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <!--Row 0-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 1-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 2-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 3-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 4-->
+                        <RowDefinition Height="20"/>
+                        <!--Row 5-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 6-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 7-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 8-->
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <!--Col 0-->
+                        <ColumnDefinition Width="145"/>
+                        <!--Col 1-->
+                        <ColumnDefinition Width="auto"/>
+                        <!--Col 2-->
+                        <ColumnDefinition MinWidth="110"/>
+                        <!--Col 3-->
+                    </Grid.ColumnDefinitions>
+
+                    <!--Row 0 setup: Title-->
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="6" Text="Modify Option"
+                               Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center"/>
+
+                    <!--Row 1 setup: Search Criteria-->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Criteria" FontSize="16"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Option Code" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding optionCodes}" SelectedValue="{Binding selectedOptionCode}"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Box Size" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding boxSize}" FontSize="16" IsReadOnly="{Binding optionCodeNotSelected}"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Options found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding optionsFound.Count}" FontSize="16"/>
+
+                    <!--Row 2 setup: Option Table-->
+                    <DataGrid  Grid.Row="2" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" x:Name="OptionTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" SelectionMode="Single"
+                                   ItemsSource="{Binding optionsFound}" SelectedValue="{Binding selectedOption}">
+
+                        <DataGrid.Columns>
+                            <!--
+                                <DataGridTemplateColumn Header="Rename" x:Name="Header0">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Rename" FontSize="9" 
+                                                    Command="{Binding ElementName=OptionTable, Path=DataContext.renameCommand}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                -->
+                            <DataGridTextColumn x:Name="OptionCode" Width="auto" FontSize="16" Header="Option"
+                                                    Binding="{Binding OptionCode}"/>
+                            <DataGridTextColumn x:Name="BoxSize" Width="auto" FontSize="16" Header="Box Size"
+                                                    Binding="{Binding BoxSize}"/>
+                            <DataGridTextColumn x:Name="Time" Width="auto" FontSize="16" Header="Time"
+                                                    Binding="{Binding Time}"/>
+                            <DataGridTextColumn x:Name="OptionName" Width="auto" FontSize="16" Header="Name"
+                                                    Binding="{Binding Name}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!--Row 5 setup: Blank, Spacing-->
+
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="New Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding newTime}" FontSize="16"/>
+
+                    <TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding selectedOptionCode, StringFormat='Rename Option Code {0}'}" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBox Grid.Row="6" Grid.Column="3" Margin="5" MaxWidth="100" Text="{Binding renameOptionCodes}" FontSize="16" IsEnabled="{Binding canRenameOptionCodes, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="New Name" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3" Margin="5" MaxWidth="550" Text="{Binding newName}" FontSize="16"/>
+
+                    <Button Grid.Row="8" Grid.Column="3" Content="Submit" Margin="0 5 0 0" HorizontalAlignment="Right"
+                            Command="{Binding submitCommand}"/>
+
+                    <!--Rename Section                        
+                        <TextBlock Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" FontSize="16" Text="{Binding selectedOption.OptionCode, StringFormat='Rename {0}'}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="4" Text="New Option Code:" FontSize="16" Margin="20 0 5 0" VerticalAlignment="Center"
+                               Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+                        <TextBox Grid.Row="3" Grid.Column="5" MinWidth="100" Margin="5" Text="{Binding renameOption}" FontSize="16" MaxWidth="125"
+                             Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+
+                        <Button Grid.Row="4" Grid.Column="4" Content="Cancel" HorizontalAlignment="Center" Margin="10 0"
+                                Command="{Binding cancelCommand}"
+                            Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+                        <Button Grid.Row="4" Grid.Column="5" Content="Accept" HorizontalAlignment="Center" Margin="10 0"
+                                Command="{Binding acceptCommand}"
+                            Visibility="{Binding renameActive, Converter={StaticResource VisibilityConverter}}"/>
+-->
+
+                </Grid>
+            </Border>
+            <!--Information text-->
+            <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
+                       FontSize="12" Text="{Binding informationText}"/>
+        </Grid>
+    </Border>
+</Window>

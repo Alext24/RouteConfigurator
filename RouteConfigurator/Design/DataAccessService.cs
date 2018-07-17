@@ -306,6 +306,47 @@ namespace RouteConfigurator.Design
             return models;
         }
 
+        public ObservableCollection<string> getOptionCodes()
+        {
+            ObservableCollection<string> optionCodes = new ObservableCollection<string>();
+
+            string optionCode = "";
+            foreach(Option option in context.Options)
+            {
+                optionCode = option.OptionCode;
+                if (!optionCodes.Contains(optionCode))
+                {
+                    optionCodes.Add(optionCode);
+                }
+            }
+            return optionCodes;
+        }
+
+        public ObservableCollection<Option> getNumOptionsFound(string optionCode, string boxSize)
+        {
+            ObservableCollection<Option> options = new ObservableCollection<Option>();
+
+            if (string.IsNullOrWhiteSpace(boxSize))
+            {
+                var result = context.Options.Where(option => option.OptionCode.Contains(optionCode)).ToList();
+                foreach(Option option in result)
+                {
+                    options.Add(option);
+                }
+            }
+            else
+            {
+                var result = context.Options.Where(option => option.OptionCode.Contains(optionCode) &&
+                                                             option.BoxSize.Equals(boxSize)).ToList();
+                foreach(Option option in result)
+                {
+                    options.Add(option);
+                }
+            }
+
+            return options;
+        }
+
         /// <returns> list of active overrides</returns>
         public ObservableCollection<Override> getOverrides()
         {

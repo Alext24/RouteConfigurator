@@ -35,6 +35,10 @@ namespace RouteConfigurator.Model
 
         ObservableCollection<Model> getNumModelsFound(string drive, string av, string boxSize);
 
+        ObservableCollection<string> getOptionCodes();
+
+        ObservableCollection<Option> getNumOptionsFound(string optionCode, string boxSize);
+
         ObservableCollection<Override> getOverrides();
 
         ObservableCollection<Override> getFilteredOverrides(string overrideFilter);
