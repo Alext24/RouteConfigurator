@@ -69,6 +69,7 @@ namespace RouteConfigurator.ViewModel
         #region RelayCommands
         public RelayCommand timeSearchCommand { get; set; }
         public RelayCommand supervisorLoginCommand { get; set; }
+        public RelayCommand managerLoginCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -81,6 +82,7 @@ namespace RouteConfigurator.ViewModel
 
             timeSearchCommand = new RelayCommand(timeSearch);
             supervisorLoginCommand = new RelayCommand(supervisorLogin);
+            managerLoginCommand = new RelayCommand(managerLogin);
         }
         #endregion
 
@@ -96,6 +98,11 @@ namespace RouteConfigurator.ViewModel
         private void supervisorLogin()
         {
             _navigationService.NavigateTo("SupervisorView");
+        }
+
+        private void managerLogin()
+        {
+            _navigationService.NavigateTo("ManagerView");
         }
         #endregion
 

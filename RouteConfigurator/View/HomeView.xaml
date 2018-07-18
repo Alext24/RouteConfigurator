@@ -155,10 +155,11 @@
                                 </Button.Content>
                             </Button>
 
-                            <Button Padding="4" FontSize="16" Margin="10 0 0 0">
+                            <Button Padding="4" FontSize="16" Margin="10 0 0 0" 
+                                    Command="{Binding managerLoginCommand}">
                                 <Button.Content>
                                     <StackPanel>
-                                        <TextBlock TextAlignment="Center" Text="Director"/>        
+                                        <TextBlock TextAlignment="Center" Text="Manager"/>        
                                         <TextBlock TextAlignment="Center" Text="Login"/>
                                     </StackPanel>
                                 </Button.Content>

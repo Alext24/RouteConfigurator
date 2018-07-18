@@ -35,6 +35,7 @@ namespace RouteConfigurator.ViewModel
 
             SimpleIoc.Default.Register<HomeViewModel>();
             SimpleIoc.Default.Register<SupervisorViewModel>();
+            SimpleIoc.Default.Register<ManagerViewModel>();
             SimpleIoc.Default.Register<AddModelPopupModel>();
             SimpleIoc.Default.Register<AddOptionPopupModel>();
             SimpleIoc.Default.Register<AddTimeTrialPopupModel>();
@@ -60,6 +61,16 @@ namespace RouteConfigurator.ViewModel
                 SimpleIoc.Default.Unregister<SupervisorViewModel>();
                 SimpleIoc.Default.Register<SupervisorViewModel>();
                 return ServiceLocator.Current.GetInstance<SupervisorViewModel>();
+            }
+        }
+
+        public ManagerViewModel Manager 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<ManagerViewModel>();
+                SimpleIoc.Default.Register<ManagerViewModel>();
+                return ServiceLocator.Current.GetInstance<ManagerViewModel>();
             }
         }
 
@@ -130,6 +141,7 @@ namespace RouteConfigurator.ViewModel
         {
             SimpleIoc.Default.Unregister<HomeViewModel>();
             SimpleIoc.Default.Unregister<SupervisorViewModel>();
+            SimpleIoc.Default.Unregister<ManagerViewModel>();
             SimpleIoc.Default.Unregister<AddModelPopupModel>();
             SimpleIoc.Default.Unregister<AddOptionPopupModel>();
             SimpleIoc.Default.Unregister<AddTimeTrialPopupModel>();
@@ -144,6 +156,7 @@ namespace RouteConfigurator.ViewModel
 
             navigationService.Configure("HomeView", new System.Uri("/View/HomeView.xaml", UriKind.Relative));
             navigationService.Configure("SupervisorView", new System.Uri("/View/SupervisorView.xaml", UriKind.Relative));
+            navigationService.Configure("ManagerView", new System.Uri("/View/ManagerView.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
