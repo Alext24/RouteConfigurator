@@ -82,6 +82,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BaseValueConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\CheckBoxToModStateConverter.cs" />
     <Compile Include="Converters\DecimalTimeToStringConverter.cs" />
     <Compile Include="Design\DataAccessService.cs" />
     <Compile Include="Design\FrameNavigationService.cs" />
@@ -89,10 +90,23 @@
     <Compile Include="Migrations\201807161826584_initialDatabase3.Designer.cs">
       <DependentUpon>201807161826584_initialDatabase3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807181529009_AddedModificationTable.cs" />
+    <Compile Include="Migrations\201807181529009_AddedModificationTable.Designer.cs">
+      <DependentUpon>201807181529009_AddedModificationTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807181806277_UpdatedModificationTable.cs" />
+    <Compile Include="Migrations\201807181806277_UpdatedModificationTable.Designer.cs">
+      <DependentUpon>201807181806277_UpdatedModificationTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201807191823194_UpdatedModificationTable2.cs" />
+    <Compile Include="Migrations\201807191823194_UpdatedModificationTable2.Designer.cs">
+      <DependentUpon>201807191823194_UpdatedModificationTable2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\IDataAccessService.cs" />
     <Compile Include="Model\IFrameNavigationService.cs" />
     <Compile Include="Model\Model.cs" />
+    <Compile Include="Model\Modification.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Override.cs" />
     <Compile Include="Model\RouteConfiguratorDB.cs" />
@@ -220,6 +234,15 @@
     </Compile>
     <EmbeddedResource Include="Migrations\201807161826584_initialDatabase3.resx">
       <DependentUpon>201807161826584_initialDatabase3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807181529009_AddedModificationTable.resx">
+      <DependentUpon>201807181529009_AddedModificationTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807181806277_UpdatedModificationTable.resx">
+      <DependentUpon>201807181806277_UpdatedModificationTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807191823194_UpdatedModificationTable2.resx">
+      <DependentUpon>201807191823194_UpdatedModificationTable2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -44,5 +44,10 @@ namespace RouteConfigurator.Model
         ObservableCollection<Override> getFilteredOverrides(string overrideFilter);
 
         void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);
+
+        ObservableCollection<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize);
+        ObservableCollection<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize);
+        ObservableCollection<Modification> getFilteredModifiedModels(string Sender, string ModelName);
+        ObservableCollection<Modification> getFilteredModifiedOptions(string Sender);
     }
 }

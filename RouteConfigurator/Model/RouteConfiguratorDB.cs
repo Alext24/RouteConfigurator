@@ -19,5 +19,6 @@ namespace RouteConfigurator.Model
         public virtual DbSet<TimeTrial> TimeTrials { get; set; }
         public virtual DbSet<TimeTrialsOptionTime> TTOptionTimes { get; set; }
         public virtual DbSet<Override> Overrides { get; set; }
+        public virtual DbSet<Modification> Modifications { get; set; }
     }
 }

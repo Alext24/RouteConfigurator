@@ -388,5 +388,74 @@ namespace RouteConfigurator.Design
             }
             context.SaveChanges();
         }
+
+        public ObservableCollection<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize)
+        {
+            ObservableCollection<Modification> newModels = new ObservableCollection<Modification>();
+
+            var result = context.Modifications.Where(item => item.IsOption == false && item.IsNew == true &&
+                                                             item.State == 0 &&
+                                                             item.Sender.Contains(Sender) &&
+                                                             item.NewBase.Contains(Base) &&
+                                                             item.NewBoxSize.Contains(BoxSize)).ToList();
+
+            foreach(Modification item in result)
+            {
+                newModels.Add(item);
+            }
+
+            return newModels;
+        }
+
+        public ObservableCollection<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize)
+        {
+            ObservableCollection<Modification> newModels = new ObservableCollection<Modification>();
+
+            var result = context.Modifications.Where(item => item.IsOption == true && item.IsNew == true &&
+                                                             item.State == 0 && 
+                                                             item.Sender.Contains(Sender) &&
+                                                             item.NewOptionCode.Contains(OptionCode) &&
+                                                             item.NewBoxSize.Contains(BoxSize)).ToList();
+
+            foreach(Modification item in result)
+            {
+                newModels.Add(item);
+            }
+
+            return newModels;
+        }
+
+        public ObservableCollection<Modification> getFilteredModifiedModels(string Sender, string ModelName)
+        {
+            ObservableCollection<Modification> newModels = new ObservableCollection<Modification>();
+
+            var result = context.Modifications.Where(item => item.IsOption == false && item.IsNew == false &&
+                                                             item.State == 0 &&
+                                                             item.Sender.Contains(Sender) &&
+                                                             item.OldModelBase.Contains(ModelName)).ToList();
+
+            foreach(Modification item in result)
+            {
+                newModels.Add(item);
+            }
+
+            return newModels;
+        }
+
+        public ObservableCollection<Modification> getFilteredModifiedOptions(string Sender)
+        {
+            ObservableCollection<Modification> newModels = new ObservableCollection<Modification>();
+
+            var result = context.Modifications.Where(item => item.IsOption == true && item.IsNew == false &&
+                                                             item.State == 0 &&
+                                                             item.Sender.Contains(Sender)).ToList();
+
+            foreach(Modification item in result)
+            {
+                newModels.Add(item);
+            }
+
+            return newModels;
+        }
     }
 }
