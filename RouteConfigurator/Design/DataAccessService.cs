@@ -442,13 +442,14 @@ namespace RouteConfigurator.Design
             return newModels;
         }
 
-        public ObservableCollection<Modification> getFilteredModifiedOptions(string Sender)
+        public ObservableCollection<Modification> getFilteredModifiedOptions(string Sender, string OptionCode)
         {
             ObservableCollection<Modification> newModels = new ObservableCollection<Modification>();
 
             var result = context.Modifications.Where(item => item.IsOption == true && item.IsNew == false &&
                                                              item.State == 0 &&
-                                                             item.Sender.Contains(Sender)).ToList();
+                                                             item.Sender.Contains(Sender) && 
+                                                             item.OldOptionCode.Contains(OptionCode)).ToList();
 
             foreach(Modification item in result)
             {

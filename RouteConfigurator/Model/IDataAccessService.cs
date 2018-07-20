@@ -48,6 +48,6 @@ namespace RouteConfigurator.Model
         ObservableCollection<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize);
         ObservableCollection<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize);
         ObservableCollection<Modification> getFilteredModifiedModels(string Sender, string ModelName);
-        ObservableCollection<Modification> getFilteredModifiedOptions(string Sender);
+        ObservableCollection<Modification> getFilteredModifiedOptions(string Sender, string OptionCode);
     }
 }

@@ -46,6 +46,7 @@ namespace RouteConfigurator.ViewModel
         private Modification _selectedModifiedModel;
 
         private string _OMSenderFilter = "";
+        private string _OMOptionCodeFilter = "";
         private Modification _selectedModifiedOption;
 
         private string _informationText;
@@ -155,6 +156,8 @@ namespace RouteConfigurator.ViewModel
                 _NMSenderFilter = value.ToUpper();
                 RaisePropertyChanged("NMSenderFilter");
                 informationText = "";
+
+                updateNewModelTable();
             }
         }
 
@@ -169,6 +172,8 @@ namespace RouteConfigurator.ViewModel
                 _NMBaseFilter = value.ToUpper();
                 RaisePropertyChanged("NMBaseFilter");
                 informationText = "";
+
+                updateNewModelTable();
             }
         }
 
@@ -183,6 +188,8 @@ namespace RouteConfigurator.ViewModel
                 _NMBoxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("NMBoxSizeFilter");
                 informationText = "";
+
+                updateNewModelTable();
             }
         }
 
@@ -210,6 +217,8 @@ namespace RouteConfigurator.ViewModel
                 _NOSenderFilter = value.ToUpper();
                 RaisePropertyChanged("NOSenderFilter");
                 informationText = "";
+
+                updateNewOptionTable();
             }
         }
 
@@ -224,6 +233,8 @@ namespace RouteConfigurator.ViewModel
                 _NOOptionCodeFilter = value.ToUpper();
                 RaisePropertyChanged("NOOptionCodeFilter");
                 informationText = "";
+
+                updateNewOptionTable();
             }
         }
 
@@ -238,6 +249,8 @@ namespace RouteConfigurator.ViewModel
                 _NOBoxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("NOBoxSizeFilter");
                 informationText = "";
+
+                updateNewOptionTable();
             }
         }
 
@@ -265,6 +278,8 @@ namespace RouteConfigurator.ViewModel
                 _MMSenderFilter = value.ToUpper();
                 RaisePropertyChanged("MMSenderFilter");
                 informationText = "";
+
+                updateModelModificationTable();
             }
         }
 
@@ -308,6 +323,24 @@ namespace RouteConfigurator.ViewModel
                 _OMSenderFilter = value.ToUpper();
                 RaisePropertyChanged("OMSenderFilter");
                 informationText = "";
+
+                updateOptionModificationTable();
+            }
+        }
+
+        public string OMOptionCodeFilter
+        {
+            get
+            {
+                return _OMOptionCodeFilter;
+            }
+            set
+            {
+                _OMOptionCodeFilter = value.ToUpper();
+                RaisePropertyChanged("OMOptionCodeFilter");
+                informationText = "";
+
+                updateOptionModificationTable();
             }
         }
 
@@ -346,7 +379,7 @@ namespace RouteConfigurator.ViewModel
 
         private void updateNewOptionTable()
         {
-            newOptions = _serviceProxy.getFilteredNewOptions(NOSenderFilter, NOOptionCodeFilter, NMBoxSizeFilter);
+            newOptions = _serviceProxy.getFilteredNewOptions(NOSenderFilter, NOOptionCodeFilter, NOBoxSizeFilter);
         }
 
         private void updateModelModificationTable()
@@ -356,7 +389,7 @@ namespace RouteConfigurator.ViewModel
 
         private void updateOptionModificationTable()
         {
-            modifiedOptions = _serviceProxy.getFilteredModifiedOptions(OMSenderFilter);
+            modifiedOptions = _serviceProxy.getFilteredModifiedOptions(OMSenderFilter, OMOptionCodeFilter);
         }
 
         #endregion

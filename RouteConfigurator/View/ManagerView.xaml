@@ -8,7 +8,7 @@
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
       mc:Ignorable="d" 
       MinHeight="850"
-      MinWidth="1300"
+      MinWidth="1350"
       Title="ManagerView"
       DataContext="{Binding Manager, Source={StaticResource Locator}}">
 
@@ -23,10 +23,8 @@
             <ImageBrush ImageSource="/Backgrounds/WaterBackground.jpg"/>
         </Border.Background>
 
-        <Border Background="{StaticResource LightBlue}" Padding="10 10 10 0" CornerRadius="20" 
-                MaxWidth="1200" MaxHeight="750">
+        <Border Background="{StaticResource LightBlue}" Padding="10 10 10 0" CornerRadius="20" MaxWidth="1250" MaxHeight="750">
             <ScrollViewer HorizontalAlignment="Center" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="159*"/>
@@ -38,13 +36,13 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>      <!--Row 0-->
-                                <RowDefinition Height="auto"/>      <!--Row 0-->
-                                <RowDefinition Height="auto"/>      <!--Row 0-->
-                                <RowDefinition Height="20"/>        <!--Row 0-->
-                                <RowDefinition Height="auto"/>      <!--Row 0-->
-                                <RowDefinition Height="auto"/>      <!--Row 0-->
-                                <RowDefinition Height="auto"/>      <!--Row 0-->
-                                <RowDefinition Height="auto"/>      
+                                <RowDefinition Height="auto"/>      <!--Row 1-->
+                                <RowDefinition Height="auto"/>      <!--Row 2-->
+                                <RowDefinition Height="20"/>        <!--Row 3-->
+                                <RowDefinition Height="auto"/>      <!--Row 4-->
+                                <RowDefinition Height="auto"/>      <!--Row 5-->
+                                <RowDefinition Height="auto"/>      <!--Row 6-->
+                                <RowDefinition Height="auto"/>      <!--Row 7-->     
                             </Grid.RowDefinitions>
 
                             <Grid.ColumnDefinitions>
@@ -269,8 +267,8 @@
                                         <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel HorizontalAlignment="Center">
-                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" Margin="0 5 0 0"
-                                                             Text="{Binding MMModelNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" Margin="0 5 0 0" MinWidth="100" MaxWidth="160"
+                                                             Text="{Binding ElementName=NewModelTable, Path=DataContext.MMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
                                                     <TextBlock Text="Sender" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
@@ -308,8 +306,8 @@
                                         <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" Margin="0 5 0 0"
-                                                             Text="{Binding ElementName=NewModelTable, Path=DataContext.MMModelNameFilter}"/>
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" Margin="0 5 0 0" MinWidth="80" MaxWidth="100"
+                                                             Text="{Binding ElementName=NewModelTable, Path=DataContext.MMModelNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
                                                     <TextBlock Text="Old Model" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
@@ -443,7 +441,7 @@
                                     <TextBox Grid.Column="3" FontSize="16" VerticalContentAlignment="Center"
                                          Text="{Binding OMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBox Grid.Column="5" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding OMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{Binding OMOptionCodeFilter, UpdateSourceTrigger=PropertyChanged}"/>
                                 </Grid>
                             </Border>
 
