@@ -36,5 +36,8 @@
     
     <Color x:Key="TealColor">#1affd1</Color>
     <SolidColorBrush x:Key="Teal" Color="{StaticResource TealColor}" />
+
+    <Color x:Key="LightOrangeColor">#ffdb99</Color>
+    <SolidColorBrush x:Key="LightOrange" Color="{StaticResource LightOrangeColor}" />
     
 </ResourceDictionary>

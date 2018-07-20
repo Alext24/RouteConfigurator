@@ -23,26 +23,24 @@
             <ImageBrush ImageSource="/Backgrounds/WaterBackground.jpg"/>
         </Border.Background>
 
-        <Border Background="{StaticResource LightBlue}" Padding="10 10 10 0" CornerRadius="20" MaxWidth="1250" MaxHeight="750">
+        <Border Background="{StaticResource LightBlue}" Padding="10 10 10 0" CornerRadius="20" MaxWidth="1210" MaxHeight="750">
             <ScrollViewer HorizontalAlignment="Center" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="159*"/>
-                        <RowDefinition Height="142*"/>
+                        <RowDefinition/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0" Grid.RowSpan="2">
+                    <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>      <!--Row 0-->
                                 <RowDefinition Height="auto"/>      <!--Row 1-->
-                                <RowDefinition Height="auto"/>      <!--Row 2-->
-                                <RowDefinition Height="20"/>        <!--Row 3-->
+                                <RowDefinition Height="20"/>        <!--Row 2-->
+                                <RowDefinition Height="auto"/>      <!--Row 3-->
                                 <RowDefinition Height="auto"/>      <!--Row 4-->
-                                <RowDefinition Height="auto"/>      <!--Row 5-->
+                                <RowDefinition Height="20"/>      <!--Row 5-->
                                 <RowDefinition Height="auto"/>      <!--Row 6-->
-                                <RowDefinition Height="auto"/>      <!--Row 7-->     
                             </Grid.RowDefinitions>
 
                             <Grid.ColumnDefinitions>
@@ -60,106 +58,207 @@
                             <!--New Model Table Header-->
                             <TextBlock Grid.Row="0" Text="New Model Requests" FontSize="16"/>
 
-                            <!--New Model Table Filters-->
-                            <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="1">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="6"/>       <!--Datagrid first column width-->
-                                        <ColumnDefinition Width="{Binding ElementName=NMCheckBox, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=NMRequestDate, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=NMSender, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=NMModelName, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=NMBoxSize, Path=ActualWidth}"/>
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-
-<!--Change this into a comboBox with list of senders-->
-                                    <TextBox Grid.Column="3" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding NMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Grid.Column="4" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding NMBaseFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Grid.Column="5" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding NMBoxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Grid>
-                            </Border>
-
                             <!--New Model Table-->
-                            <DataGrid  Grid.Row="2" Height="250" x:Name="NewModelTable" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="False"
-                                   ItemsSource="{Binding newModels}" SelectedValue="{Binding selectedNewModel}" AutoGenerateColumns="False" CanUserAddRows="False"
-                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                            <DataGrid  Grid.Row="1" Height="275" x:Name="NewModelTable" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="False"
+                                       ItemsSource="{Binding newModels}" SelectedValue="{Binding selectedNewModel}" AutoGenerateColumns="False" CanUserAddRows="False"
+                                       ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
-                                <!--
-                            <DataGridRow ToolTip="{Binding Description}"/> Doesn't allow Nulls
--->
+<!--                            <DataGridRow ToolTip="{Binding Description}"/> Doesn't allow Nulls-->
 
                                 <DataGrid.Columns>
+                                    <!--Column 1: Check Box-->
                                     <DataGridTemplateColumn x:Name="NMCheckBox">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
                                                           IsChecked="{Binding State, Converter={StaticResource StateConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn x:Name="NMRequestDate" Width="auto" FontSize="16" Header="Request Date"
-                                                    Binding="{Binding RequestDate, StringFormat=d}" IsReadOnly="True"/>
-                                    <DataGridTextColumn x:Name="NMSender" Width="auto" FontSize="16" Header="Sender"
-                                                    Binding="{Binding Sender}" IsReadOnly="True"/>
-                                    <DataGridTextColumn x:Name="NMModelName" Width="auto" FontSize="16" Header="Model Name"
-                                                    Binding="{Binding NewBase}"/>
-                                    <DataGridTextColumn x:Name="NMBoxSize" Width="auto" FontSize="16" Header="Box Size"
-                                                    Binding="{Binding NewBoxSize}"/>
-                                    <DataGridTextColumn x:Name="NMDriveTime" Width="auto" FontSize="16" Header="Drive Time"
-                                                    Binding="{Binding NewDriveTime, Converter={StaticResource TimeConverter}}"/>
-                                    <DataGridTextColumn x:Name="NMAVTime" Width="auto" FontSize="16" Header="AV Time"
-                                                    Binding="{Binding NewAVTime, Converter={StaticResource TimeConverter}}"/>
-                                    <DataGridTemplateColumn Header="Delete" x:Name="NMDelete">
+
+                                    <!--Column 2: Approve-->
+                                    <DataGridTemplateColumn x:Name="NMApprove">
+                                        <DataGridTemplateColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTemplateColumn.HeaderStyle>
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Approve" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Button Content="Delete" FontSize="9"
-                                                    Command="{Binding ElementName=NewModelTable, Path=DataContext.goBackCommand}"/>
+                                                <Button Content="Approve" FontSize="9"
+                                                    Command="{Binding ElementName=NewModelTable, Path=DataContext.approveNewModelCommand}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
+
+                                    <!--Column 3: Decline-->
+                                    <DataGridTemplateColumn x:Name="NMDecline">
+                                        <DataGridTemplateColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTemplateColumn.HeaderStyle>
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Decline" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Decline" FontSize="9"
+                                                    Command="{Binding ElementName=NewModelTable, Path=DataContext.declineNewModelCommand}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!--Column 4: Request Date-->
+                                    <DataGridTextColumn x:Name="NMRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Request" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Date" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 5: Model Name-->
+                                    <DataGridTextColumn x:Name="NMModelName" Width="auto" FontSize="16" Binding="{Binding NewBase}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="100" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=NewModelTable, Path=DataContext.NMBaseFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                    <TextBlock Text="Model" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 6: Box Size-->
+                                    <DataGridTextColumn x:Name="NMBoxSize" Width="auto" FontSize="16" Binding="{Binding NewBoxSize}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="50" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=NewModelTable, Path=DataContext.NMBoxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                    <TextBlock Text="Box" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Size" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 7: Drive Time-->
+                                    <DataGridTextColumn x:Name="NMDriveTime" Width="auto" FontSize="16" Binding="{Binding NewDriveTime, Converter={StaticResource TimeConverter}}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Drive" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 8: AV Time-->
+                                    <DataGridTextColumn x:Name="NMAVTime" Width="auto" FontSize="16" Binding="{Binding NewAVTime, Converter={StaticResource TimeConverter}}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="AV" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 9: Sender-->
+                                    <DataGridTextColumn x:Name="NMSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="100" MaxWidth="160" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=NewModelTable, Path=DataContext.NMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                    <TextBlock Text="Sender" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
 
                             <!--New Option Table Header-->
-                            <TextBlock Grid.Row="4" Text="New Option Requests" FontSize="16"/>
-
-                            <!--New Option Table Filters-->
-                            <Border Grid.Row="5" BorderBrush="LightGray" BorderThickness="1">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="6"/>       <!--Datagrid first column width-->
-                                        <ColumnDefinition Width="{Binding ElementName=NOCheckBox, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=NORequestDate, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=NOSender, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=NOOptionCode, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=NOBoxSize, Path=ActualWidth}"/>
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-
-<!--Change this into a comboBox with list of senders-->
-                                    <TextBox Grid.Column="3" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding NOSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Grid.Column="4" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding NOOptionCodeFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Grid.Column="5" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding NOBoxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Grid>
-                            </Border>
+                            <TextBlock Grid.Row="3" Text="New Option Requests" FontSize="16"/>
 
                             <!--New Option Table-->
-                            <DataGrid  Grid.Row="6" Height="250" x:Name="NewOptionTable" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="False"
-                                   ItemsSource="{Binding newOptions}" SelectedValue="{Binding selectedNewOption}" AutoGenerateColumns="False" CanUserAddRows="False"
-                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                            <DataGrid  Grid.Row="4" Height="275" x:Name="NewOptionTable" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="False"
+                                       ItemsSource="{Binding newOptions}" SelectedValue="{Binding selectedNewOption}" AutoGenerateColumns="False" CanUserAddRows="False"
+                                       ToolTip="Hold 'Ctrl' while clicking to unselect the selection." RowDetailsVisibilityMode="Visible" AlternatingRowBackground="{StaticResource LightOrange}">
 
-                                <!--
-                            <DataGridRow ToolTip="{Binding Description}"/> Doesn't allow Nulls
--->
+                                <!--                            <DataGridRow ToolTip="{Binding Description}"/> Doesn't allow Nulls-->
 
                                 <DataGrid.Columns>
+                                    <!--Column 1: Check Box-->
                                     <DataGridTemplateColumn x:Name="NOCheckBox">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -168,64 +267,189 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn x:Name="NORequestDate" Width="auto" FontSize="16" Header="Request Date"
-                                                    Binding="{Binding RequestDate, StringFormat=d}"/>
-                                    <DataGridTextColumn x:Name="NOSender" Width="auto" FontSize="16" Header="Sender"
-                                                    Binding="{Binding Sender}"/>
-                                    <DataGridTextColumn x:Name="NOOptionCode" Width="auto" FontSize="16" Header="Option Code"
-                                                    Binding="{Binding NewOptionCode}"/>
-                                    <DataGridTextColumn x:Name="NOBoxSize" Width="auto" FontSize="16" Header="Box Size"
-                                                    Binding="{Binding NewBoxSize}"/>
-                                    <DataGridTextColumn x:Name="NOTime" Width="auto" FontSize="16" Header="Production Time"
-                                                    Binding="{Binding NewTime, Converter={StaticResource TimeConverter}}"/>
-                                    <DataGridTextColumn x:Name="NOName" Width="auto" FontSize="16" Header="Name/Description"
-                                                    Binding="{Binding NewName}"/>
-                                    <DataGridTemplateColumn Header="Delete" x:Name="NODelete">
+
+                                    <!--Column 2: Approve-->
+                                    <DataGridTemplateColumn x:Name="NOApprove">
+                                        <DataGridTemplateColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTemplateColumn.HeaderStyle>
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Approve" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Button Content="Delete" FontSize="9"
-                                                    Command="{Binding ElementName=NewModelTable, Path=DataContext.goBackCommand}"/>
+                                                <Button Content="Approve" FontSize="9"
+                                                    Command="{Binding ElementName=NewOptionTable, Path=DataContext.approveNewOptionCommand}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
+
+                                    <!--Column 3: Decline-->
+                                    <DataGridTemplateColumn x:Name="NODecline">
+                                        <DataGridTemplateColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTemplateColumn.HeaderStyle>
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Decline" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Decline" FontSize="9"
+                                                    Command="{Binding ElementName=NewOptionTable, Path=DataContext.declineNewOptionCommand}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!--Column 4: Request Date-->
+                                    <DataGridTextColumn x:Name="NORequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Request" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Date" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 5: Option Code-->
+                                    <DataGridTextColumn x:Name="NOOptionCode" Width="auto" FontSize="16" Binding="{Binding NewOptionCode}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="40" MaxWidth="60" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=NewOptionTable, Path=DataContext.NOOptionCodeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                    <TextBlock Text="Option" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Code" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 6: Box Size-->
+                                    <DataGridTextColumn x:Name="NOBoxSize" Width="auto" FontSize="16" Binding="{Binding NewBoxSize}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="50" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=NewOptionTable, Path=DataContext.NOBoxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                    <TextBlock Text="Box" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Size" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 7: Production Time-->
+                                    <DataGridTextColumn x:Name="NOTime" Width="auto" FontSize="16" Binding="{Binding NewTime, Converter={StaticResource TimeConverter}}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Production" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 9: Sender-->
+                                    <DataGridTextColumn x:Name="NOSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="100" MaxWidth="160" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=NewOptionTable, Path=DataContext.NOSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                    <TextBlock Text="Sender" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
                                 </DataGrid.Columns>
+
+                                <!--Row Details: Name/Description-->
+                                <DataGrid.RowDetailsTemplate>
+                                    <DataTemplate>
+                                        <Grid Width="500" HorizontalAlignment="Left">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{Binding ElementName=NOCheckBox, Path=ActualWidth}"/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="1" Text="Name/Description: "/>
+                                            <TextBlock Grid.Column="2" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGrid.RowDetailsTemplate>
                             </DataGrid>
 
                             <!--Model Modifications Table Header-->
                             <TextBlock Grid.Row="0" Grid.Column="2" Text="Model Modifications" FontSize="16"/>
 
-                            <!--Model Modifications Table Filters-->
-                            <!--
-                            <Border Grid.Row="1" Grid.Column="2" BorderBrush="LightGray" BorderThickness="1">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="6"/> -->      <!--Datagrid first column width--> <!--
-                                        <ColumnDefinition Width="{Binding ElementName=MMCheckBox, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=MMRequestDate, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=MMSender, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=MMModelName, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=MMOldModelName, Path=ActualWidth}"/>
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
--->
-<!--Change this into a comboBox with list of senders-->
-<!--
-                                    <TextBox Grid.Column="3" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding MMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Grid.Column="5" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding MMModelNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Grid>
-                            </Border>
--->
                             <!--Model Modifications Table-->
-                            <DataGrid  Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="275" x:Name="ModifiedModelTable" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="False"
-                                       Width="600" HorizontalScrollBarVisibility="Visible"
-                                   ItemsSource="{Binding modifiedModels}" SelectedValue="{Binding selectedModifiedModel}" AutoGenerateColumns="False" CanUserAddRows="False"
-                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                            <DataGrid  Grid.Row="1" Grid.Column="2" Height="275" Width="600" HorizontalScrollBarVisibility="Visible"
+                                       x:Name="ModifiedModelTable" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="False"
+                                       ItemsSource="{Binding modifiedModels}" SelectedValue="{Binding selectedModifiedModel}" AutoGenerateColumns="False" CanUserAddRows="False"
+                                       ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
-                            <!--
-                            <DataGridRow ToolTip="{Binding Description}"/> Doesn't allow Nulls
-                            -->
+<!--                            <DataGridRow ToolTip="{Binding Description}"/> Doesn't allow Nulls-->
 
                                 <DataGrid.Columns>
                                     <!--Column 1: Check Box-->
@@ -238,7 +462,59 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <!--Column 2: Request Date-->
+                                    <!--Column 2: Approve-->
+                                    <DataGridTemplateColumn x:Name="MMApprove">
+                                        <DataGridTemplateColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTemplateColumn.HeaderStyle>
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Approve" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Approve" FontSize="9"
+                                                        Command="{Binding ElementName=ModifiedModelTable, Path=DataContext.approveModifiedModelCommand}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!--Column 3: Decline-->
+                                    <DataGridTemplateColumn x:Name="MMDecline">
+                                        <DataGridTemplateColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTemplateColumn.HeaderStyle>
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Decline" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Decline" FontSize="9"
+                                                    Command="{Binding ElementName=ModifiedModelTable, Path=DataContext.declineModifiedModelCommand}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!--Column 4: Request Date-->
                                     <DataGridTextColumn x:Name="MMRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}">
                                         <DataGridTextColumn.HeaderStyle>
                                             <Style TargetType="DataGridColumnHeader">
@@ -248,7 +524,7 @@
                                         <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel HorizontalAlignment="Center">
-                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 0"/>
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
                                                     <TextBlock Text="Request" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="Date" FontSize ="12" HorizontalAlignment="Center"/>
@@ -257,27 +533,7 @@
                                         </DataGridTextColumn.HeaderTemplate>
                                     </DataGridTextColumn>
 
-                                    <!--Column 3: Sender-->
-                                    <DataGridTextColumn x:Name="MMSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
-                                        <DataGridTextColumn.HeaderStyle>
-                                            <Style TargetType="DataGridColumnHeader">
-                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
-                                            </Style>
-                                        </DataGridTextColumn.HeaderStyle>
-                                        <DataGridTextColumn.HeaderTemplate>
-                                            <DataTemplate>
-                                                <StackPanel HorizontalAlignment="Center">
-                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" Margin="0 5 0 0" MinWidth="100" MaxWidth="160"
-                                                             Text="{Binding ElementName=NewModelTable, Path=DataContext.MMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
-
-                                                    <TextBlock Text="Sender" FontSize ="12" HorizontalAlignment="Center"/>
-                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTextColumn.HeaderTemplate>
-                                    </DataGridTextColumn>
-
-                                    <!--Column 4: New Model Name-->
+                                    <!--Column 5: New Model Name-->
                                     <DataGridTextColumn x:Name="MMModelName" Width="auto" FontSize="16" Binding="{Binding NewBase}">
                                         <DataGridTextColumn.HeaderStyle>
                                             <Style TargetType="DataGridColumnHeader">
@@ -287,7 +543,7 @@
                                         <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel HorizontalAlignment="Center">
-                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 0"/>
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
                                                     <TextBlock Text="New Model" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
@@ -296,18 +552,19 @@
                                         </DataGridTextColumn.HeaderTemplate>
                                     </DataGridTextColumn>
 
-                                    <!--Column 5: Old Model Name-->
+                                    <!--Column 6: Old Model Name-->
                                     <DataGridTextColumn x:Name="MMOldModelName" Width="auto" FontSize="16" Binding="{Binding OldModelBase}">
                                         <DataGridTextColumn.HeaderStyle>
                                             <Style TargetType="DataGridColumnHeader">
                                                 <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                                <Setter Property="VerticalContentAlignment" Value="Top"></Setter>
                                             </Style>
                                         </DataGridTextColumn.HeaderStyle>
                                         <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" Margin="0 5 0 0" MinWidth="80" MaxWidth="100"
-                                                             Text="{Binding ElementName=NewModelTable, Path=DataContext.MMModelNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="100" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=ModifiedModelTable, Path=DataContext.MMModelNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
                                                     <TextBlock Text="Old Model" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
@@ -316,7 +573,7 @@
                                         </DataGridTextColumn.HeaderTemplate>
                                     </DataGridTextColumn>
 
-                                    <!--Column 6: New Drive Time-->
+                                    <!--Column 7: New Drive Time-->
                                     <DataGridTextColumn x:Name="MMDriveTime" Width="auto" FontSize="16" Binding="{Binding NewDriveTime, Converter={StaticResource TimeConverter}}">
                                         <DataGridTextColumn.HeaderStyle>
                                             <Style TargetType="DataGridColumnHeader">
@@ -326,7 +583,7 @@
                                         <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel HorizontalAlignment="Center">
-                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 0"/>
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
                                                     <TextBlock Text="New Drive" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
@@ -335,7 +592,7 @@
                                         </DataGridTextColumn.HeaderTemplate>
                                     </DataGridTextColumn>
 
-                                    <!--Column 7: Old Drive Time-->
+                                    <!--Column 8: Old Drive Time-->
                                     <DataGridTextColumn x:Name="MMOldDriveTime" Width="auto" FontSize="16" Binding="{Binding OldModelDriveTime, Converter={StaticResource TimeConverter}}">
                                         <DataGridTextColumn.HeaderStyle>
                                             <Style TargetType="DataGridColumnHeader">
@@ -345,7 +602,7 @@
                                         <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel HorizontalAlignment="Center">
-                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 0"/>
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
                                                     <TextBlock Text="Old Drive" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
@@ -354,7 +611,7 @@
                                         </DataGridTextColumn.HeaderTemplate>
                                     </DataGridTextColumn>
 
-                                    <!--Column 8: New AV Time-->
+                                    <!--Column 9: New AV Time-->
                                     <DataGridTextColumn x:Name="MMAVTime" Width="auto" FontSize="16" Binding="{Binding NewAVTime, Converter={StaticResource TimeConverter}}">
                                         <DataGridTextColumn.HeaderStyle>
                                             <Style TargetType="DataGridColumnHeader">
@@ -364,7 +621,7 @@
                                         <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel HorizontalAlignment="Center">
-                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 0"/>
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
                                                     <TextBlock Text="New AV" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
@@ -373,7 +630,7 @@
                                         </DataGridTextColumn.HeaderTemplate>
                                     </DataGridTextColumn>
 
-                                    <!--Column 9: Old AV Time-->
+                                    <!--Column 10: Old AV Time-->
                                     <DataGridTextColumn x:Name="MMOldAVTime" Width="auto" FontSize="16" Binding="{Binding OldModelAVTime, Converter={StaticResource TimeConverter}}">
                                         <DataGridTextColumn.HeaderStyle>
                                             <Style TargetType="DataGridColumnHeader">
@@ -383,7 +640,7 @@
                                         <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel HorizontalAlignment="Center">
-                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 0"/>
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
                                                     <TextBlock Text="Old AV" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
@@ -392,70 +649,41 @@
                                         </DataGridTextColumn.HeaderTemplate>
                                     </DataGridTextColumn>
 
-                                    <!--Column 10: Delete-->
-                                    <DataGridTemplateColumn x:Name="MMDelete">
-                                        <DataGridTemplateColumn.HeaderStyle>
+                                    <!--Column 11: Sender-->
+                                    <DataGridTextColumn x:Name="MMSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
+                                        <DataGridTextColumn.HeaderStyle>
                                             <Style TargetType="DataGridColumnHeader">
                                                 <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
                                             </Style>
-                                        </DataGridTemplateColumn.HeaderStyle>
-                                        <DataGridTemplateColumn.HeaderTemplate>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
                                             <DataTemplate>
                                                 <StackPanel HorizontalAlignment="Center">
-                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 0"/>
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="100" MaxWidth="160" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=ModifiedModelTable, Path=DataContext.MMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                                    <TextBlock Text="Delete" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Sender" FontSize ="12" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
                                                 </StackPanel>
                                             </DataTemplate>
-                                        </DataGridTemplateColumn.HeaderTemplate>
-
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Button Content="Delete" FontSize="9"
-                                                    Command="{Binding ElementName=NewModelTable, Path=DataContext.goBackCommand}"/>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
 
                             <!--Option Modifications Table Header-->
-                            <TextBlock Grid.Row="4" Grid.Column="2" Text="Option Modifications" FontSize="16"/>
-
-                            <!--Option Modifications Table Filters-->
-                            <Border Grid.Row="5" Grid.Column="2" BorderBrush="LightGray" BorderThickness="1">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="6"/>       <!--Datagrid first column width-->
-                                        <ColumnDefinition Width="{Binding ElementName=OMCheckBox, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=OMRequestDate, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=OMSender, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=OMOptionCode, Path=ActualWidth}"/>
-                                        <ColumnDefinition Width="{Binding ElementName=OMOldOptionCode, Path=ActualWidth}"/>
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-
-<!--Change this into a comboBox with list of senders-->
-                                    <TextBox Grid.Column="3" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding OMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBox Grid.Column="5" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding OMOptionCodeFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Grid>
-                            </Border>
+                            <TextBlock Grid.Row="3" Grid.Column="2" Text="Option Modifications" FontSize="16"/>
 
                             <!--Option Modifications Table-->
-                            <DataGrid  Grid.Row="6" Grid.Column="2" Height="250" x:Name="ModifiedOptionTable" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="False"
-                                       Width="600" HorizontalScrollBarVisibility="Visible"
-                                   ItemsSource="{Binding modifiedOptions}" SelectedValue="{Binding selectedModifiedOption}" AutoGenerateColumns="False" CanUserAddRows="False"
-                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                            <DataGrid  Grid.Row="4" Grid.Column="2" Height="275" Width="600" HorizontalScrollBarVisibility="Visible"
+                                       x:Name="ModifiedOptionTable" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="False"
+                                       ItemsSource="{Binding modifiedOptions}" SelectedValue="{Binding selectedModifiedOption}" AutoGenerateColumns="False" CanUserAddRows="False"
+                                       ToolTip="Hold 'Ctrl' while clicking to unselect the selection." RowDetailsVisibilityMode="Visible" AlternatingRowBackground="{StaticResource LightOrange}">
 
-                                <!--
-                            <DataGridRow ToolTip="{Binding Description}"/> Doesn't allow Nulls
--->
+<!--                            <DataGridRow ToolTip="{Binding Description}"/> Doesn't allow Nulls-->
 
                                 <DataGrid.Columns>
+                                    <!--Column 1: Check Box-->
                                     <DataGridTemplateColumn x:Name="OMCheckBox">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
@@ -464,40 +692,228 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTextColumn x:Name="OMRequestDate" Width="auto" FontSize="16" Header="Request Date"
-                                                    Binding="{Binding RequestDate, StringFormat=d}"/>
-                                    <DataGridTextColumn x:Name="OMSender" Width="auto" FontSize="16" Header="Sender"
-                                                    Binding="{Binding Sender}"/>
-                                    <DataGridTextColumn x:Name="OMOptionCode" Width="auto" FontSize="16" Header="New Option Code"
-                                                    Binding="{Binding NewOptionCode}"/>
-                                    <DataGridTextColumn x:Name="OMOldOptionCode" Width="auto" FontSize="16" Header="Old Option Code"
-                                                    Binding="{Binding OldOptionCode}"/>
-                                    <DataGridTextColumn x:Name="OMNewTime" Width="auto" FontSize="16" Header="New Time"
-                                                    Binding="{Binding NewTime, Converter={StaticResource TimeConverter}}"/>
-                                    <DataGridTextColumn x:Name="OMOldTime" Width="auto" FontSize="16" Header="Old Time"
-                                                    Binding="{Binding OldOptionTime, Converter={StaticResource TimeConverter}}"/>
-                                    <DataGridTextColumn x:Name="OMNewName" Width="auto" FontSize="16" Header="New Name/Description"
-                                                    Binding="{Binding NewName}"/>
-                                    <DataGridTextColumn x:Name="OMOldName" Width="auto" FontSize="16" Header="Old Name/Description"
-                                                    Binding="{Binding OldOptionName}"/>
-                                    <DataGridTemplateColumn Header="Delete" x:Name="OMDelete">
+
+                                    <!--Column 2: Approve-->
+                                    <DataGridTemplateColumn x:Name="OMApprove">
+                                        <DataGridTemplateColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTemplateColumn.HeaderStyle>
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Approve" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Button Content="Delete" FontSize="9"
-                                                    Command="{Binding ElementName=ModifiedOptionTable, Path=DataContext.goBackCommand}"/>
+                                                <Button Content="Approve" FontSize="9"
+                                                    Command="{Binding ElementName=ModifiedOptionTable, Path=DataContext.approveModifiedOptionCommand}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
+
+                                    <!--Column 3: Decline-->
+                                    <DataGridTemplateColumn x:Name="OMDecline">
+                                        <DataGridTemplateColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTemplateColumn.HeaderStyle>
+                                        <DataGridTemplateColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Decline" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.HeaderTemplate>
+
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Decline" FontSize="9"
+                                                    Command="{Binding ElementName=ModifiedOptionTable, Path=DataContext.declineModifiedOptionCommand}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!--Column 4: Request Date-->
+                                    <DataGridTextColumn x:Name="OMRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Request" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Date" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 5: New Option Code-->
+                                    <DataGridTextColumn x:Name="OMOptionCode" Width="auto" FontSize="16" Binding="{Binding NewOptionCode}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="New Option" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Code" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 6: Old Option Code-->
+                                    <DataGridTextColumn x:Name="OMOldOptionCode" Width="auto" FontSize="16" Binding="{Binding OldOptionCode}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" Margin="0 5 0 5" MinWidth="60" MaxWidth="80"
+                                                             Text="{Binding ElementName=ModifiedOptionTable, Path=DataContext.OMOptionCodeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                    <TextBlock Text="Old Option" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Code" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 7: New Time-->
+                                    <DataGridTextColumn x:Name="OMNewTime" Width="auto" FontSize="16" Binding="{Binding NewTime, Converter={StaticResource TimeConverter}}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="New" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 8: Old Time-->
+                                    <DataGridTextColumn x:Name="OMOldTime" Width="auto" FontSize="16" Binding="{Binding OldOptionTime, Converter={StaticResource TimeConverter}}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Old" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
+                                    <!--Column 9: Sender-->
+                                    <DataGridTextColumn x:Name="OMSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox FontSize="16" VerticalContentAlignment="Center" Margin="0 5 0 5" MinWidth="100" MaxWidth="160"
+                                                             Text="{Binding ElementName=ModifiedOptionTable, Path=DataContext.OMSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                    <TextBlock Text="Sender" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
                                 </DataGrid.Columns>
+
+                                <!--Row Details: Name/Description-->
+                                <DataGrid.RowDetailsTemplate>
+                                    <DataTemplate>
+                                        <Grid Width="500" HorizontalAlignment="Left">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{Binding ElementName=OMCheckBox, Path=ActualWidth}"/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="1" Text="New Name/Description: "/>
+                                            <TextBlock Grid.Column="2" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
+
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Old Name/Description: "/>
+                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding OldOptionName}" TextWrapping="WrapWithOverflow"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGrid.RowDetailsTemplate>
                             </DataGrid>
 
-                            <Button Grid.Row="7" Grid.Column="2" Content="Go back" FontSize="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Command="{Binding goBackCommand}"/>
+
+                            <!--Button Setup-->
+                            <Grid Grid.Row="6" Grid.Column="2" HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <!--Approve Checked Button-->
+                                <Button Grid.Column="0" Content="Approve Checked" FontSize="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 5 0"
+                                        Command="{Binding approveCheckedCommand}"/>
+
+                                <!--Decline Checked Button-->
+                                <Button Grid.Column="1" Content="Decline Checked" FontSize="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5 0 5 0"
+                                        Command="{Binding declineCheckedCommand}"/>
+                                
+                                <!--Go Back Button-->
+                                <Button Grid.Column="2" Content="Go back" FontSize="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5 0 0 0" 
+                                        Command="{Binding goBackCommand}"/>
+                            </Grid>
                         </Grid>
                     </Border>
 
                     <!--Information text-->
-                    <TextBlock Grid.Row="2" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
-                           FontSize="12" Text="{Binding informationText}" />
+                    <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 10" TextWrapping="WrapWithOverflow"
+                               FontSize="12" Text="{Binding informationText}" />
                 </Grid>
             </ScrollViewer>
         </Border>
