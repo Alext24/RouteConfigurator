@@ -458,5 +458,16 @@ namespace RouteConfigurator.Design
 
             return newModels;
         }
+
+        public IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum)
+        {
+            var result = context.OverrideRequests.Where(item => item.State == 0 &&
+                                                                item.Sender.Contains(Sender) && 
+                                                                item.ModelNum.Contains(ModelNum)).ToList();
+
+            IEnumerable<OverrideRequest> overrideRequests = new List<OverrideRequest>(result);
+
+            return overrideRequests;
+        }
     }
 }

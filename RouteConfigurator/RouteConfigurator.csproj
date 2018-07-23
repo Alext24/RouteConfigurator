@@ -102,6 +102,10 @@
     <Compile Include="Migrations\201807191823194_UpdatedModificationTable2.Designer.cs">
       <DependentUpon>201807191823194_UpdatedModificationTable2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807231402438_AddedOverrideRequestTable.cs" />
+    <Compile Include="Migrations\201807231402438_AddedOverrideRequestTable.Designer.cs">
+      <DependentUpon>201807231402438_AddedOverrideRequestTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\IDataAccessService.cs" />
     <Compile Include="Model\IFrameNavigationService.cs" />
@@ -109,6 +113,7 @@
     <Compile Include="Model\Modification.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Override.cs" />
+    <Compile Include="Model\OverrideRequest.cs" />
     <Compile Include="Model\RouteConfiguratorDB.cs" />
     <Compile Include="Model\TimeTrial.cs" />
     <Compile Include="Model\TimeTrialsOptionTime.cs" />
@@ -243,6 +248,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201807191823194_UpdatedModificationTable2.resx">
       <DependentUpon>201807191823194_UpdatedModificationTable2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807231402438_AddedOverrideRequestTable.resx">
+      <DependentUpon>201807231402438_AddedOverrideRequestTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

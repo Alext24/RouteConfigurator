@@ -49,5 +49,7 @@ namespace RouteConfigurator.Model
         ObservableCollection<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize);
         ObservableCollection<Modification> getFilteredModifiedModels(string Sender, string ModelName);
         ObservableCollection<Modification> getFilteredModifiedOptions(string Sender, string OptionCode);
+
+        IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum);
     }
 }
