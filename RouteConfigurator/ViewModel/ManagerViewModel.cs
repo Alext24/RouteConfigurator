@@ -49,6 +49,7 @@ namespace RouteConfigurator.ViewModel
 
         private string _OMSenderFilter = "";
         private string _OMOptionCodeFilter = "";
+        private string _OMBoxSizeFilter = "";
         private Modification _selectedModifiedOption;
 
         private string _ORSenderFilter = "";
@@ -60,18 +61,7 @@ namespace RouteConfigurator.ViewModel
 
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
-        public RelayCommand approveNewModelCommand { get; set; }
-        public RelayCommand declineNewModelCommand { get; set; }
-        public RelayCommand approveNewOptionCommand { get; set; }
-        public RelayCommand declineNewOptionCommand { get; set; }
-        public RelayCommand approveModifiedModelCommand { get; set; }
-        public RelayCommand declineModifiedModelCommand { get; set; }
-        public RelayCommand approveModifiedOptionCommand { get; set; }
-        public RelayCommand declineModifiedOptionCommand { get; set; }
-        public RelayCommand approveOverrideCommand { get; set; }
-        public RelayCommand declineOverrideCommand { get; set; }
-        public RelayCommand approveCheckedCommand { get; set; }
-        public RelayCommand declineCheckedCommand { get; set; }
+        public RelayCommand submitCheckedCommand { get; set; }
         public RelayCommand goBackCommand { get; set; }
         #endregion
 
@@ -84,18 +74,7 @@ namespace RouteConfigurator.ViewModel
             _navigationService = navigationService;
 
             loadedCommand = new RelayCommand(loaded);
-            approveNewModelCommand = new RelayCommand(approveNM);
-            declineNewModelCommand = new RelayCommand(declineNM);
-            approveNewOptionCommand = new RelayCommand(approveNO);
-            declineNewOptionCommand = new RelayCommand(declineNO);
-            approveModifiedModelCommand = new RelayCommand(approveMM);
-            declineModifiedModelCommand = new RelayCommand(declineMM);
-            approveModifiedOptionCommand = new RelayCommand(approveMO);
-            declineModifiedOptionCommand = new RelayCommand(declineMO);
-            approveOverrideCommand = new RelayCommand(approveOR);
-            declineOverrideCommand = new RelayCommand(declineOR);
-            approveCheckedCommand = new RelayCommand(approveChecked);
-            declineCheckedCommand = new RelayCommand(declineChecked);
+            submitCheckedCommand = new RelayCommand(submitChecked);
             goBackCommand = new RelayCommand(goBack);
         }
         #endregion
@@ -116,65 +95,9 @@ namespace RouteConfigurator.ViewModel
             modifiedOptions = _serviceProxy.getFilteredModifiedOptions();
             */
         }
-
-        private void approveNM()
+        private void submitChecked()
         {
-            MessageBox.Show("Placeholder for approving");
-        }
-
-        private void declineNM()
-        {
-            MessageBox.Show("Placeholder for declining");
-        }
-
-        private void approveNO()
-        {
-            MessageBox.Show("Placeholder for approving");
-        }
-
-        private void declineNO()
-        {
-            MessageBox.Show("Placeholder for declining");
-        }
-
-        private void approveMM()
-        {
-            MessageBox.Show("Placeholder for approving");
-        }
-
-        private void declineMM()
-        {
-            MessageBox.Show("Placeholder for declining");
-        }
-
-        private void approveMO()
-        {
-            MessageBox.Show("Placeholder for approving");
-        }
-
-        private void declineMO()
-        {
-            MessageBox.Show("Placeholder for declining");
-        }
-
-        private void approveOR()
-        {
-            MessageBox.Show("Placeholder for approving");
-        }
-
-        private void declineOR()
-        {
-            MessageBox.Show("Placeholder for declining");
-        }
-
-        private void approveChecked()
-        {
-            MessageBox.Show("Placeholder for approving all selected");
-        }
-
-        private void declineChecked()
-        {
-            MessageBox.Show("Placeholder for delcining all selected");
+            MessageBox.Show("Placeholder for submitting all selected");
         }
 
         private void goBack()
@@ -448,6 +371,22 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public string OMBoxSizeFilter
+        {
+            get
+            {
+                return _OMBoxSizeFilter;
+            }
+            set
+            {
+                _OMBoxSizeFilter = value.ToUpper();
+                RaisePropertyChanged("OMBoxSizeFilter");
+                informationText = "";
+
+                updateOptionModificationTable();
+            }
+        }
+
         public Modification selectedModifiedOption
         {
             get
@@ -538,7 +477,7 @@ namespace RouteConfigurator.ViewModel
 
         private void updateOptionModificationTable()
         {
-            modifiedOptions = _serviceProxy.getFilteredModifiedOptions(OMSenderFilter, OMOptionCodeFilter);
+            modifiedOptions = _serviceProxy.getFilteredModifiedOptions(OMSenderFilter, OMOptionCodeFilter, OMBoxSizeFilter);
         }
 
         private void updateOverrideTable()

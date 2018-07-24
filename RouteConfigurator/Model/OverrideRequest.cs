@@ -20,6 +20,10 @@ namespace RouteConfigurator.Model
         [Column(TypeName = "date")]
         public DateTime RequestDate { get; set; }
 
+        [Display(Name = "Review Date")]
+        [Column(TypeName = "date")]
+        public DateTime ReviewDate { get; set; }
+
         [Display(Name = "Description")]
         [Column(TypeName = "text")]
         public string Description { get; set; }

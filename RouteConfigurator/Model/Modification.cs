@@ -20,6 +20,10 @@ namespace RouteConfigurator.Model
         [Column(TypeName = "date")]
         public DateTime RequestDate { get; set; }
 
+        [Display(Name = "Review Date")]
+        [Column(TypeName = "date")]
+        public DateTime ReviewDate { get; set; }
+
         [Display(Name = "Description")]
         [Column(TypeName = "text")]
         public string Description { get; set; }
@@ -56,26 +60,24 @@ namespace RouteConfigurator.Model
         /// Used for both model and option
         /// </summary>
         [StringLength(5, MinimumLength = 2)]
-        public string NewBoxSize { get; set; }
+        public string BoxSize { get; set; }
 
         [StringLength(8, MinimumLength = 8, ErrorMessage = "Base has to be 8 characters")]
-        public string NewBase { get; set; }
+        public string ModelBase { get; set; }
+
         public decimal NewDriveTime { get; set; }
         public decimal NewAVTime { get; set; }
 
-        [StringLength(8, MinimumLength = 8, ErrorMessage = "Base has to be 8 characters")]
-        public string OldModelBase { get; set; }
         public decimal OldModelDriveTime { get; set; }
         public decimal OldModelAVTime { get; set; }
 
         [StringLength(2, MinimumLength = 2, ErrorMessage = "Option Code format must be 'PX' or 'TX'")]
-        public string NewOptionCode { get; set; }
+        public string OptionCode { get; set; }
+
         public decimal NewTime { get; set; }
         [StringLength(100)]
         public string NewName { get; set; }
 
-        [StringLength(2, MinimumLength = 2, ErrorMessage = "Option Code format must be 'PX' or 'TX'")]
-        public string OldOptionCode { get; set; }
         public decimal OldOptionTime { get; set; }
         [StringLength(100)]
         public string OldOptionName { get; set; }

@@ -13,10 +13,21 @@ namespace RouteConfigurator
         {
             bool isChecked = false;
             int state = (int)value;
+            string param = (string)parameter;
 
-            if(state == 3)  //Checked state
+            if(param != null && param.Equals("approve"))  //Approve check box
             {
-                isChecked = true;
+                if(state == 3)  //Approve checked
+                {
+                    isChecked = true;
+                }
+            }
+            else if(param != null && param.Equals("decline")) //Decline check box
+            {
+                if(state == 4) //Decline checked
+                {
+                    isChecked = true;
+                }
             }
             return isChecked;
         }
@@ -25,10 +36,18 @@ namespace RouteConfigurator
         {
             bool isChecked = (bool)value;
             int state = 0;  //Waiting state
+            string param = (string)parameter;
 
             if (isChecked)
             {
-                state = 3;  //Checked state
+                if (param != null && param.Equals("approve"))
+                {
+                    state = 3;  //Approve checked state
+                }
+                else if (param != null && param.Equals("decline"))
+                {
+                    state = 4;  //Decline checked state
+                }
             }
             return state;
         }
