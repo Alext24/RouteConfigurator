@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using RouteConfigurator.Design;
 using RouteConfigurator.Model;
+using RouteConfigurator.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace RouteConfigurator.ViewModel
 {
@@ -61,6 +63,7 @@ namespace RouteConfigurator.ViewModel
 
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
+        public RelayCommand openSupervisorCommand { get; set; }
         public RelayCommand submitCheckedCommand { get; set; }
         public RelayCommand goBackCommand { get; set; }
         #endregion
@@ -74,6 +77,7 @@ namespace RouteConfigurator.ViewModel
             _navigationService = navigationService;
 
             loadedCommand = new RelayCommand(loaded);
+            openSupervisorCommand = new RelayCommand(openSupervisorView);
             submitCheckedCommand = new RelayCommand(submitChecked);
             goBackCommand = new RelayCommand(goBack);
         }
@@ -87,6 +91,15 @@ namespace RouteConfigurator.ViewModel
             updateModelModificationTable();
             updateOptionModificationTable();
             updateOverrideTable();
+        }
+
+        private void openSupervisorView()
+        {
+            MainWindow secondWindow = new MainWindow();
+            Page sup = new SupervisorView();
+
+            secondWindow.Show();
+            secondWindow.Content = sup;
         }
 
         private void submitChecked()

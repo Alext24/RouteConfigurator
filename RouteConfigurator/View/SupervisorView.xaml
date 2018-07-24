@@ -34,11 +34,9 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>      <!--Row 0-->
                             <RowDefinition Height="auto"/>      <!--Row 1-->
-                            <RowDefinition Height="auto"/>      <!--Row 2-->
-                            <RowDefinition Height="20"/>        <!--Row 3: Spacing-->
+                            <RowDefinition Height="20"/>        <!--Row 2: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 3-->
                             <RowDefinition Height="auto"/>      <!--Row 4-->
-                            <RowDefinition Height="auto"/>      <!--Row 5-->
-                            <RowDefinition Height="auto"/>      <!--Row 6-->
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
@@ -54,84 +52,180 @@
                         <!--Row 0 setup: Model Table Name-->
                         <TextBlock Grid.Row="0" Text="All Models" FontSize="16"/>
 
-                        <!--Row 1 setup: Model Table Filters-->
-                        <Border Grid.Row="1" BorderBrush="LightGray" BorderThickness="1">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="6"/>   <!--Datagrid first column width-->
-                                    <ColumnDefinition Width="{Binding ElementName=BaseHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition Width="{Binding ElementName=BoxSizeHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBox Grid.Column="1" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding modelFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox Grid.Column="2" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding boxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                            </Grid>
-                        </Border>
-
-                        <!--Load Models Button-->
-                        <Button Grid.Row="1" Grid.Column="2" Content="Load Models" HorizontalAlignment="Right" 
-                                Command="{Binding loadModelsCommand}"/>
-
-                        <!--Row 2 setup: Model Table-->
-                        <DataGrid  Grid.Row="2" Height="250" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                        <!--Row 1 setup: Model Table-->
+                        <DataGrid  Grid.Row="1" Height="275" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
                                    CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible"
                                    ItemsSource="{Binding models}" SelectedItem="{Binding selectedModel}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
-                                <DataGridTextColumn x:Name="BaseHeader" Width="auto" MinWidth="100" FontSize="16" Header="Model"
-                                                    Binding="{Binding Base}"/>
-                                <DataGridTextColumn x:Name="BoxSizeHeader" Width="auto" FontSize="16" Header="Box Size"
-                                                    Binding="{Binding BoxSize}"/>
-                                <DataGridTextColumn x:Name="DriveTimeHeader" Width="auto" FontSize="16" Header="Drive Time"
-                                                    Binding="{Binding DriveTime}"/>
-                                <DataGridTextColumn x:Name="AVTimeHeader" Width="auto" FontSize="16" Header="AV Time"
-                                                    Binding="{Binding AVTime}"/>
+                                <!--Column 1: Model Name-->
+                                <DataGridTextColumn x:Name="BaseHeader" Width="auto" MinWidth="100" FontSize="16" Binding="{Binding Base}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=ModelTable, Path=DataContext.modelFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Model" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 2: Box Size-->
+                                <DataGridTextColumn x:Name="BoxSizeHeader" Width="auto" FontSize="16" Binding="{Binding BoxSize}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="40" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=ModelTable, Path=DataContext.boxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Box" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Size" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 3: Drive Time-->
+                                <DataGridTextColumn x:Name="DriveTimeHeader" Width="auto" FontSize="16" Binding="{Binding DriveTime, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Drive" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 4: AV Time-->
+                                <DataGridTextColumn x:Name="AVTimeHeader" Width="auto" FontSize="16" Binding="{Binding AVTime, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="AV" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <!--Row 3 setup: Blank, Spacing-->
+                        <!--Row 2 setup: Blank, Spacing-->
 
-                        <!--Row 4 setup: Options table name-->
-                        <TextBlock Grid.Row="4" Text="All Options" FontSize="16"/>
+                        <!--Row 3 setup: Options table name-->
+                        <TextBlock Grid.Row="3" Text="All Options" FontSize="16"/>
 
-                        <!--Row 5 setup: Options table filters-->
-                        <Border Grid.Row="5" BorderBrush="LightGray" BorderThickness="1">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="6"/>   <!--Datagrid first column width-->
-                                    <ColumnDefinition Width="{Binding ElementName=OptionCodeHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition Width="{Binding ElementName=OptionBoxSizeHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBox Grid.Column="1" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding optionFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox Grid.Column="2" FontSize="16" VerticalContentAlignment="Center"
-                                         Text="{Binding optionBoxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                            </Grid>
-                        </Border>
-
-                        <!--Load Options Button-->
-                        <Button Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right" Content="Load Options" 
-                                Command="{Binding loadOptionsCommand}"/>
-
-                        <!--Row 6 setup: Options table-->
-                        <DataGrid  Grid.Row="6" Height="250" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                        <!--Row 4 setup: Options table-->
+                        <DataGrid  Grid.Row="4" Height="275" x:Name="OptionTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
                                    CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible"
                                    ItemsSource="{Binding options}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
-                                <DataGridTextColumn x:Name="OptionCodeHeader" Width="auto" FontSize="16" Header="Option"
-                                                    Binding="{Binding OptionCode}"/>
-                                <DataGridTextColumn x:Name="OptionBoxSizeHeader" Width="auto" FontSize="16" Header="Box Size"
-                                                    Binding="{Binding BoxSize}"/>
-                                <DataGridTextColumn x:Name="OptionTimeHeader" Width="auto" FontSize="16" Header="Time"
-                                                    Binding="{Binding Time}"/>
-                                <DataGridTextColumn x:Name="OptionNameHeader" Width="auto" FontSize="16" Header="Name"
-                                                    Binding="{Binding Name}"/>
+                                <!--Column 1: Option Code-->
+                                <DataGridTextColumn x:Name="OptionCode" Width="auto" FontSize="16" Binding="{Binding OptionCode}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="40" MaxWidth="60" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=OptionTable, Path=DataContext.optionFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Option" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Code" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 2: Box Size-->
+                                <DataGridTextColumn x:Name="BoxSize" Width="auto" FontSize="16" Binding="{Binding BoxSize}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="40" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=OptionTable, Path=DataContext.optionBoxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Box" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Size" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 3: Production Time-->
+                                <DataGridTextColumn x:Name="Time" Width="auto" FontSize="16" Binding="{Binding Time, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Production" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 4: Option Name-->
+                                <DataGridTextColumn x:Name="Name" Width="auto" MaxWidth="100" FontSize="16" Binding="{Binding Name}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
 
@@ -140,35 +234,30 @@
                         <TextBlock Grid.Row="0" Grid.Column="4" Text="{Binding selectedModel.Base, StringFormat=Time Trials for {0}}" FontSize="16"
                                    Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <!--Row 1 setup: Time Trial Table Filter-->
-                        <Border Grid.Row="1" Grid.Column="4" BorderBrush="LightGray" BorderThickness="1">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="6"/>   <!--Datagrid first column width-->
-                                    <ColumnDefinition Width="{Binding ElementName=TTDeleteHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition Width="{Binding ElementName=TTOptionsTextHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition Width="{Binding ElementName=TTDateHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition Width="{Binding ElementName=TTSalesOrderHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition Width="{Binding ElementName=TTProdNumHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBox Grid.Column="2" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding optionTextFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox Grid.Column="4" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding salesFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                                <TextBox Grid.Column="5" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding productionNumFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                            </Grid>
-                        </Border>
-
-                        <!--Row 2 setup: Time Trial Table-->
-                        <DataGrid  Grid.Row="2" Grid.Column="4" Height="230" MaxWidth="475" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" VerticalAlignment="Top"
+                        <!--Row 1 setup: Time Trial Table-->
+                        <DataGrid  Grid.Row="1" Grid.Column="4" Height="255" MaxWidth="475" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" VerticalAlignment="Top"
                                    AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible"
                                    ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="Delete" x:Name="TTDeleteHeader">
+                                <!--Column 1: Delete Button-->
+                                <DataGridTemplateColumn x:Name="Delete">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Delete" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.HeaderTemplate>
+
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button Content="Delete" FontSize="9"
@@ -176,22 +265,161 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn x:Name="TTOptionsTextHeader" Width="auto" MinWidth="80" FontSize="16" Header="Options Text"
-                                                    Binding="{Binding OptionsText}"/>
-                                <DataGridTextColumn x:Name="TTDateHeader"        Width="auto" MinWidth="80" FontSize="16" Header="Date"
-                                                    Binding="{Binding Date, StringFormat=d}"/>
-                                <DataGridTextColumn x:Name="TTSalesOrderHeader"  Width="auto" FontSize="16" Header="Sales Order"
-                                                    Binding="{Binding SalesOrder}"/>
-                                <DataGridTextColumn x:Name="TTProdNumHeader"     Width="auto" FontSize="16" Header="Production #"
-                                                    Binding="{Binding ProductionNumber}"/>
-                                <DataGridTextColumn x:Name="TTProdTimeHeader"    Width="auto" FontSize="16" Header="Production Time"
-                                                    Binding="{Binding TotalTime, Converter={StaticResource TimeConverter}}"/>
-                                <DataGridTextColumn x:Name="TTDriveTimeHeader"   Width="auto" FontSize="16" Header="Drive Time"
-                                                    Binding="{Binding DriveTime, Converter={StaticResource TimeConverter}}"/>
-                                <DataGridTextColumn x:Name="TTAVTimeHeader"      Width="auto" FontSize="16" Header="AV Time"
-                                                    Binding="{Binding AVTime, Converter={StaticResource TimeConverter}}"/>
-                                <DataGridTextColumn x:Name="TTNumOptionsHeader"  Width="auto" FontSize="16" Header="# of Options"
-                                                    Binding="{Binding NumOptions}"/>
+
+                                <!--Column 2: Options Text-->
+                                <DataGridTextColumn x:Name="OptionsText" Width="auto" FontSize="16" MinWidth="80" Binding="{Binding OptionsText}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=TimeTrialTable, Path=DataContext.optionTextFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Options" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Text" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 3: Request Date-->
+                                <DataGridTextColumn x:Name="Date" Width="auto" MinWidth="80" FontSize="16" Binding="{Binding Date, StringFormat=d}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Date" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 4: Sales Order-->
+                                <DataGridTextColumn x:Name="SalesOrder" Width="auto" FontSize="16" Binding="{Binding SalesOrder}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=TimeTrialTable, Path=DataContext.salesFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Sales" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Order" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 5: Production Number-->
+                                <DataGridTextColumn x:Name="ProductionNumber" Width="auto" FontSize="16" Binding="{Binding ProductionNumber}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=TimeTrialTable, Path=DataContext.productionNumFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Production" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Number" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 6: Production Time-->
+                                <DataGridTextColumn x:Name="ProductionTime" Width="auto" FontSize="16" Binding="{Binding TotalTime, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Production" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 7: Drive Time-->
+                                <DataGridTextColumn x:Name="DriveTime" Width="auto" FontSize="16" Binding="{Binding DriveTime, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Drive" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 8: AV Time-->
+                                <DataGridTextColumn x:Name="AVTime" Width="auto" FontSize="16" Binding="{Binding AVTime, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="AV" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 9: Number of Options-->
+                                <DataGridTextColumn x:Name="NumOptions" Width="auto" FontSize="16" Binding="{Binding NumOptions}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Number of" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Options" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
 
                             <!--Setup the options visibility-->
@@ -211,7 +439,8 @@
                             </DataGrid.RowDetailsTemplate>
                         </DataGrid>
 
-                        <Grid Grid.Row="2" Grid.Column="4" VerticalAlignment="Bottom"
+                        <!--Under Time Trials Table setup: Average times-->
+                        <Grid Grid.Row="1" Grid.Column="4" VerticalAlignment="Bottom"
                               Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -232,43 +461,35 @@
                             <TextBlock Grid.Column="3" HorizontalAlignment="Left"  Text="{Binding averageDriveTime, Converter={StaticResource TimeConverter}}" FontSize="16"/>
                             <TextBlock Grid.Column="4" HorizontalAlignment="Right" Text="Avg AV Time:" FontSize="16" Margin="5 0 5 0"/>
                             <TextBlock Grid.Column="5" HorizontalAlignment="Left"  Text="{Binding averageAVTime, Converter={StaticResource TimeConverter}}" FontSize="16"/>
-                            
                         </Grid>
 
-                        <!--Row 4 setup: Options table name-->
-                        <TextBlock Grid.Row="4" Grid.Column="4" Text="Overrides" FontSize="16"/>
+                        <!--Row 3 setup: Overrides table name-->
+                        <TextBlock Grid.Row="3" Grid.Column="4" Text="Overrides" FontSize="16"/>
 
-                        <!--Row 5 setup: Override Table Filter-->
-                        <Border Grid.Row="5" Grid.Column="4" BorderBrush="LightGray" BorderThickness="1">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="6"/>   <!--Datagrid first column width-->
-                                    <ColumnDefinition Width="{Binding ElementName=OverrideModelNumHeader, Path=ActualWidth}"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBox Grid.Column="1" FontSize="16" VerticalContentAlignment="Center" 
-                                         Text="{Binding overrideFilter, UpdateSourceTrigger=PropertyChanged}"/>
-                            </Grid>
-                        </Border>
-
-                        <!--Load Overrides button-->
-                        <Button Grid.Row="5" Grid.Column="6" HorizontalAlignment="Right" Content="Load Overrides" 
-                                Command="{Binding loadOverridesCommand}"/>
-
-                        <!--Row 6 setup: Overrides Table-->
-                        <DataGrid  Grid.Row="6" Grid.Column="4" Height="250" x:Name="OverrideTable" BorderBrush="LightGray" IsReadOnly="True" 
+                        <!--Row 4 setup: Overrides Table-->
+                        <DataGrid  Grid.Row="4" Grid.Column="4" Height="275" x:Name="OverrideTable" BorderBrush="LightGray" IsReadOnly="True" 
                                    AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible"
                                    ItemsSource="{Binding overrides}" SelectedValue="{Binding selectedOverride}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <DataGrid.Columns>
-                                <DataGridTextColumn x:Name="OverrideModelNumHeader" Width="auto" MinWidth="100" FontSize="16" Header="Model Number"
-                                                    Binding="{Binding ModelNum}"/>
-                                <DataGridTextColumn x:Name="OverrideRouteHeader"    Width="auto" MinWidth="80" FontSize="16" Header="Override Route"
-                                                    Binding="{Binding OverrideRoute}"/>
-                                <DataGridTextColumn x:Name="OverrideTimeHeader"     Width="auto" FontSize="16" Header="Override Time"
-                                                    Binding="{Binding OverrideTime}"/>
-                                <DataGridTemplateColumn Header="Delete">
+                                <!--Column 1: Delete Button-->
+                                <DataGridTemplateColumn x:Name="OverrideDelete">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Delete" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.HeaderTemplate>
+
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Button Content="Delete" FontSize="9"
@@ -276,13 +497,82 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
+
+                                <!--Column 2: Override Model Name-->
+                                <DataGridTextColumn x:Name="ModelNum" Width="auto" MinWidth="100" FontSize="16" Binding="{Binding ModelNum}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="100" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=OverrideTable, Path=DataContext.overrideFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Model" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 3: Override Time-->
+                                <DataGridTextColumn x:Name="OverrideTime" Width="auto" FontSize="16" Binding="{Binding OverrideTime, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Override" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 4: Override Route-->
+                                <DataGridTextColumn x:Name="OverrideRoute" Width="auto" MinWidth="80" FontSize="16" Binding="{Binding OverrideRoute}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Override" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Route" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
 
                         <!--Button Setup-->
                         <!--Model Buttons-->
-                        <StackPanel Grid.Row="2" Grid.Column="2">
-                            <Button Margin="0 10 0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding addModelCommand}">
+                        <StackPanel Grid.Row="1" Grid.Column="2">
+                            <!--Load Models Button-->
+                            <Button Margin="0 0 0 5" FontSize="16" Command="{Binding loadModelsCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Load"/>
+                                        <TextBlock TextAlignment="Center" Text="Models"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Add Model Button-->
+                            <Button Margin="0 5 0 5" FontSize="16" Command="{Binding addModelCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="Add"/>        
@@ -291,7 +581,8 @@
                                 </Button.Content>
                             </Button>
                             
-                            <Button Margin="0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding modifyModelCommand}">
+                            <!--Modify Models Button-->
+                            <Button Margin="0 5 0 0" FontSize="16" Command="{Binding modifyModelCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="Modify"/>        
@@ -302,8 +593,19 @@
                         </StackPanel>
 
                         <!--Option Buttons-->
-                        <StackPanel Grid.Row="6" Grid.Column="2">
-                            <Button Margin="0 10 0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding addOptionCommand}">
+                        <StackPanel Grid.Row="4" Grid.Column="2">
+                            <!--Load Options Button-->
+                            <Button Margin="0 0 0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding loadOptionsCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Load"/>        
+                                        <TextBlock TextAlignment="Center" Text="Options"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Add Options Button-->
+                            <Button Margin="0 5 0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding addOptionCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="Add"/>        
@@ -312,6 +614,7 @@
                                 </Button.Content>
                             </Button>
                             
+                            <!--Modify Options Button-->
                             <Button Margin="0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding modifyOptionCommand}">
                                 <Button.Content>
                                     <StackPanel>
@@ -323,8 +626,9 @@
                         </StackPanel>
 
                         <!--Time Trial Buttons-->
-                        <StackPanel Grid.Row="2" Grid.Column="6">
-                            <Button Margin="0 10 0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding addTimeTrialCommand}">
+                        <StackPanel Grid.Row="1" Grid.Column="6">
+                            <!--Add Time Trial Button-->
+                            <Button Margin="0 0 0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding addTimeTrialCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="Add"/>        
@@ -335,14 +639,26 @@
                         </StackPanel>
 
                         <!--Override Buttons-->
-                        <Grid Grid.Row="6" Grid.Column="6">
+                        <Grid Grid.Row="4" Grid.Column="6">
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
-                            <Button Grid.Row="0" Margin="0 10 0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding overrideModelCommand}">
+                            <!--Load Overrides button-->
+                            <Button Grid.Row="0" Margin="0 0 0 5" FontSize="16" Command="{Binding loadOverridesCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Load"/>        
+                                        <TextBlock TextAlignment="Center" Text="Overrides"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Override Models button-->
+                            <Button Grid.Row="1" Margin="0 5 0 5" FontSize="16" Command="{Binding overrideModelCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="Override"/>        
@@ -351,7 +667,8 @@
                                 </Button.Content>
                             </Button>
 
-                            <Button Grid.Row="2" Content="Go back" FontSize="16" VerticalAlignment="Bottom" Command="{Binding goBackCommand}"/>
+                            <!--Go Home Button-->
+                            <Button Grid.Row="2" Content="Home View" FontSize="16" Margin="0 5 0 0" VerticalAlignment="Bottom" Command="{Binding goHomeCommand}"/>
                         </Grid>
                     </Grid>
                 </Border>

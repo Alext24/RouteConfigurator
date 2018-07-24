@@ -126,7 +126,7 @@
                                         </DataGridTemplateColumn>
 
                                         <!--Column 3: Request Date-->
-                                        <DataGridTextColumn x:Name="NMRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}">
+                                        <DataGridTextColumn x:Name="NMRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -223,7 +223,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 8: Sender-->
-                                        <DataGridTextColumn x:Name="NMSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
+                                        <DataGridTextColumn x:Name="NMSender" Width="auto" FontSize="16" Binding="{Binding Sender}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -313,7 +313,7 @@
                                         </DataGridTemplateColumn>
 
                                         <!--Column 3: Request Date-->
-                                        <DataGridTextColumn x:Name="MMRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}">
+                                        <DataGridTextColumn x:Name="MMRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -332,7 +332,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 4: Model Name-->
-                                        <DataGridTextColumn x:Name="MMModelName" Width="auto" FontSize="16" Binding="{Binding ModelBase}">
+                                        <DataGridTextColumn x:Name="MMModelName" Width="auto" FontSize="16" Binding="{Binding ModelBase}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -371,7 +371,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 6: Old Drive Time-->
-                                        <DataGridTextColumn x:Name="MMOldDriveTime" Width="auto" FontSize="16" Binding="{Binding OldModelDriveTime, Converter={StaticResource TimeConverter}}">
+                                        <DataGridTextColumn x:Name="MMOldDriveTime" Width="auto" FontSize="16" Binding="{Binding OldModelDriveTime, Converter={StaticResource TimeConverter}}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -409,7 +409,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 8: Old AV Time-->
-                                        <DataGridTextColumn x:Name="MMOldAVTime" Width="auto" FontSize="16" Binding="{Binding OldModelAVTime, Converter={StaticResource TimeConverter}}">
+                                        <DataGridTextColumn x:Name="MMOldAVTime" Width="auto" FontSize="16" Binding="{Binding OldModelAVTime, Converter={StaticResource TimeConverter}}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -428,7 +428,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 9: Sender-->
-                                        <DataGridTextColumn x:Name="MMSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
+                                        <DataGridTextColumn x:Name="MMSender" Width="auto" FontSize="16" Binding="{Binding Sender}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -532,7 +532,7 @@
                                         </DataGridTemplateColumn>
 
                                         <!--Column 3: Request Date-->
-                                        <DataGridTextColumn x:Name="NORequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}">
+                                        <DataGridTextColumn x:Name="NORequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -610,7 +610,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 7: Sender-->
-                                        <DataGridTextColumn x:Name="NOSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
+                                        <DataGridTextColumn x:Name="NOSender" Width="auto" FontSize="16" Binding="{Binding Sender}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -644,7 +644,7 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBlock Grid.Column="0" Text="Name/Description: "/>
-                                                <TextBlock Grid.Column="1" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
+                                                <TextBox Grid.Column="1" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
                                             </Grid>
                                         </DataTemplate>
                                     </DataGrid.RowDetailsTemplate>
@@ -719,7 +719,7 @@
                                         </DataGridTemplateColumn>
 
                                         <!--Column 3: Request Date-->
-                                        <DataGridTextColumn x:Name="OMRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}">
+                                        <DataGridTextColumn x:Name="OMRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -738,7 +738,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 4: Option Code-->
-                                        <DataGridTextColumn x:Name="OMOptionCode" Width="auto" FontSize="16" Binding="{Binding OptionCode}">
+                                        <DataGridTextColumn x:Name="OMOptionCode" Width="auto" FontSize="16" Binding="{Binding OptionCode}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -758,7 +758,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 5: Box Size-->
-                                        <DataGridTextColumn x:Name="OMBoxSize" Width="auto" FontSize="16" Binding="{Binding BoxSize}">
+                                        <DataGridTextColumn x:Name="OMBoxSize" Width="auto" FontSize="16" Binding="{Binding BoxSize}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -797,7 +797,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 6: Old Time-->
-                                        <DataGridTextColumn x:Name="OMOldTime" Width="auto" FontSize="16" Binding="{Binding OldOptionTime, Converter={StaticResource TimeConverter}}">
+                                        <DataGridTextColumn x:Name="OMOldTime" Width="auto" FontSize="16" Binding="{Binding OldOptionTime, Converter={StaticResource TimeConverter}}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -816,7 +816,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 7: Sender-->
-                                        <DataGridTextColumn x:Name="OMSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
+                                        <DataGridTextColumn x:Name="OMSender" Width="auto" FontSize="16" Binding="{Binding Sender}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -851,7 +851,7 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBlock Grid.Column="0" Text="New Name/Description: "/>
-                                                <TextBlock Grid.Column="1" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
+                                                <TextBox Grid.Column="1" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
 
                                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Old Name/Description: "/>
                                                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding OldOptionName}" TextWrapping="WrapWithOverflow"/>
@@ -928,7 +928,7 @@
                                         </DataGridTemplateColumn>
 
                                         <!--Column 3: Request Date-->
-                                        <DataGridTextColumn x:Name="ORRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}">
+                                        <DataGridTextColumn x:Name="ORRequestDate" Width="auto" FontSize="16" Binding="{Binding RequestDate, StringFormat=d}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -1005,7 +1005,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 7: Old Model Time-->
-                                        <DataGridTextColumn x:Name="OROldModelTime" Width="auto" FontSize="16" Binding="{Binding ModelTime, Converter={StaticResource TimeConverter}}">
+                                        <DataGridTextColumn x:Name="OROldModelTime" Width="auto" FontSize="16" Binding="{Binding ModelTime, Converter={StaticResource TimeConverter}}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -1024,7 +1024,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 8: Old Model Route-->
-                                        <DataGridTextColumn x:Name="OROldModelRoute" Width="auto" FontSize="16" Binding="{Binding ModelRoute}">
+                                        <DataGridTextColumn x:Name="OROldModelRoute" Width="auto" FontSize="16" Binding="{Binding ModelRoute}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -1043,7 +1043,7 @@
                                         </DataGridTextColumn>
 
                                         <!--Column 9: Sender-->
-                                        <DataGridTextColumn x:Name="ORSender" Width="auto" FontSize="16" Binding="{Binding Sender}">
+                                        <DataGridTextColumn x:Name="ORSender" Width="auto" FontSize="16" Binding="{Binding Sender}" IsReadOnly="True">
                                             <DataGridTextColumn.HeaderStyle>
                                                 <Style TargetType="DataGridColumnHeader">
                                                     <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -1063,7 +1063,6 @@
                                         </DataGridTextColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>
-
                             </Grid>
 
                             <!--Button Setup-->
@@ -1071,14 +1070,30 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
+                                    <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
 
+                                <Button Grid.Column="0" FontSize="16" Margin="0 0 5 0" Command="{Binding openSupervisorCommand}">
+                                    <Button.Content>
+                                        <StackPanel>
+                                            <TextBlock TextAlignment="Center" Text="Open Supervisor"/>
+                                            <TextBlock TextAlignment="Center" Text="View"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+
                                 <!--Submit Checked Button-->
-                                <Button Grid.Column="0" Content="Submit Checked" FontSize="16" Margin="0 0 5 0"
-                                        Command="{Binding submitCheckedCommand}"/>
+                                <Button Grid.Column="1" FontSize="16" Margin="5 0 5 0" Command="{Binding submitCheckedCommand}">
+                                    <Button.Content>
+                                        <StackPanel>
+                                            <TextBlock TextAlignment="Center" Text="Submit"/>
+                                            <TextBlock TextAlignment="Center" Text="Checked"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
 
                                 <!--Go Back Button-->
-                                <Button Grid.Column="1" Content="Go back" FontSize="16" Margin="5 0 0 0" 
+                                <Button Grid.Column="2" Content="Go back" FontSize="16" Margin="5 0 0 0" 
                                         Command="{Binding goBackCommand}"/>
                             </Grid>
                         </Grid>

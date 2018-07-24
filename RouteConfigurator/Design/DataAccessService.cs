@@ -317,6 +317,10 @@ namespace RouteConfigurator.Design
         {
             foreach (TimeTrial TT in timeTrials)
             {
+                foreach (TimeTrialsOptionTime TTOT in TT.TTOptionTimes)
+                {
+                    context.TTOptionTimes.Add(TTOT);
+                }
                 context.TimeTrials.Add(TT);
             }
             context.SaveChanges();

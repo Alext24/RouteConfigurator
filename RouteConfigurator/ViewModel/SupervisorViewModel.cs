@@ -75,7 +75,7 @@ namespace RouteConfigurator.ViewModel
         public RelayCommand overrideModelCommand { get; set; }
         public RelayCommand deleteOverrideCommand { get; set; }
 
-        public RelayCommand goBackCommand { get; set; }
+        public RelayCommand goHomeCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -101,7 +101,7 @@ namespace RouteConfigurator.ViewModel
             overrideModelCommand = new RelayCommand(overrideModel);
             deleteOverrideCommand = new RelayCommand(deleteOverride);
 
-            goBackCommand = new RelayCommand(goBack);
+            goHomeCommand = new RelayCommand(goHome);
         }
         #endregion
 
@@ -173,9 +173,9 @@ namespace RouteConfigurator.ViewModel
             //Send to director for approval
         }
 
-        private void goBack()
+        private void goHome()
         {
-            _navigationService.GoBack();
+            _navigationService.NavigateTo("HomeView");
         }
 
         #endregion
