@@ -86,7 +86,7 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
-            loadModelsCommand = new RelayCommand(loadModels);
+            loadModelsCommand = new RelayCommand(updateModelTable);
             addModelCommand = new RelayCommand(addModel);
             modifyModelCommand = new RelayCommand(modifyModel);
 
@@ -108,7 +108,7 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loadModels()
         {
-            models = _serviceProxy.getFilteredModels(modelFilter, boxSizeFilter);
+            updateModelTable();
         }
 
         private void addModel()
@@ -141,7 +141,7 @@ namespace RouteConfigurator.ViewModel
 
         private void loadOptions()
         {
-            options = _serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter);
+            updateOptionTable();
         }
 
         private void addOption()
@@ -158,7 +158,7 @@ namespace RouteConfigurator.ViewModel
 
         private void loadOverrides()
         {
-            overrides = _serviceProxy.getFilteredOverrides(overrideFilter);
+            updateOverrideTable();
         }
 
         private void overrideModel()
@@ -170,6 +170,7 @@ namespace RouteConfigurator.ViewModel
         private void deleteOverride()
         {
             MessageBox.Show(string.Format("Placeholder for deleting override for {0}", selectedOverride.ModelNum));
+            //Send to director for approval
         }
 
         private void goBack()
@@ -245,7 +246,7 @@ namespace RouteConfigurator.ViewModel
                 _modelFilter = value.ToUpper();
                 RaisePropertyChanged("modelFilter");
                 informationText = "";
-                updateFilter();
+                updateModelTable();
             }
         }
 
@@ -263,7 +264,7 @@ namespace RouteConfigurator.ViewModel
                 _boxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("boxSizeFilter");
                 informationText = "";
-                updateFilter();
+                updateModelTable();
             }
         }
 
@@ -294,7 +295,7 @@ namespace RouteConfigurator.ViewModel
                 _optionFilter = value.ToUpper();
                 RaisePropertyChanged("optionFilter");
                 informationText = "";
-                updateOptionFilter();
+                updateOptionTable();
             }
         }
 
@@ -312,7 +313,7 @@ namespace RouteConfigurator.ViewModel
                 _optionBoxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("optionBoxSizeFilter");
                 informationText = "";
-                updateOptionFilter();
+                updateOptionTable();
             }
         }
 
@@ -369,7 +370,7 @@ namespace RouteConfigurator.ViewModel
                 _optionTextFilter = value.ToUpper();
                 RaisePropertyChanged("optionTextFilter");
                 informationText = "";
-                updateTTFilter();
+                updateTTTable();
             }
         }
 
@@ -387,7 +388,7 @@ namespace RouteConfigurator.ViewModel
                 _salesFilter = value;
                 RaisePropertyChanged("salesFilter");
                 informationText = "";
-                updateTTFilter();
+                updateTTTable();
             }
         }
 
@@ -405,7 +406,7 @@ namespace RouteConfigurator.ViewModel
                 _productionNumFilter = value;
                 RaisePropertyChanged("productionNumFilter");
                 informationText = "";
-                updateTTFilter();
+                updateTTTable();
             }
         }
 
@@ -489,7 +490,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("overrideFilter");
                 informationText = "";
 
-                updateOverrideFilter();
+                updateOverrideTable();
             }
         }
 
@@ -511,28 +512,28 @@ namespace RouteConfigurator.ViewModel
         /// <summary>
         /// Updates the model list to only show models with the specified filters
         /// </summary>
-        private void updateFilter()
+        private void updateModelTable()
         {
-            models = _serviceProxy.getFilteredModels(modelFilter, boxSizeFilter);
+            models = new ObservableCollection<Model.Model>(_serviceProxy.getFilteredModels(modelFilter, boxSizeFilter));
         }
 
         /// <summary>
         /// Updates the options list to only show options with the specified filters
         /// </summary>
-        private void updateOptionFilter()
+        private void updateOptionTable()
         {
-            options = _serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter);
+            options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter));
         }
 
         /// <summary>
         /// Updates the time trials list to only show time trials with the specified filters
         /// Calls calcTTAverages
         /// </summary>
-        private void updateTTFilter()
+        private void updateTTTable()
         {
             if (selectedModel != null)
             {
-                timeTrials = _serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter);
+                timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter));
                 calcTTAverages();
             }
         }
@@ -553,14 +554,17 @@ namespace RouteConfigurator.ViewModel
                 count++;
             }
 
-            averageProdTime = averageProdTime / count;
-            averageDriveTime = averageDriveTime / count;
-            averageAVTime = averageAVTime / count;
+            if (count != 0)
+            {
+                averageProdTime = averageProdTime / count;
+                averageDriveTime = averageDriveTime / count;
+                averageAVTime = averageAVTime / count;
+            }
         }
 
-        private void updateOverrideFilter()
+        private void updateOverrideTable()
         {
-            overrides = _serviceProxy.getFilteredOverrides(overrideFilter);
+            overrides =new ObservableCollection<Override>(_serviceProxy.getFilteredOverrides(overrideFilter));
         }
         #endregion
     }

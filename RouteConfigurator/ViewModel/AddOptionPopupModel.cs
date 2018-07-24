@@ -218,7 +218,7 @@ namespace RouteConfigurator.ViewModel
                 time != null && time > 0)
                 {
                     //Check that the option doesn't already exist in the database
-                    ObservableCollection<Option> options = _serviceProxy.getFilteredOptions(optionCode, boxSize);
+                    ObservableCollection<Option> options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionCode, boxSize));
                     if (options.Count > 0)
                     {
                         informationText = "This option already exists";

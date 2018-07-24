@@ -41,6 +41,7 @@ namespace RouteConfigurator.ViewModel
         private string _totalTimeText;
         private string _routeText;
         private string _prodSupCodeText;
+        private string _description;
 
         private ObservableCollection<Option> _options = new ObservableCollection<Option>();
 
@@ -274,6 +275,19 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public string description 
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                _description = value;
+                RaisePropertyChanged("description");
+            }
+        }
+
         public string informationText 
         {
             get
@@ -298,7 +312,7 @@ namespace RouteConfigurator.ViewModel
         {
             List<String> optionsList = parseOptions(modelNum);
 
-            options = _serviceProxy.getModelOptions(optionsList, boxSize);
+            options = new ObservableCollection<Option>(_serviceProxy.getModelOptions(optionsList, boxSize));
         }
 
         /// <summary>

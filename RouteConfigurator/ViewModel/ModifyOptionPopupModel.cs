@@ -37,11 +37,9 @@ namespace RouteConfigurator.ViewModel
 
         private Option _selectedOption;
 
-        private bool _optionCodeNotSelected = true;
+        private decimal _newTime;
 
-        private string _renameOptionCodes;
-
-        private bool _canRenameOptionCodes = false;
+        private string _newName;
 
         private string _informationText;
         #endregion
@@ -103,23 +101,7 @@ namespace RouteConfigurator.ViewModel
                 informationText = "";
 
                 updateOptionsTable();
-
-                optionCodeNotSelected = value == null ? true : false;
-
                 boxSize = "";
-            }
-        }
-
-        public bool optionCodeNotSelected
-        {
-            get
-            {
-                return _optionCodeNotSelected;
-            }
-            set
-            {
-                _optionCodeNotSelected = value;
-                RaisePropertyChanged("optionCodeNotSelected");
             }
         }
 
@@ -166,31 +148,29 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public string renameOptionCodes
+        public decimal newTime
         {
             get
             {
-                return _renameOptionCodes;
+                return _newTime;
             }
             set
             {
-                _renameOptionCodes = value.ToUpper();
-                RaisePropertyChanged("renameOptionCodes");
-                informationText = "";
+                _newTime = value;
+                RaisePropertyChanged("newTime");
             }
         }
 
-        public bool canRenameOptionCodes
+        public string newName
         {
             get
             {
-                return _canRenameOptionCodes;
+                return _newName;
             }
             set
             {
-                _canRenameOptionCodes = value;
-                RaisePropertyChanged("canRenameOptionCodes");
-                renameOptionCodes = "";
+                _newName = value;
+                RaisePropertyChanged("newName");
             }
         }
 
@@ -212,15 +192,6 @@ namespace RouteConfigurator.ViewModel
         private void updateOptionsTable()
         {
             optionsFound = _serviceProxy.getNumOptionsFound(selectedOptionCode, boxSize);
-
-            if(string.IsNullOrWhiteSpace(boxSize))
-            {
-                canRenameOptionCodes = true;
-            }
-            else
-            {
-                canRenameOptionCodes = false;
-            }
         }
         #endregion
     }

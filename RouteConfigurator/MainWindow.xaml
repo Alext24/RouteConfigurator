@@ -10,9 +10,8 @@
         MinHeight="{Binding Content.MinHeight, ElementName=mainFrame}"
         MinWidth="{Binding Content.MinWidth, ElementName=mainFrame}"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
-        DataContext="{Binding Main, Source={StaticResource Locator}}">
-    
+        WindowState="Maximized">
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

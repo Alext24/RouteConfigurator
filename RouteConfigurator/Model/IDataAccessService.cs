@@ -9,13 +9,13 @@ namespace RouteConfigurator.Model
 {
     public interface IDataAccessService
     {
-        ObservableCollection<Model> getModels();
+        IEnumerable<Model> getModels();
 
-        ObservableCollection<Model> getFilteredModels(string modelFilter, string boxSizeFilter);
+        IEnumerable<Model> getFilteredModels(string modelFilter, string boxSizeFilter);
 
-        ObservableCollection<Option> getOptions();
+        IEnumerable<Option> getOptions();
 
-        ObservableCollection<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter);
+        IEnumerable<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter);
 
         Model getModel(string modelName);
 
@@ -27,9 +27,9 @@ namespace RouteConfigurator.Model
 
         ObservableCollection<TimeTrial> getTimeTrials(string modelBase, List<string> options);
 
-        ObservableCollection<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter);
+        IEnumerable<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter);
 
-        ObservableCollection<Option> getModelOptions(List<string> optionsList, string boxSize);
+        IEnumerable<Option> getModelOptions(List<string> optionsList, string boxSize);
 
         ObservableCollection<string> getDriveTypes();
 
@@ -39,16 +39,16 @@ namespace RouteConfigurator.Model
 
         ObservableCollection<Option> getNumOptionsFound(string optionCode, string boxSize);
 
-        ObservableCollection<Override> getOverrides();
+        IEnumerable<Override> getOverrides();
 
-        ObservableCollection<Override> getFilteredOverrides(string overrideFilter);
+        IEnumerable<Override> getFilteredOverrides(string overrideFilter);
 
         void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);
 
-        ObservableCollection<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize);
-        ObservableCollection<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize);
-        ObservableCollection<Modification> getFilteredModifiedModels(string Sender, string ModelName);
-        ObservableCollection<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize);
+        IEnumerable<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize);
+        IEnumerable<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize);
+        IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelName);
+        IEnumerable<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize);
 
         IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum);
     }

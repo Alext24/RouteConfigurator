@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RouteConfigurator.View"
         mc:Ignorable="d"
-        MinHeight="500"
-        MinWidth="870"
-        Height="500"
-        Width="870"
+        MinHeight="510"
+        MinWidth="850"
+        Height="510"
+        Width="850"
         Title="Add Model"
         DataContext="{Binding AddModel, Source={StaticResource Locator}}">
 
-    <Border Padding="40" Background="{StaticResource LightBlue}">
+    <Border Padding="20" Background="{StaticResource LightBlue}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -25,11 +25,13 @@
                         <RowDefinition Height="auto"/>      <!--Row 0-->
                         <RowDefinition Height="auto"/>      <!--Row 1-->
                         <RowDefinition Height="auto"/>      <!--Row 2-->
-                        <RowDefinition Height="20"/>        <!--Row 3-->
+                        <RowDefinition Height="auto"/>        <!--Row 3-->
                         <RowDefinition Height="auto"/>      <!--Row 4-->
-                        <RowDefinition Height="auto"/>      <!--Row 5-->
-                        <RowDefinition Height="30"/>        <!--Row 6-->
+                        <RowDefinition Height="10"/>        <!--Row 5-->
+                        <RowDefinition Height="auto"/>      <!--Row 6-->
                         <RowDefinition Height="auto"/>      <!--Row 7-->
+                        <RowDefinition Height="30"/>        <!--Row 8-->
+                        <RowDefinition Height="auto"/>      <!--Row 9-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -72,14 +74,22 @@
                              ToolTip="Format Example: '12.34' hours"/>
 
                     <!--Row 3 setup: Blank, Spacing-->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Description"
+                               FontSize="16" Padding="20 5 0 0"/>
+
+                    <!--Row 4 setup: Description Text Box-->
+                    <TextBox Grid.Row="4" Grid.ColumnSpan="4" FontSize="16" MaxLines="2" Margin="10 0" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto"
+                             Text="{Binding description}"/>
+
+                    <!--Row 5 setup: Blank, Spacing-->
                     
-                    <!--Row 4 setup: Options table header-->
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Options"
+                    <!--Row 6 setup: Options table header-->
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Options"
                                FontSize="16" Padding="20 0"/>
 
-                    <!--Row 5 setup: Columns 0-1: Options table-->
+                    <!--Row 7 setup: Columns 0-1: Options table-->
                     <DataGrid  Height="120" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
-                               Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="10 0"
+                               Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="10 0"
                                ItemsSource="{Binding options}" AutoGenerateColumns="False"
                                ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
@@ -93,8 +103,8 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <!--Row 5 setup: Columns 2-3: Model Information-->
-                    <Grid Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2">
+                    <!--Row 7 setup: Columns 2-3: Model Information-->
+                    <Grid Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition Height="20"/>
@@ -140,13 +150,13 @@
                                    Text="{Binding prodSupCodeText}"/>
                     </Grid>
 
-                    <!--Row 6 setup: Blank, Spacing-->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 5 10 0"
+                    <!--Row 8 setup: Blank, Spacing-->
+                    <TextBlock Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 5 10 0"
                                Text="*Options are not necessary and will be removed when submitted."
                                FontSize="10" TextWrapping="WrapWithOverflow"/>
 
-                    <!--Row 7 setup: Submit button-->
-                    <Button Grid.Row="7" Grid.Column="3" Content="Submit" Command="{Binding submitCommand}"/>
+                    <!--Row 9 setup: Submit button-->
+                    <Button Grid.Row="9" Grid.Column="3" Content="Submit" Command="{Binding submitCommand}"/>
 
                 </Grid>
             

@@ -41,22 +41,15 @@ namespace RouteConfigurator.ViewModel
 
         private Model.Model _selectedModel;
 
-        private string _renameDrive;
+        private decimal _newDriveTime;
 
-        private bool _canRenameDrive = false;
-
-        private bool _renameActive = false;
-
-        private string _renameModel;
+        private decimal _newAVTime;
 
         private string _informationText;
         #endregion
 
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
-        public RelayCommand renameCommand { get; set; }
-        public RelayCommand acceptCommand { get; set; }
-        public RelayCommand cancelCommand { get; set; }
         public RelayCommand submitCommand { get; set; }
         #endregion
 
@@ -69,9 +62,6 @@ namespace RouteConfigurator.ViewModel
             _navigationService = navigationService;
 
             loadedCommand = new RelayCommand(loaded);
-            renameCommand = new RelayCommand(rename);
-            acceptCommand = new RelayCommand(accept);
-            cancelCommand = new RelayCommand(cancel);
             submitCommand = new RelayCommand(submit);
         }
         #endregion
@@ -80,26 +70,6 @@ namespace RouteConfigurator.ViewModel
         private void loaded()
         {
             driveTypes = _serviceProxy.getDriveTypes();
-        }
-
-        private void rename()
-        {
-            renameActive = true;
-        }
-
-        private void accept()
-        {
-            //Check if name is valid
-            //Send to director
-
-        }
-
-        private void cancel()
-        {
-            renameModel = "";
-            renameActive = false;
-            selectedModel = null;
-            informationText = "Rename canceled";
         }
 
         private void submit()
@@ -215,63 +185,32 @@ namespace RouteConfigurator.ViewModel
                 _selectedModel = value;
                 RaisePropertyChanged("selectedModel");
                 informationText = "";
-
-                renameActive = false;
             }
         }
 
-        public string renameDrive
+        public decimal newDriveTime
         {
             get
             {
-                return _renameDrive;
+                return _newDriveTime;
             }
             set
             {
-                _renameDrive = value.ToUpper();
-                RaisePropertyChanged("renameDrive");
-                informationText = "";
+                _newDriveTime = value;
+                RaisePropertyChanged("newDriveTime");
             }
         }
 
-        public bool canRenameDrive
+        public decimal newAVTime
         {
             get
             {
-                return _canRenameDrive;
+                return _newAVTime;
             }
             set
             {
-                _canRenameDrive = value;
-                RaisePropertyChanged("canRenameDrive");
-                renameDrive = "";
-            }
-        }
-
-        public bool renameActive
-        {
-            get
-            {
-                return _renameActive;
-            }
-            set
-            {
-                _renameActive = value;
-                RaisePropertyChanged("renameActive");
-            }
-        }
-
-        public string renameModel
-        {
-            get
-            {
-                return _renameModel;
-            }
-            set
-            {
-                _renameModel = value.ToUpper();
-                RaisePropertyChanged("renameModel");
-                informationText = "";
+                _newAVTime = value;
+                RaisePropertyChanged("newAVTime");
             }
         }
 
@@ -293,15 +232,6 @@ namespace RouteConfigurator.ViewModel
         private void updateModelsTable()
         {
             modelsFound = _serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize);
-
-            if(string.IsNullOrWhiteSpace(AVText) && string.IsNullOrWhiteSpace(boxSize))
-            {
-                canRenameDrive = true;
-            }
-            else
-            {
-                canRenameDrive = false;
-            }
         }
         #endregion
     }

@@ -639,13 +639,12 @@
                                                 </Grid.RowDefinitions>
 
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="{Binding ElementName=NOCheckBox, Path=ActualWidth}"/>
                                                     <ColumnDefinition Width="auto"/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Grid.Column="1" Text="Name/Description: "/>
-                                                <TextBlock Grid.Column="2" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
+                                                <TextBlock Grid.Column="0" Text="Name/Description: "/>
+                                                <TextBlock Grid.Column="1" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
                                             </Grid>
                                         </DataTemplate>
                                     </DataGrid.RowDetailsTemplate>
@@ -847,16 +846,15 @@
                                                 </Grid.RowDefinitions>
 
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="{Binding ElementName=OMCheckBox, Path=ActualWidth}"/>
                                                     <ColumnDefinition Width="auto"/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Grid.Column="1" Text="New Name/Description: "/>
-                                                <TextBlock Grid.Column="2" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
+                                                <TextBlock Grid.Column="0" Text="New Name/Description: "/>
+                                                <TextBlock Grid.Column="1" Text="{Binding NewName}" TextWrapping="WrapWithOverflow"/>
 
-                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="Old Name/Description: "/>
-                                                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding OldOptionName}" TextWrapping="WrapWithOverflow"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Old Name/Description: "/>
+                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding OldOptionName}" TextWrapping="WrapWithOverflow"/>
                                             </Grid>
                                         </DataTemplate>
                                     </DataGrid.RowDetailsTemplate>

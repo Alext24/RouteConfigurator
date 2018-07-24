@@ -21,66 +21,33 @@ namespace RouteConfigurator.Design
         #endregion
 
         /// <returns> returns all models </returns>
-        public ObservableCollection<Model.Model> getModels()
+        public IEnumerable<Model.Model> getModels()
         {
-            ObservableCollection<Model.Model> models = new ObservableCollection<Model.Model>();
-
-            foreach(Model.Model model in context.Models)
-            {
-                models.Add(model);
-            }
-
-            return models;
+            return context.Models.ToList();
         }
 
         /// <param name="modelFilter"> base name for the model </param>
         /// <param name="boxSizeFilter"> box size for the model </param>
         /// <returns> returns a list of the models that meet the filters</returns>
-        public ObservableCollection<Model.Model> getFilteredModels(string modelFilter, string boxSizeFilter)
+        public IEnumerable<Model.Model> getFilteredModels(string modelFilter, string boxSizeFilter)
         {
-
-            ObservableCollection<Model.Model> models = new ObservableCollection<Model.Model>();
-
-            var result = context.Models.Where(model => model.Base.Contains(modelFilter) && 
-                                                       model.BoxSize.Contains(boxSizeFilter)).ToList();
-
-            foreach(Model.Model model in result)
-            {
-                models.Add(model);
-            }
-
-            return models;
+            return context.Models.Where(model => model.Base.Contains(modelFilter) && 
+                                                 model.BoxSize.Contains(boxSizeFilter)).ToList();
         }
 
         /// <returns> returns all options </returns>
-        public ObservableCollection<Option> getOptions()
+        public IEnumerable<Option> getOptions()
         {
-            ObservableCollection<Option> options = new ObservableCollection<Option>();
-
-            foreach(Option option in context.Options)
-            {
-                options.Add(option);
-            }
-
-            return options;
+            return context.Options.ToList();
         }
 
         /// <param name="optionFilter"> name for the option </param>
         /// <param name="optionBoxSizeFilter"> box size for the option </param>
         /// <returns> returns a list of the options that meet the filters</returns>
-        public ObservableCollection<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter)
+        public IEnumerable<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter)
         {
-            ObservableCollection<Option> options = new ObservableCollection<Option>();
-
-            var result = context.Options.Where(option => option.OptionCode.Contains(optionFilter) && 
-                                                       option.BoxSize.Contains(optionBoxSizeFilter)).ToList();
-
-            foreach(Option option in result)
-            {
-                options.Add(option);
-            }
-
-            return options;
+            return context.Options.Where(option => option.OptionCode.Contains(optionFilter) && 
+                                                   option.BoxSize.Contains(optionBoxSizeFilter)).ToList();
         }
 
         /// <param name="modelName"> base name for a model </param>
@@ -222,39 +189,21 @@ namespace RouteConfigurator.Design
         /// <param name="salesFilter"> sales number for the time trials</param>
         /// <param name="productionNumFilter"> production number for the time trials</param>
         /// <returns> a list of time trials that meet the filters</returns>
-        public ObservableCollection<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter)
+        public IEnumerable<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter)
         {
-            ObservableCollection<TimeTrial> timeTrials = new ObservableCollection<TimeTrial>();
-
-            var result = context.TimeTrials.Where(tt => tt.Model.Base.Contains(modelBase) &&
-                                                        tt.OptionsText.Contains(optionTextFilter) &&
-                                                        tt.SalesOrder.ToString().Contains(salesFilter) &&
-                                                        tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
-
-            foreach(TimeTrial tt in result)
-            {
-                timeTrials.Add(tt);
-            }
-
-            return timeTrials;
+            return context.TimeTrials.Where(tt => tt.Model.Base.Contains(modelBase) &&
+                                                  tt.OptionsText.Contains(optionTextFilter) &&
+                                                  tt.SalesOrder.ToString().Contains(salesFilter) &&
+                                                  tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
         }
 
         /// <param name="optionsList"> option codes to search for </param>
         /// <param name="boxSize"> box size of model </param>
         /// <returns> list of options </returns>
-        public ObservableCollection<Option> getModelOptions(List<string> optionsList, string boxSize)
+        public IEnumerable<Option> getModelOptions(List<string> optionsList, string boxSize)
         {
-            ObservableCollection<Option> options = new ObservableCollection<Option>();
-
-            var result = context.Options.Where(option => optionsList.Any(optionCode => option.OptionCode.Contains(optionCode)) && 
-                                                         option.BoxSize.Contains(boxSize)).ToList();
-
-            foreach(Option option in result)
-            {
-                options.Add(option);
-            }
-
-            return options;
+            return context.Options.Where(option => optionsList.Any(optionCode => option.OptionCode.Contains(optionCode)) && 
+                                                   option.BoxSize.Contains(boxSize)).ToList();
         }
 
         /// <returns> list of unique drive types</returns>
@@ -286,7 +235,7 @@ namespace RouteConfigurator.Design
             if (string.IsNullOrWhiteSpace(boxSize))
             {
                 var result = context.Models.Where(model => model.Base.Contains(drive) &&
-                                                            model.Base.Contains(av)).ToList();
+                                                           model.Base.Contains(av)).ToList();
                 foreach(Model.Model model in result)
                 {
                     models.Add(model);
@@ -348,32 +297,16 @@ namespace RouteConfigurator.Design
         }
 
         /// <returns> list of active overrides</returns>
-        public ObservableCollection<Override> getOverrides()
+        public IEnumerable<Override> getOverrides()
         {
-            ObservableCollection<Override> overrides = new ObservableCollection<Override>();
-
-            foreach(Override item in context.Overrides)
-            {
-                overrides.Add(item);
-            }
-
-            return overrides;
+            return context.Overrides.ToList();
         }
 
         /// <param name="overrideFilter"> model number to filter overrides by</param>
         /// <returns> list of active overrides that contain the model number</returns>
-        public ObservableCollection<Override> getFilteredOverrides(string overrideFilter)
+        public IEnumerable<Override> getFilteredOverrides(string overrideFilter)
         {
-            ObservableCollection<Override> overrides = new ObservableCollection<Override>();
-
-            var result = context.Overrides.Where(item => item.ModelNum.Contains(overrideFilter)).ToList();
-
-            foreach(Override item in result)
-            {
-                overrides.Add(item);
-            }
-
-            return overrides;
+            return context.Overrides.Where(item => item.ModelNum.Contains(overrideFilter)).ToList();
         }
 
         /// <summary>
@@ -389,86 +322,46 @@ namespace RouteConfigurator.Design
             context.SaveChanges();
         }
 
-        public ObservableCollection<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize)
+        public IEnumerable<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize)
         {
-            ObservableCollection<Modification> newModels = new ObservableCollection<Modification>();
-
-            var result = context.Modifications.Where(item => item.IsOption == false && item.IsNew == true &&
-                                                             item.State == 0 &&
-                                                             item.Sender.Contains(Sender) &&
-                                                             item.ModelBase.Contains(Base) &&
-                                                             item.BoxSize.Contains(BoxSize)).ToList();
-
-            foreach(Modification item in result)
-            {
-                newModels.Add(item);
-            }
-
-            return newModels;
+            return context.Modifications.Where(item => item.IsOption == false && item.IsNew == true &&
+                                                       item.State == 0 &&
+                                                       item.Sender.Contains(Sender) &&
+                                                       item.ModelBase.Contains(Base) &&
+                                                       item.BoxSize.Contains(BoxSize)).ToList();
         }
 
-        public ObservableCollection<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize)
+        public IEnumerable<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize)
         {
-            ObservableCollection<Modification> newModels = new ObservableCollection<Modification>();
-
-            var result = context.Modifications.Where(item => item.IsOption == true && item.IsNew == true &&
-                                                             item.State == 0 && 
-                                                             item.Sender.Contains(Sender) &&
-                                                             item.OptionCode.Contains(OptionCode) &&
-                                                             item.BoxSize.Contains(BoxSize)).ToList();
-
-            foreach(Modification item in result)
-            {
-                newModels.Add(item);
-            }
-
-            return newModels;
+            return context.Modifications.Where(item => item.IsOption == true && item.IsNew == true &&
+                                                       item.State == 0 && 
+                                                       item.Sender.Contains(Sender) &&
+                                                       item.OptionCode.Contains(OptionCode) &&
+                                                       item.BoxSize.Contains(BoxSize)).ToList();
         }
 
-        public ObservableCollection<Modification> getFilteredModifiedModels(string Sender, string ModelName)
+        public IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelName)
         {
-            ObservableCollection<Modification> newModels = new ObservableCollection<Modification>();
-
-            var result = context.Modifications.Where(item => item.IsOption == false && item.IsNew == false &&
-                                                             item.State == 0 &&
-                                                             item.Sender.Contains(Sender) &&
-                                                             item.ModelBase.Contains(ModelName)).ToList();
-
-            foreach(Modification item in result)
-            {
-                newModels.Add(item);
-            }
-
-            return newModels;
+            return context.Modifications.Where(item => item.IsOption == false && item.IsNew == false &&
+                                                       item.State == 0 &&
+                                                       item.Sender.Contains(Sender) &&
+                                                       item.ModelBase.Contains(ModelName)).ToList();
         }
 
-        public ObservableCollection<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize)
+        public IEnumerable<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize)
         {
-            ObservableCollection<Modification> newModels = new ObservableCollection<Modification>();
-
-            var result = context.Modifications.Where(item => item.IsOption == true && item.IsNew == false &&
-                                                             item.State == 0 &&
-                                                             item.Sender.Contains(Sender) && 
-                                                             item.OptionCode.Contains(OptionCode) &&
-                                                             item.BoxSize.Contains(BoxSize)).ToList();
-
-            foreach(Modification item in result)
-            {
-                newModels.Add(item);
-            }
-
-            return newModels;
+            return context.Modifications.Where(item => item.IsOption == true && item.IsNew == false &&
+                                                       item.State == 0 &&
+                                                       item.Sender.Contains(Sender) && 
+                                                       item.OptionCode.Contains(OptionCode) &&
+                                                       item.BoxSize.Contains(BoxSize)).ToList();
         }
 
         public IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum)
         {
-            var result = context.OverrideRequests.Where(item => item.State == 0 &&
-                                                                item.Sender.Contains(Sender) && 
-                                                                item.ModelNum.Contains(ModelNum)).ToList();
-
-            IEnumerable<OverrideRequest> overrideRequests = new List<OverrideRequest>(result);
-
-            return overrideRequests;
+            return context.OverrideRequests.Where(item => item.State == 0 &&
+                                                          item.Sender.Contains(Sender) && 
+                                                          item.ModelNum.Contains(ModelNum)).ToList();
         }
     }
 }

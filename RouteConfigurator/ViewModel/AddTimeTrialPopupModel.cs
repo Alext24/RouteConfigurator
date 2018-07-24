@@ -71,7 +71,7 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loaded()
         {
-            models = _serviceProxy.getModels();
+            models = new ObservableCollection<Model.Model>(_serviceProxy.getModels());
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace RouteConfigurator.ViewModel
 
                 if(models == null || models.Count == 0)
                 {
-                    models = _serviceProxy.getModels();
+                    models = new ObservableCollection<Model.Model>(_serviceProxy.getModels());
                 }
             }
         }

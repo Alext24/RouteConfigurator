@@ -87,14 +87,8 @@ namespace RouteConfigurator.ViewModel
             updateModelModificationTable();
             updateOptionModificationTable();
             updateOverrideTable();
-
-            /*
-            newModels = _serviceProxy.getFilteredNewModels();
-            newOptions = _serviceProxy.getFilteredNewOptions();
-            modifiedModels = _serviceProxy.getFilteredModifiedModels();
-            modifiedOptions = _serviceProxy.getFilteredModifiedOptions();
-            */
         }
+
         private void submitChecked()
         {
             MessageBox.Show("Placeholder for submitting all selected");
@@ -462,22 +456,22 @@ namespace RouteConfigurator.ViewModel
         #region Private Functions
         private void updateNewModelTable()
         {
-            newModels = _serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter);
+            newModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter));
         }
 
         private void updateNewOptionTable()
         {
-            newOptions = _serviceProxy.getFilteredNewOptions(NOSenderFilter, NOOptionCodeFilter, NOBoxSizeFilter);
+            newOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewOptions(NOSenderFilter, NOOptionCodeFilter, NOBoxSizeFilter));
         }
 
         private void updateModelModificationTable()
         {
-            modifiedModels = _serviceProxy.getFilteredModifiedModels(MMSenderFilter, MMModelNameFilter);
+            modifiedModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedModels(MMSenderFilter, MMModelNameFilter));
         }
 
         private void updateOptionModificationTable()
         {
-            modifiedOptions = _serviceProxy.getFilteredModifiedOptions(OMSenderFilter, OMOptionCodeFilter, OMBoxSizeFilter);
+            modifiedOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedOptions(OMSenderFilter, OMOptionCodeFilter, OMBoxSizeFilter));
         }
 
         private void updateOverrideTable()
