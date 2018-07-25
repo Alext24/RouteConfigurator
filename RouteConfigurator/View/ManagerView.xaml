@@ -44,6 +44,18 @@
                             <Grid.Resources>
                                 <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
                                 <routeconfigurator:CheckBoxToModStateConverter x:Key="StateConverter"/>
+
+                                <Style TargetType="ToolTip">
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding}" MaxWidth="300" TextWrapping="WrapWithOverflow"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
                             </Grid.Resources>
 
                             <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -68,7 +80,7 @@
 
                                     <DataGrid.RowStyle>
                                         <Style TargetType="DataGridRow">
-                                            <Setter Property="ToolTip" Value="{Binding Description}"/>
+                                            <Setter Property="ToolTip" Value="{Binding Description}" />
                                         </Style>
                                     </DataGrid.RowStyle>
 

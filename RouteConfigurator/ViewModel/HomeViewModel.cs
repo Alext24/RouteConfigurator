@@ -97,7 +97,7 @@ namespace RouteConfigurator.ViewModel
 
         private void supervisorLogin()
         {
-            _navigationService.NavigateTo("SupervisorView");
+            _navigationService.NavigateTo("SupervisorView", true);
         }
 
         private void managerLogin()

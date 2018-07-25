@@ -29,6 +29,8 @@ namespace RouteConfigurator.Model
 
         IEnumerable<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter);
 
+        IEnumerable<TimeTrial> getStrictFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter);
+
         IEnumerable<Option> getModelOptions(List<string> optionsList, string boxSize);
 
         ObservableCollection<string> getDriveTypes();

@@ -29,6 +29,8 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        private bool _goHomeAllowed = false;
+
         // Model Table
         private static ObservableCollection<Model.Model> _models;
         private Model.Model _selectedModel;
@@ -44,6 +46,7 @@ namespace RouteConfigurator.ViewModel
         private bool _TTVisible = false;
         private ObservableCollection<TimeTrial> _timeTrials;
         private TimeTrial _selectedTimeTrial;
+        private bool _optionTextChecked = false;
         private string _optionTextFilter = "";
         private string _salesFilter = "";
         private string _productionNumFilter = "";
@@ -86,6 +89,11 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
+            if(navigationService.Parameter != null)
+            {
+                goHomeAllowed = true;
+            }
+
             loadModelsCommand = new RelayCommand(updateModelTable);
             addModelCommand = new RelayCommand(addModel);
             modifyModelCommand = new RelayCommand(modifyModel);
@@ -106,6 +114,19 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Commands
+        public bool goHomeAllowed
+        {
+            get
+            {
+                return _goHomeAllowed;
+            }
+            set
+            {
+                _goHomeAllowed = value;
+                RaisePropertyChanged("goHomeAllowed");
+            }
+        }
+
         private void loadModels()
         {
             updateModelTable();
@@ -359,6 +380,24 @@ namespace RouteConfigurator.ViewModel
         /// <summary>
         /// Calls updateTTFilter
         /// </summary>
+        public bool optionTextChecked
+        {
+            get
+            {
+                return _optionTextChecked;
+            }
+            set
+            {
+                _optionTextChecked = value;
+                RaisePropertyChanged("optionTextChecked");
+                informationText = "";
+                updateTTTable();
+            }
+        }
+
+        /// <summary>
+        /// Calls updateTTFilter
+        /// </summary>
         public string optionTextFilter
         {
             get
@@ -533,7 +572,14 @@ namespace RouteConfigurator.ViewModel
         {
             if (selectedModel != null)
             {
-                timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter));
+                if (optionTextChecked)
+                {
+                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getStrictFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter));
+                }
+                else
+                {
+                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter));
+                }
                 calcTTAverages();
             }
         }

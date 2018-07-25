@@ -197,6 +197,20 @@ namespace RouteConfigurator.Design
                                                   tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
         }
 
+        /// <param name="modelBase"> base model name </param>
+        /// <param name="optionTextFilter"> option text for the model number </param>
+        /// <param name="salesFilter"> sales number for the time trials</param>
+        /// <param name="productionNumFilter"> production number for the time trials</param>
+        /// <returns> a list of time trials that meet the filters</returns>
+        public IEnumerable<TimeTrial> getStrictFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter)
+        {
+            return context.TimeTrials.Where(tt => tt.Model.Base.Contains(modelBase) &&
+                                                  tt.OptionsText.Equals(optionTextFilter) &&
+                                                  tt.SalesOrder.ToString().Contains(salesFilter) &&
+                                                  tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
+        }
+
+
         /// <param name="optionsList"> option codes to search for </param>
         /// <param name="boxSize"> box size of model </param>
         /// <returns> list of options </returns>
