@@ -85,50 +85,11 @@ namespace RouteConfigurator.Design
         /// <returns> total time for the options </returns>
         public decimal getTotalOptionsTime(string boxSize, List<string> options)
         {
-            decimal totalTime = 0;
-
-            if (options.Count() == 0)
-            {
-                return 0;
-            }
-
             using (context = new RouteConfiguratorDB())
             {
                 return context.Options.Where(x => x.BoxSize.Equals(boxSize) &&
                                                   options.Contains(x.OptionCode)).Sum(y => y.Time);
             }
-
-            List<Option> optionsForBoxSize = context.Options.Where(o => o.BoxSize.Equals(boxSize)).ToList();
-
-            string errorText = "";
-            bool missedOption = false;
-            bool foundOption;
-
-            foreach(string option in options)
-            {
-                foundOption = false;
-                foreach(Option op in optionsForBoxSize)
-                {
-                    if (op.OptionCode.Equals(option))
-                    {
-                        totalTime += op.Time;
-                        foundOption = true;
-                        break;
-                    }
-                }
-                if (!foundOption)
-                {
-                    missedOption = true;
-                    errorText += string.Format("{0} not found\n", option);
-                }
-            }
-
-            if (missedOption)
-            {
-                errorText += "Information may be inaccurate.";
-                MessageBox.Show(errorText);
-            }
-            return totalTime;
         }
 
         /// <param name="modelBase"> model base to get time trials for</param>
