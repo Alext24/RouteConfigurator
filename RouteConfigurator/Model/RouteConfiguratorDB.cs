@@ -9,7 +9,7 @@ namespace RouteConfigurator.Model
 {
     public class RouteConfiguratorDB : DbContext
     {
-        public RouteConfiguratorDB() : base("RouteConfiguratorDB")
+        public RouteConfiguratorDB() : base("name=RouteConfiguratorConnectionString")
         {
 
         }
