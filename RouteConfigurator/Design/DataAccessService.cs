@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Data.Entity;
 
 namespace RouteConfigurator.Design
 {
@@ -54,6 +55,9 @@ namespace RouteConfigurator.Design
         /// <returns> returns the model specified by the model name </returns>
         public Model.Model getModel(string modelName)
         {
+            return context.Models.Find(modelName) as Model.Model;
+
+            /*
             Model.Model returnModel = null;
 
             var model = context.Models.Find(modelName);
@@ -61,12 +65,16 @@ namespace RouteConfigurator.Design
             returnModel = model as Model.Model;
 
             return returnModel;
+            */
         }
 
         /// <param name="modelNum"> the entire model number </param>
         /// <returns> returns the override info for a model</returns>
         public Override getModelOverride(string modelNum)
         {
+            return context.Overrides.Find(modelNum) as Override;
+
+            /*
             Override retOverride = null;
 
             var overrideVal = context.Overrides.Find(modelNum);
@@ -79,6 +87,7 @@ namespace RouteConfigurator.Design
             retOverride = overrideVal as Override;
 
             return retOverride;
+            */
         }
 
         /// <param name="boxSize"> box size for the model </param>
@@ -92,6 +101,9 @@ namespace RouteConfigurator.Design
             {
                 return 0;
             }
+
+            return context.Options.Where(x => x.BoxSize.Equals(boxSize) &&
+                                              options.Contains(x.OptionCode)).Sum(y => y.Time);
 
             List<Option> optionsForBoxSize = context.Options.Where(o => o.BoxSize.Equals(boxSize)).ToList();
 
@@ -128,8 +140,11 @@ namespace RouteConfigurator.Design
 
         /// <param name="modelBase"> model base to get time trials for</param>
         /// <returns> list of time trials with the model base </returns>
-        public ObservableCollection<TimeTrial> getTimeTrials(string modelBase)
+        public IEnumerable<TimeTrial> getTimeTrials(string modelBase)
         {
+            return context.TimeTrials.Where(x => x.Model.Base.Equals(modelBase)).ToList();
+
+            /*
             ObservableCollection<TimeTrial> timeTrials = new ObservableCollection<TimeTrial>();
 
             //Search through each stored time trial
@@ -142,15 +157,19 @@ namespace RouteConfigurator.Design
                 }
             }
             return timeTrials;
+            */
         }
 
         /// <param name="modelBase">model base name</param>
         /// <param name="options">list of options</param>
         /// <returns> list of time trials for a specific model </returns>
-        public ObservableCollection<TimeTrial> getTimeTrials(string modelBase, List<string> options)
+        public IEnumerable<TimeTrial> getTimeTrials(string modelBase, List<string> options)
         {
-            ObservableCollection<TimeTrial> timeTrials = new ObservableCollection<TimeTrial>();
+            return context.TimeTrials.Where(x => x.Model.Base.Equals(modelBase) &&
+                                                 x.TTOptionTimes.Count == options.Count &&
+                                                 x.TTOptionTimes.All(y => options.Contains(y.OptionCode))).ToList();
 
+            /*
             //Search through each stored time trial
             foreach (var timeTrial in context.TimeTrials)
             {
@@ -182,6 +201,8 @@ namespace RouteConfigurator.Design
                 }
             }
             return timeTrials;
+
+            */
         }
 
         /// <param name="modelBase"> base model name </param>
@@ -221,8 +242,11 @@ namespace RouteConfigurator.Design
         }
 
         /// <returns> list of unique drive types</returns>
-        public ObservableCollection<string> getDriveTypes()
+        public IEnumerable<string> getDriveTypes()
         {
+            return context.Models.Select(x => x.Base.Substring(0, 4)).ToList().Distinct();
+
+            /*
             ObservableCollection<string> driveTypes = new ObservableCollection<string>();
 
             string driveType = "";
@@ -236,14 +260,32 @@ namespace RouteConfigurator.Design
             }
 
             return driveTypes;
+            */
         }
 
         /// <param name="drive"></param>
         /// <param name="av"></param>
         /// <param name="boxSize"></param>
+        /// <param name="exact"></param>
         /// <returns> a list of models that meet the filters</returns>
-        public ObservableCollection<Model.Model> getNumModelsFound(string drive, string av, string boxSize)
+        public IEnumerable<Model.Model> getNumModelsFound(string drive, string av, string boxSize, bool exact)
         {
+
+            if (exact)
+            {
+                return context.Models.Where(x => x.Base.Contains(drive) &&
+                                                 x.Base.Contains(av) &&
+                                                 x.BoxSize.Equals(boxSize)).ToList();
+            }
+            else
+            {
+                return context.Models.Where(x => x.Base.Contains(drive) &&
+                                                 x.Base.Contains(av) &&
+                                                 x.BoxSize.Contains(boxSize)).ToList();
+            }
+
+
+
             ObservableCollection<Model.Model> models = new ObservableCollection<Model.Model>();
 
             if (string.IsNullOrWhiteSpace(boxSize))
@@ -269,8 +311,10 @@ namespace RouteConfigurator.Design
             return models;
         }
 
-        public ObservableCollection<string> getOptionCodes()
+        public IEnumerable<string> getOptionCodes()
         {
+            return context.Options.Select(x => x.OptionCode).ToList().Distinct();
+
             ObservableCollection<string> optionCodes = new ObservableCollection<string>();
 
             string optionCode = "";
@@ -285,8 +329,19 @@ namespace RouteConfigurator.Design
             return optionCodes;
         }
 
-        public ObservableCollection<Option> getNumOptionsFound(string optionCode, string boxSize)
+        public IEnumerable<Option> getNumOptionsFound(string optionCode, string boxSize, bool exact)
         {
+            if (exact)
+            {
+                return context.Options.Where(option => option.OptionCode.Contains(optionCode) &&
+                                                       option.BoxSize.Equals(boxSize)).ToList();
+            }
+            else
+            {
+                return context.Options.Where(option => option.OptionCode.Contains(optionCode) &&
+                                                       option.BoxSize.Contains(boxSize)).ToList();
+            }
+
             ObservableCollection<Option> options = new ObservableCollection<Option>();
 
             if (string.IsNullOrWhiteSpace(boxSize))
@@ -380,6 +435,12 @@ namespace RouteConfigurator.Design
             return context.OverrideRequests.Where(item => item.State == 0 &&
                                                           item.Sender.Contains(Sender) && 
                                                           item.ModelNum.Contains(ModelNum)).ToList();
+        }
+
+        public void addModificationRequest(Modification mod)
+        {
+            context.Modifications.Add(mod);
+            context.SaveChanges();
         }
     }
 }

@@ -508,7 +508,7 @@ namespace RouteConfigurator.ViewModel
             if (!string.IsNullOrWhiteSpace(model))
             {
                 //Retrieve timeTrials from the database
-                timeTrials = _serviceProxy.getTimeTrials(model, options);
+                timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getTimeTrials(model, options));
 
                 if (timeTrials.Count() > 0)
                 {

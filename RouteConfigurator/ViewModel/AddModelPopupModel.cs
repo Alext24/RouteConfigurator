@@ -67,10 +67,35 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void submit()
         {
-            if (isValid())
+            if (checkValid())
             {
-                MessageBox.Show("Hi\nPlaceholder for sending model to director");
-                informationText = "Model has been submitted.  Waiting for director approval.";
+                Modification newModel = new Modification()
+                {
+                    RequestDate = DateTime.Now,
+                    ModelBase = modelNum.Substring(0,8),
+                    BoxSize = boxSize,
+                    Description = description,
+                    State = 0,
+                    Sender = "TEMPORARY PLACEHOLDER",
+                    IsOption = false,
+                    IsNew = true,
+                    NewDriveTime = (decimal)driveTime,
+                    NewAVTime = (decimal)AVTime,
+                };
+
+                try
+                {
+                    _serviceProxy.addModificationRequest(newModel);
+                    informationText = "Model has been submitted.  Waiting for director approval.";
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                    return;
+                }
+
+                //MessageBox.Show("Hi\nPlaceholder for sending model to director");
             }
         }
         #endregion
@@ -285,6 +310,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _description = value;
                 RaisePropertyChanged("description");
+                informationText = "";
             }
         }
 
@@ -408,29 +434,60 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Checks if all information is entered and that the model doesn't
-        /// already exist in the database.
+        /// 
+        /// Calls checkComplete
         /// </summary>
-        /// <returns> true if information is valid and can be submitted, false otherwise</returns>
-        private bool isValid()
+        /// <returns></returns>
+        private bool checkValid()
         {
-            bool valid = false;
+            bool valid = checkComplete();
+            if (valid)
+            {
+                using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+                {
+                    //Check if the model already exists in the database as a model or as a new model request
+                    string modelBase = modelNum.Substring(0, 8);
+
+                    List<Model.Model> result = context.Models.Where(model => model.Base.Equals(modelBase)).ToList();
+
+                    if (result.Count > 0)
+                    {
+                        informationText = string.Format("Model {0} already exists.", modelBase);
+                        valid = false;
+                    }
+                    else
+                    {
+                        List<Modification> result2 = context.Modifications.Where(model => model.ModelBase.Equals(modelBase) &&
+                                                                                          model.IsNew == true).ToList();
+                        if (result2.Count > 0)
+                        {
+                            informationText = string.Format("Model {0} is already waiting for approval.", modelBase);
+                            valid = false;
+                        }
+                    }
+                }
+            }
+            return valid;
+        }
+
+        /// <summary>
+        /// Checks to see if all necessary fields are filled out before the model 
+        /// can be added.  
+        /// </summary>
+        /// <returns> true if the form is complete, otherwise false </returns>
+        private bool checkComplete()
+        {
+            bool complete = false;
 
             if (_modelEntered)
             {
                 if (_boxSizeEntered && _driveTimeEntered && _AVTimeEntered)
                 {
-                    valid = true;
+                    complete = true;
                 }
                 else
                 {
                     informationText = "Enter all information before submitting.";
-                }
-
-                if (valid && _serviceProxy.getModel(modelNum.Substring(0, 8)) != null)
-                {
-                    informationText = "Model already exists.";
-                    valid = false;
                 }
             }
             else
@@ -438,8 +495,7 @@ namespace RouteConfigurator.ViewModel
                 informationText = "Invalid Model";
             }
 
-
-            return valid;
+            return complete;
         }
 
         /// <summary>

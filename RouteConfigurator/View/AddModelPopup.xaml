@@ -30,15 +30,14 @@
                         <RowDefinition Height="10"/>        <!--Row 5-->
                         <RowDefinition Height="auto"/>      <!--Row 6-->
                         <RowDefinition Height="auto"/>      <!--Row 7-->
-                        <RowDefinition Height="30"/>        <!--Row 8-->
                         <RowDefinition Height="auto"/>      <!--Row 9-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition Width="auto" MaxWidth="100"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
                     <!--Row 0 setup: Title-->
@@ -59,22 +58,20 @@
                                FontSize="16" Padding="20 0"/>
 
                     <!--Row 2 setup: Input boxes-->
-                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0"
+                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0" MinWidth="200"
                              Text="{Binding modelNum}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" Width="80"
                              Text="{Binding boxSize}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0"
-                             Text="{Binding driveTime, TargetNullValue=''}"
-                             ToolTip="Format Example: '12.34' hours"/>
+                    <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0" Width="180"
+                             Text="{Binding driveTime, TargetNullValue=''}" ToolTip="Format Example: '12.34' hours"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0"
-                             Text="{Binding AVTime, TargetNullValue=''}"
-                             ToolTip="Format Example: '12.34' hours"/>
+                    <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0" Width="180"
+                             Text="{Binding AVTime, TargetNullValue=''}" ToolTip="Format Example: '12.34' hours"/>
 
-                    <!--Row 3 setup: Blank, Spacing-->
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Description"
+                    <!--Row 3 setup: Description Header-->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Request Description"
                                FontSize="16" Padding="20 5 0 0"/>
 
                     <!--Row 4 setup: Description Text Box-->
@@ -84,14 +81,12 @@
                     <!--Row 5 setup: Blank, Spacing-->
                     
                     <!--Row 6 setup: Options table header-->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Options"
-                               FontSize="16" Padding="20 0"/>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Options" FontSize="16" Padding="20 5 0 5"/>
 
                     <!--Row 7 setup: Columns 0-1: Options table-->
-                    <DataGrid  Height="120" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                    <DataGrid  Height="130" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True" AutoGenerateColumns="False"
                                Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="10 0"
-                               ItemsSource="{Binding options}" AutoGenerateColumns="False"
-                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                               ItemsSource="{Binding options}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Option"
@@ -119,7 +114,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <!--Row 0 setup: Total Time-->
+                        <!--Row 0 setup: Model Time-->
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Model Time"
                                    FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 
@@ -150,16 +145,13 @@
                                    Text="{Binding prodSupCodeText}"/>
                     </Grid>
 
-                    <!--Row 8 setup: Blank, Spacing-->
+                    <!--Row 8 setup: Asterisk header and submit button-->
                     <TextBlock Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 5 10 0"
                                Text="*Options are not necessary and will be removed when submitted."
                                FontSize="10" TextWrapping="WrapWithOverflow"/>
 
-                    <!--Row 9 setup: Submit button-->
-                    <Button Grid.Row="9" Grid.Column="3" Content="Submit" Command="{Binding submitCommand}"/>
-
+                    <Button Grid.Row="8" Grid.Column="3" Content="Submit Model" Command="{Binding submitCommand}" Margin="0 10 0 0"/>
                 </Grid>
-            
             </Border>
 
             <!--Information text-->

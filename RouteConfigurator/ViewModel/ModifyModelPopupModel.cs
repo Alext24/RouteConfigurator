@@ -37,6 +37,8 @@ namespace RouteConfigurator.ViewModel
 
         private string _boxSize = "";
 
+        private bool _exactBoxSize = false;
+
         private ObservableCollection<Model.Model> _modelsFound;
 
         private Model.Model _selectedModel;
@@ -69,7 +71,7 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loaded()
         {
-            driveTypes = _serviceProxy.getDriveTypes();
+            driveTypes = new ObservableCollection<string>(_serviceProxy.getDriveTypes());
         }
 
         private void submit()
@@ -158,6 +160,22 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public bool exactBoxSize
+        {
+            get
+            {
+                return _exactBoxSize;
+            }
+            set
+            {
+                _exactBoxSize = value;
+                RaisePropertyChanged("exactBoxSize");
+                informationText = "";
+
+                updateModelsTable();
+            }
+        }
+
         public ObservableCollection<Model.Model> modelsFound
         {
             get
@@ -231,7 +249,7 @@ namespace RouteConfigurator.ViewModel
         #region Private Functions 
         private void updateModelsTable()
         {
-            modelsFound = _serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize);
+            modelsFound = new ObservableCollection<Model.Model>(_serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize, exactBoxSize));
         }
         #endregion
     }

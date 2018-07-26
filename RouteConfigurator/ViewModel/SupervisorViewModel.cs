@@ -241,7 +241,7 @@ namespace RouteConfigurator.ViewModel
                 if (value != null)
                 {
                     TTVisible = true;
-                    timeTrials = _serviceProxy.getTimeTrials(selectedModel.Base);
+                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getTimeTrials(selectedModel.Base));
 
                     calcTTAverages();
                 }

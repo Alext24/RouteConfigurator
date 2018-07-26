@@ -64,7 +64,10 @@
                     <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding optionCodes}" SelectedValue="{Binding selectedOptionCode}"/>
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Box Size" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding boxSize}" FontSize="16"/>
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                        <TextBox Margin="5" Width="115" Text="{Binding boxSize}" FontSize="16"/>
+                        <CheckBox IsChecked="{Binding exactBoxSize}" VerticalAlignment="Center"/>
+                    </StackPanel>
 
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Options found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
                     <TextBlock Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding optionsFound.Count}" FontSize="16"/>

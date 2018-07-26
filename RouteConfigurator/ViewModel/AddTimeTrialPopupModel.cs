@@ -76,58 +76,55 @@ namespace RouteConfigurator.ViewModel
 
         /// <summary>
         /// Adds a time trial to the list to be submitted
-        /// Calls checkComplete and checkValid
+        /// Calls checkValid
         /// </summary>
         private void addTT()
         {
             informationText = "";
-            if (checkComplete())
+            if (checkValid())
             {
-                if (checkValid())
+                TimeTrial newTT = new TimeTrial()
                 {
-                    TimeTrial newTT = new TimeTrial()
-                    {
-                        ProductionNumber = (int)productionNum,
-                        SalesOrder = (int)salesOrder,
-                        Date = (DateTime)date,
-                        DriveTime = (decimal)driveTime,
-                        AVTime = (decimal)AVTime,
-                        Model = selectedModel,
-                        NumOptions = numOptions == null ? 0 : (int)numOptions,
-                        TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(),
+                    ProductionNumber = (int)productionNum,
+                    SalesOrder = (int)salesOrder,
+                    Date = (DateTime)date,
+                    DriveTime = (decimal)driveTime,
+                    AVTime = (decimal)AVTime,
+                    Model = selectedModel,
+                    NumOptions = numOptions == null ? 0 : (int)numOptions,
+                    TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(),
 
-                        TotalTime = calcTotalTime()
-                    };
+                    TotalTime = calcTotalTime()
+                };
 
-                    foreach (TimeTrialsOptionTime TTOption in TTOptions)
-                    {
-                        TTOption.OptionCode = TTOption.OptionCode.ToUpper();
-                        TTOption.ProductionNumber = (int)productionNum;
-                        TTOption.TimeTrial = newTT;
+                foreach (TimeTrialsOptionTime TTOption in TTOptions)
+                {
+                    TTOption.OptionCode = TTOption.OptionCode.ToUpper();
+                    TTOption.ProductionNumber = (int)productionNum;
+                    TTOption.TimeTrial = newTT;
 
-                        newTT.TTOptionTimes.Add(TTOption);
-                    }
-
-                    //Sort list alphabetically
-                    newTT.TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(newTT.TTOptionTimes.OrderBy(i => i.OptionCode));
-
-                    newTT.OptionsText = getOptionsText(newTT.TTOptionTimes);
-
-                    timeTrials.Add(newTT);
-
-                    // Clear input boxes
-
-                    //modelText = "";
-                    //date = null;
-                    //salesOrder = null;
-                    productionNum++;
-                    driveTime = null;
-                    AVTime = null;
-                    numOptions = null;
-                    TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
-
-                    informationText = "Time Trial added";
+                    newTT.TTOptionTimes.Add(TTOption);
                 }
+
+                //Sort list alphabetically
+                newTT.TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(newTT.TTOptionTimes.OrderBy(i => i.OptionCode));
+
+                newTT.OptionsText = getOptionsText(newTT.TTOptionTimes);
+
+                timeTrials.Add(newTT);
+
+                // Clear input boxes
+
+                //modelText = "";
+                //date = null;
+                //salesOrder = null;
+                productionNum++;
+                driveTime = null;
+                AVTime = null;
+                numOptions = null;
+                TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
+
+                informationText = "Time Trial added";
             }
         }
 

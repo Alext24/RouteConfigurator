@@ -23,9 +23,9 @@ namespace RouteConfigurator.Model
 
         decimal getTotalOptionsTime(string boxSize, List<string> options);
 
-        ObservableCollection<TimeTrial> getTimeTrials(string modelBase);
+        IEnumerable<TimeTrial> getTimeTrials(string modelBase);
 
-        ObservableCollection<TimeTrial> getTimeTrials(string modelBase, List<string> options);
+        IEnumerable<TimeTrial> getTimeTrials(string modelBase, List<string> options);
 
         IEnumerable<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter);
 
@@ -33,13 +33,13 @@ namespace RouteConfigurator.Model
 
         IEnumerable<Option> getModelOptions(List<string> optionsList, string boxSize);
 
-        ObservableCollection<string> getDriveTypes();
+        IEnumerable<string> getDriveTypes();
 
-        ObservableCollection<Model> getNumModelsFound(string drive, string av, string boxSize);
+        IEnumerable<Model> getNumModelsFound(string drive, string av, string boxSize, bool exact);
 
-        ObservableCollection<string> getOptionCodes();
+        IEnumerable<string> getOptionCodes();
 
-        ObservableCollection<Option> getNumOptionsFound(string optionCode, string boxSize);
+        IEnumerable<Option> getNumOptionsFound(string optionCode, string boxSize, bool exact);
 
         IEnumerable<Override> getOverrides();
 
@@ -53,5 +53,7 @@ namespace RouteConfigurator.Model
         IEnumerable<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize);
 
         IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum);
+
+        void addModificationRequest(Modification mod);
     }
 }

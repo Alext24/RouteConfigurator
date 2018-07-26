@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RouteConfigurator.View"
         mc:Ignorable="d"
-        MinHeight="450"
+        MinHeight="500"
         MinWidth="800"
-        Height="450" 
+        Height="500" 
         Width="800"
         Title="Add Option" 
         DataContext="{Binding AddOption, Source={StaticResource Locator}}">
 
-    <Border Padding="40" Background="{StaticResource LightBlue}">
+    <Border Padding="20" Background="{StaticResource LightBlue}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -25,16 +25,18 @@
                         <RowDefinition Height="auto"/>      <!--Row 0-->
                         <RowDefinition Height="auto"/>      <!--Row 1-->
                         <RowDefinition Height="auto"/>      <!--Row 2-->
-                        <RowDefinition Height="20"/>        <!--Row 3-->
+                        <RowDefinition Height="auto"/>      <!--Row 3-->
                         <RowDefinition Height="auto"/>      <!--Row 4-->
                         <RowDefinition Height="20"/>        <!--Row 5-->
                         <RowDefinition Height="auto"/>      <!--Row 6-->
+                        <RowDefinition Height="20"/>        <!--Row 7-->
+                        <RowDefinition Height="auto"/>      <!--Row 8-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
@@ -52,36 +54,39 @@
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="Production Time"
                                FontSize="16" Padding="20 0"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Name/Description"
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Name/Option Description"
                                FontSize="16" Padding="20 0"/>
 
                     <!--Row 2 setup: Input boxes-->
-                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0"
-                             Text="{Binding optionCode}"
-                             ToolTip="Format Example: PA or TX"/>
+                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0" Width="115"
+                             Text="{Binding optionCode}" ToolTip="Format Example: PA or TX"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0"
+                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" Width="80"
                              Text="{Binding boxSize}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0"
-                             Text="{Binding time, TargetNullValue=''}"
-                             ToolTip="Format Example: '12.34' hours"/>
+                    <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0" Width="140"
+                             Text="{Binding time, TargetNullValue=''}" ToolTip="Format Example: '12.34' hours"/>
 
                     <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0"
                              Text="{Binding name}"/>
 
-                    <!--Row 3 setup: Blank, Spacing-->
+                    <!--Row 3 setup: Description Header-->
+                    <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="Request Description"
+                               FontSize="16" Padding="20 5 0 0"/>
 
-                    <!--Row 4 Col 0-1 setup: Options table header-->
-                    <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="20 0" FontSize="16"
+                    <!--Row 4 setup: Description Text Box-->
+                    <TextBox Grid.Row="4" Grid.ColumnSpan="4" FontSize="16" MaxLines="2" Margin="10 0" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto"
+                             Text="{Binding description}"/>
+
+                    <!--Row 5 setup: Blank, Spacing-->
+
+                    <!--Row 6 Col 0-1 setup: Options table header-->
+                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="20 0" FontSize="16"
                                Text="Current Options to Submit" VerticalAlignment="Bottom" Padding="0 5"/>
 
-                    <!--Row 4 Col 3 setup: Add Option Button-->
-                    <Button Grid.Row="4" Grid.Column="3" Content="Add Option" Command="{Binding addOptionCommand}"/>
-                    
-                    <!--Row 5-6 Col 0-1 setup: Options table-->
-                    <DataGrid  Height="120" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
-                               Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="10 0"
+                    <!--Row 7-8 Col 0-1 setup: Options table-->
+                    <DataGrid  Height="140" MaxWidth="350" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
+                               Grid.Row="7" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0"
                                ItemsSource="{Binding optionsToSubmit}" AutoGenerateColumns="False"
                                ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
@@ -97,10 +102,13 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <!--Row 5 setup: Columns 2-3: Blank, Spacing-->
+                    <!--Row 6 Col 3 setup: Add Option Button-->
+                    <Button Grid.Row="6" Grid.Column="3" Content="Add Option" HorizontalAlignment="Right" Width="150" Command="{Binding addOptionCommand}"/>
+                    
+                    <!--Row 7 setup: Columns 2-3: Blank, Spacing-->
 
-                    <!--Row 6 setup: Columns 2-3: Submit Button-->
-                    <Button Grid.Row="6" Grid.Column="3" Content="Submit Options" Command="{Binding submitCommand}"/>
+                    <!--Row 8 setup: Columns 2-3: Submit Button-->
+                    <Button Grid.Row="8" Grid.Column="3" Content="Submit Options" HorizontalAlignment="Right" Width="150" Command="{Binding submitCommand}"/>
 
                 </Grid>
             </Border>

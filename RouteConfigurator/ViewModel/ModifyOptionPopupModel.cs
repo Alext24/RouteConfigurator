@@ -33,6 +33,8 @@ namespace RouteConfigurator.ViewModel
 
         private string _boxSize = "";
 
+        private bool _exactBoxSize = false;
+
         private ObservableCollection<Option> _optionsFound;
 
         private Option _selectedOption;
@@ -65,7 +67,7 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loaded()
         {
-            optionCodes = _serviceProxy.getOptionCodes();
+            optionCodes = new ObservableCollection<string>(_serviceProxy.getOptionCodes());
         }
 
         private void submit()
@@ -115,6 +117,22 @@ namespace RouteConfigurator.ViewModel
             {
                 _boxSize = value.ToUpper();
                 RaisePropertyChanged("boxSize");
+                informationText = "";
+
+                updateOptionsTable();
+            }
+        }
+
+        public bool exactBoxSize
+        {
+            get
+            {
+                return _exactBoxSize;
+            }
+            set
+            {
+                _exactBoxSize = value;
+                RaisePropertyChanged("exactBoxSize");
                 informationText = "";
 
                 updateOptionsTable();
@@ -191,7 +209,7 @@ namespace RouteConfigurator.ViewModel
         #region Private Functions 
         private void updateOptionsTable()
         {
-            optionsFound = _serviceProxy.getNumOptionsFound(selectedOptionCode, boxSize);
+            optionsFound = new ObservableCollection<Option>(_serviceProxy.getNumOptionsFound(selectedOptionCode, boxSize, exactBoxSize));
         }
         #endregion
     }
