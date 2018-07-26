@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RouteConfigurator.ViewModel
 {
@@ -258,22 +259,30 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void searchModel()
         {
-            //Retrieves a model from the database
-            model = _serviceProxy.getModel(_modelBase);
-
-            if(model != null)
+            try
             {
-                updateModelText();
+                //Retrieves a model from the database
+                model = _serviceProxy.getModel(_modelBase);
 
-                informationText = "Model loaded";
+                if (model != null)
+                {
+                    updateModelText();
+
+                    informationText = "Model loaded";
+                }
+                else
+                {
+                    informationText = "Model not found";
+
+                    routeText = string.Format("N/A");
+                    prodSupCodeText = string.Format("N/A");
+                    productionTimeText = string.Format("N/A");
+                }
             }
-            else
+            catch (Exception e)
             {
-                informationText = "Model not found";
-
-                routeText = string.Format("N/A");
-                prodSupCodeText = string.Format("N/A");
-                productionTimeText =  string.Format("N/A");
+                informationText = "There was a problem accessing the database.";
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -354,28 +363,35 @@ namespace RouteConfigurator.ViewModel
             prodSupCodeText = "";
             productionTimeText = "";
 
-            Override modelOverride = _serviceProxy.getModelOverride(modelNumber);
-
-            if (modelOverride != null)
+            try
             {
-                //Model's information is currently overriden
-                routeText = modelOverride.OverrideRoute.ToString();
+                Override modelOverride = _serviceProxy.getModelOverride(modelNumber);
 
-                TimeSpan time = TimeSpan.FromHours((double)modelOverride.OverrideTime);
-                productionTimeText = string.Format("{0}:{1:00}", ((time.Days*24) + time.Hours), time.Minutes);
+                if (modelOverride != null)
+                {
+                    //Model's information is currently overriden
+                    routeText = modelOverride.OverrideRoute.ToString();
 
-                setProdSupCode(modelOverride.OverrideTime);
-            }
-            else
+                    TimeSpan time = TimeSpan.FromHours((double)modelOverride.OverrideTime);
+                    productionTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
+
+                    setProdSupCode(modelOverride.OverrideTime);
+                }
+                else
+                {
+                    //Model's information is not currently overriden
+                    decimal totalTime = getTotalTime();
+
+                    TimeSpan time = TimeSpan.FromHours((double)totalTime);
+                    productionTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
+
+                    setRoute(time);
+                    setProdSupCode(totalTime);
+                }
+            }catch (Exception e)
             {
-                //Model's information is not currently overriden
-                decimal totalTime = getTotalTime();
-
-                TimeSpan time = TimeSpan.FromHours((double)totalTime);
-                productionTimeText = string.Format("{0}:{1:00}", ((time.Days*24) + time.Hours), time.Minutes);
-
-                setRoute(time);
-                setProdSupCode(totalTime);
+                informationText = "There was a problem accessing the database.";
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -389,7 +405,45 @@ namespace RouteConfigurator.ViewModel
             totalTime += model.DriveTime;
             totalTime += model.AVTime;
 
-            totalTime += _serviceProxy.getTotalOptionsTime(model.BoxSize, _optionsList);
+            if (_optionsList.Count > 0)
+            {
+                string errorText = "";
+                bool missedOption = false;
+                bool foundOption;
+
+                try
+                {
+                    foreach (string option in _optionsList)
+                    {
+                        foundOption = false;
+                        if (_serviceProxy.getFilteredOptions(option, model.BoxSize).ToList().Count == 1)
+                        {
+                            foundOption = true;
+                        }
+
+                        if (!foundOption)
+                        {
+                            missedOption = true;
+                            errorText += string.Format("Option {0} not found\n", option);
+                        }
+                    }
+
+                    totalTime += _serviceProxy.getTotalOptionsTime(model.BoxSize, _optionsList);
+
+                    if (missedOption)
+                    {
+                        errorText += "Information may be inaccurate.";
+                        MessageBox.Show(errorText);
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    totalTime = 0;
+                    informationText = "There was a problem accessing the database.";
+                    Console.WriteLine(e.Message);
+                }
+            }
 
             return totalTime;
         }
@@ -507,17 +561,24 @@ namespace RouteConfigurator.ViewModel
 
             if (!string.IsNullOrWhiteSpace(model))
             {
-                //Retrieve timeTrials from the database
-                timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getTimeTrials(model, options));
+                try
+                {
+                    //Retrieve timeTrials from the database
+                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getTimeTrials(model, options));
 
-                if (timeTrials.Count() > 0)
+                    if (timeTrials.Count() > 0)
+                    {
+                        informationText = "Time trials loaded";
+                        calcAverageTime();
+                    }
+                    else
+                    {
+                        informationText = "No time trials for this model exist";
+                    }
+                }catch(Exception e)
                 {
-                    informationText = "Time trials loaded";
-                    calcAverageTime();
-                }
-                else
-                {
-                    informationText = "No time trials for this model exist";
+                    informationText = "There was a problem accessing the database.";
+                    Console.WriteLine(e.Message);
                 }
             }
             else
