@@ -18,6 +18,17 @@ namespace RouteConfigurator.Design
         public DataAccessService() { }
         #endregion
 
+        #region Model Read
+        /// <param name="modelName"> base name for a model </param>
+        /// <returns> returns the model specified by the model name </returns>
+        public Model.Model getModel(string modelName)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Models.Find(modelName) as Model.Model;
+            }
+        }
+
         /// <returns> returns all models </returns>
         public IEnumerable<Model.Model> getModels()
         {
@@ -36,127 +47,6 @@ namespace RouteConfigurator.Design
             {
                 return context.Models.Where(model => model.Base.Contains(modelFilter) &&
                                                      model.BoxSize.Contains(boxSizeFilter)).ToList();
-            }
-        }
-
-        /// <returns> returns all options </returns>
-        public IEnumerable<Option> getOptions()
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Options.ToList();
-            }
-        }
-
-        /// <param name="optionFilter"> name for the option </param>
-        /// <param name="optionBoxSizeFilter"> box size for the option </param>
-        /// <returns> returns a list of the options that meet the filters</returns>
-        public IEnumerable<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Options.Where(option => option.OptionCode.Contains(optionFilter) &&
-                                                       option.BoxSize.Contains(optionBoxSizeFilter)).ToList();
-            }
-        }
-
-        /// <param name="modelName"> base name for a model </param>
-        /// <returns> returns the model specified by the model name </returns>
-        public Model.Model getModel(string modelName)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Models.Find(modelName) as Model.Model;
-            }
-        }
-
-        /// <param name="modelNum"> the entire model number </param>
-        /// <returns> returns the override info for a model</returns>
-        public Override getModelOverride(string modelNum)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Overrides.Find(modelNum) as Override;
-            }
-        }
-
-        /// <param name="boxSize"> box size for the model </param>
-        /// <param name="options"> list of options</param>
-        /// <returns> total time for the options </returns>
-        public decimal getTotalOptionsTime(string boxSize, List<string> options)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Options.Where(x => x.BoxSize.Equals(boxSize) &&
-                                                  options.Contains(x.OptionCode)).Sum(y => y.Time);
-            }
-        }
-
-        /// <param name="modelBase"> model base to get time trials for</param>
-        /// <returns> list of time trials with the model base </returns>
-        public IEnumerable<TimeTrial> getTimeTrials(string modelBase)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.TimeTrials.Where(x => x.Model.Base.Equals(modelBase)).ToList();
-            }
-        }
-
-        /// <param name="modelBase">model base name</param>
-        /// <param name="options">list of options</param>
-        /// <returns> list of time trials for a specific model </returns>
-        public IEnumerable<TimeTrial> getTimeTrials(string modelBase, List<string> options)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.TimeTrials.Where(x => x.Model.Base.Equals(modelBase) &&
-                                                     x.TTOptionTimes.Count == options.Count &&
-                                                     x.TTOptionTimes.All(y => options.Contains(y.OptionCode))).ToList();
-            }
-        }
-
-        /// <param name="modelBase"> base model name </param>
-        /// <param name="optionTextFilter"> option text for the model number </param>
-        /// <param name="salesFilter"> sales number for the time trials</param>
-        /// <param name="productionNumFilter"> production number for the time trials</param>
-        /// <returns> a list of time trials that meet the filters</returns>
-        public IEnumerable<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.TimeTrials.Where(tt => tt.Model.Base.Contains(modelBase) &&
-                                                      tt.OptionsText.Contains(optionTextFilter) &&
-                                                      tt.SalesOrder.ToString().Contains(salesFilter) &&
-                                                      tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
-            }
-        }
-
-        /// <param name="modelBase"> base model name </param>
-        /// <param name="optionTextFilter"> option text for the model number </param>
-        /// <param name="salesFilter"> sales number for the time trials</param>
-        /// <param name="productionNumFilter"> production number for the time trials</param>
-        /// <returns> a list of time trials that meet the filters</returns>
-        public IEnumerable<TimeTrial> getStrictFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.TimeTrials.Where(tt => tt.Model.Base.Contains(modelBase) &&
-                                                      tt.OptionsText.Equals(optionTextFilter) &&
-                                                      tt.SalesOrder.ToString().Contains(salesFilter) &&
-                                                      tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
-            }
-        }
-
-
-        /// <param name="optionsList"> option codes to search for </param>
-        /// <param name="boxSize"> box size of model </param>
-        /// <returns> list of options </returns>
-        public IEnumerable<Option> getModelOptions(List<string> optionsList, string boxSize)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Options.Where(option => optionsList.Any(optionCode => option.OptionCode.Contains(optionCode)) &&
-                                                       option.BoxSize.Contains(boxSize)).ToList();
             }
         }
 
@@ -193,6 +83,62 @@ namespace RouteConfigurator.Design
                 }
             }
         }
+        #endregion
+
+        #region Option Read
+        /// <returns> returns all options </returns>
+        public IEnumerable<Option> getOptions()
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Options.ToList();
+            }
+        }
+
+        /// <param name="optionFilter"> name for the option </param>
+        /// <param name="optionBoxSizeFilter"> box size for the option </param>
+        /// <param name="exact"> if box size needs to be exact</param>
+        /// <returns> returns a list of the options that meet the filters</returns>
+        public IEnumerable<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter, bool exact)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                if (exact)
+                {
+                    return context.Options.Where(option => option.OptionCode.Contains(optionFilter) &&
+                                                           option.BoxSize.Equals(optionBoxSizeFilter)).ToList();
+                }
+                else
+                {
+                    return context.Options.Where(option => option.OptionCode.Contains(optionFilter) &&
+                                                           option.BoxSize.Contains(optionBoxSizeFilter)).ToList();
+                }
+            }
+        }
+
+        /// <param name="optionsList"> option codes to search for </param>
+        /// <param name="boxSize"> box size of model </param>
+        /// <returns> list of options </returns>
+        public IEnumerable<Option> getModelOptions(List<string> optionsList, string boxSize)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Options.Where(option => optionsList.Any(optionCode => option.OptionCode.Contains(optionCode)) &&
+                                                       option.BoxSize.Equals(boxSize)).ToList();
+            }
+        }
+
+        /// <param name="boxSize"> box size for the model </param>
+        /// <param name="options"> list of options</param>
+        /// <returns> total time for the options </returns>
+        public decimal getTotalOptionsTime(string boxSize, List<string> options)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Options.Where(x => x.BoxSize.Equals(boxSize) &&
+                                                  options.Contains(x.OptionCode)).Sum(y => y.Time);
+            }
+        }
 
         public IEnumerable<string> getOptionCodes()
         {
@@ -218,6 +164,18 @@ namespace RouteConfigurator.Design
                 }
             }
         }
+        #endregion
+
+        #region Override Read
+        /// <param name="modelNum"> the entire model number </param>
+        /// <returns> returns the override info for a model</returns>
+        public Override getModelOverride(string modelNum)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Overrides.Find(modelNum) as Override;
+            }
+        }
 
         /// <returns> list of active overrides</returns>
         public IEnumerable<Override> getOverrides()
@@ -237,6 +195,142 @@ namespace RouteConfigurator.Design
                 return context.Overrides.Where(item => item.ModelNum.Contains(overrideFilter)).ToList();
             }
         }
+        #endregion
+
+        #region Time Trial Read
+        /// <param name="modelBase"> model base to get time trials for</param>
+        /// <returns> list of time trials with the model base </returns>
+        public IEnumerable<TimeTrial> getTimeTrials(string modelBase)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.TimeTrials.Where(x => x.Model.Base.Equals(modelBase)).ToList();
+            }
+        }
+
+        /// <param name="modelBase">model base name</param>
+        /// <param name="options">list of options</param>
+        /// <returns> list of time trials for a specific model </returns>
+        public IEnumerable<TimeTrial> getTimeTrials(string modelBase, List<string> options)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.TimeTrials.Include("Model").Include("TTOptionTimes").Where(x => 
+                               x.Model.Base.Equals(modelBase) &&
+                               x.TTOptionTimes.Count == options.Count &&
+                               x.TTOptionTimes.All(y => options.Contains(y.OptionCode))).ToList();
+            }
+        }
+
+        /// <param name="modelBase"> base model name </param>
+        /// <param name="optionTextFilter"> option text for the model number </param>
+        /// <param name="salesFilter"> sales number for the time trials</param>
+        /// <param name="productionNumFilter"> production number for the time trials</param>
+        /// <param name="exact"> if Options text needs to be exact</param>
+        /// <returns> a list of time trials that meet the filters</returns>
+        public IEnumerable<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter, bool exact)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                if (exact)
+                {
+                    return context.TimeTrials.Include("Model").Include("TTOptionTimes").Where(tt => 
+                                   tt.Model.Base.Contains(modelBase) &&
+                                   tt.OptionsText.Equals(optionTextFilter) &&
+                                   tt.SalesOrder.ToString().Contains(salesFilter) &&
+                                   tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
+                }
+                else
+                {
+                    return context.TimeTrials.Include("Model").Include("TTOptionTimes").Where(tt => 
+                                   tt.Model.Base.Contains(modelBase) &&
+                                   tt.OptionsText.Contains(optionTextFilter) &&
+                                   tt.SalesOrder.ToString().Contains(salesFilter) &&
+                                   tt.ProductionNumber.ToString().Contains(productionNumFilter)).ToList();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Modifications Read
+        /// <param name="Sender"> User who sent the modification </param>
+        /// <param name="Base"> Model base (drive and av) </param>
+        /// <param name="BoxSize"> Box size for the model</param>
+        /// <returns> List of unapproved new models that meet the filters</returns>
+        public IEnumerable<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Modifications.Where(item => item.IsOption == false && item.IsNew == true &&
+                                                           item.State == 0 &&
+                                                           item.Sender.Contains(Sender) &&
+                                                           item.ModelBase.Contains(Base) &&
+                                                           item.BoxSize.Contains(BoxSize)).ToList();
+            }
+        }
+
+        /// <param name="Sender"> User who sent the modification </param>
+        /// <param name="OptionCode"> Option code </param>
+        /// <param name="BoxSize"> Box size for the option</param>
+        /// <returns> List of unapproved new options that meet the filters</returns>
+        public IEnumerable<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Modifications.Where(item => item.IsOption == true && item.IsNew == true &&
+                                                           item.State == 0 &&
+                                                           item.Sender.Contains(Sender) &&
+                                                           item.OptionCode.Contains(OptionCode) &&
+                                                           item.BoxSize.Contains(BoxSize)).ToList();
+            }
+        }
+
+        /// <param name="Sender"> User who sent the modification </param>
+        /// <param name="ModelName"> Model name to filter</param>
+        /// <returns> List of unapproved modified models that meet the filters</returns>
+        public IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelName)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Modifications.Where(item => item.IsOption == false && item.IsNew == false &&
+                                                           item.State == 0 &&
+                                                           item.Sender.Contains(Sender) &&
+                                                           item.ModelBase.Contains(ModelName)).ToList();
+            }
+        }
+
+        /// <param name="Sender"> User who sent the modification </param>
+        /// <param name="OptionCode"> Option code</param>
+        /// <param name="BoxSize"> Box size for the option</param>
+        /// <returns> List of unapproved modified options that meet the filters</returns>
+        public IEnumerable<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Modifications.Where(item => item.IsOption == true && item.IsNew == false &&
+                                                           item.State == 0 &&
+                                                           item.Sender.Contains(Sender) &&
+                                                           item.OptionCode.Contains(OptionCode) &&
+                                                           item.BoxSize.Contains(BoxSize)).ToList();
+            }
+        }
+        #endregion
+
+        #region Override Requests Read
+        /// <param name="Sender"> User who sent the request </param>
+        /// <param name="ModelNum"> Full model number with options </param>
+        /// <returns> List of override requests that meet the filters</returns>
+        public IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.OverrideRequests.Where(item => item.State == 0 &&
+                                                              item.Sender.Contains(Sender) &&
+                                                              item.ModelNum.Contains(ModelNum)).ToList();
+            }
+        }
+        #endregion 
 
         /// <summary>
         /// Adds a list of time trials to the database
@@ -255,63 +349,6 @@ namespace RouteConfigurator.Design
                     context.TimeTrials.Add(TT);
                 }
                 context.SaveChanges();
-            }
-        }
-
-        public IEnumerable<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Modifications.Where(item => item.IsOption == false && item.IsNew == true &&
-                                                           item.State == 0 &&
-                                                           item.Sender.Contains(Sender) &&
-                                                           item.ModelBase.Contains(Base) &&
-                                                           item.BoxSize.Contains(BoxSize)).ToList();
-            }
-        }
-
-        public IEnumerable<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Modifications.Where(item => item.IsOption == true && item.IsNew == true &&
-                                                           item.State == 0 &&
-                                                           item.Sender.Contains(Sender) &&
-                                                           item.OptionCode.Contains(OptionCode) &&
-                                                           item.BoxSize.Contains(BoxSize)).ToList();
-            }
-        }
-
-        public IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelName)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Modifications.Where(item => item.IsOption == false && item.IsNew == false &&
-                                                           item.State == 0 &&
-                                                           item.Sender.Contains(Sender) &&
-                                                           item.ModelBase.Contains(ModelName)).ToList();
-            }
-        }
-
-        public IEnumerable<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.Modifications.Where(item => item.IsOption == true && item.IsNew == false &&
-                                                           item.State == 0 &&
-                                                           item.Sender.Contains(Sender) &&
-                                                           item.OptionCode.Contains(OptionCode) &&
-                                                           item.BoxSize.Contains(BoxSize)).ToList();
-            }
-        }
-
-        public IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum)
-        {
-            using (context = new RouteConfiguratorDB())
-            {
-                return context.OverrideRequests.Where(item => item.State == 0 &&
-                                                              item.Sender.Contains(Sender) &&
-                                                              item.ModelNum.Contains(ModelNum)).ToList();
             }
         }
 

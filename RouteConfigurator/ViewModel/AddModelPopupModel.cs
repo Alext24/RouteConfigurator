@@ -94,8 +94,6 @@ namespace RouteConfigurator.ViewModel
                     Console.WriteLine(e);
                     return;
                 }
-
-                //MessageBox.Show("Hi\nPlaceholder for sending model to director");
             }
         }
         #endregion

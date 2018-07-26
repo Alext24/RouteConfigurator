@@ -87,7 +87,7 @@
                     <!--Row 7-8 Col 0-1 setup: Options table-->
                     <DataGrid  Height="140" MaxWidth="350" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
                                Grid.Row="7" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0"
-                               ItemsSource="{Binding optionsToSubmit}" AutoGenerateColumns="False"
+                               ItemsSource="{Binding modificationsToSubmit}" AutoGenerateColumns="False"
                                ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                         <DataGrid.Columns>
@@ -96,9 +96,9 @@
                             <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size" IsReadOnly="True"
                                                 Binding="{Binding BoxSize}"/>
                             <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Time"
-                                                Binding="{Binding Time}"/>
+                                                Binding="{Binding NewTime}"/>
                             <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="Name"
-                                                Binding="{Binding Name}"/>
+                                                Binding="{Binding NewName}"/>
                         </DataGrid.Columns>
                     </DataGrid>
 

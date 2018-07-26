@@ -33,7 +33,7 @@ namespace RouteConfigurator.ViewModel
         private string _name;
         private string _description;
 
-        private ObservableCollection<Option> _optionsToSubmit = new ObservableCollection<Option>();
+        private ObservableCollection<Modification> _modificationsToSubmit = new ObservableCollection<Modification>();
 
         private string _informationText;
         #endregion
@@ -65,15 +65,21 @@ namespace RouteConfigurator.ViewModel
         {
             if (checkValid())
             {
-                Option option = new Option
+                Modification mod = new Modification()
                 {
+                    RequestDate = DateTime.Now,
                     OptionCode = optionCode,
                     BoxSize = boxSize,
-                    Time = (decimal)time,
-                    Name = name
+                    Description = description,
+                    State = 0,
+                    Sender = "TEMPORARY PLACEHOLDER",
+                    IsOption = true,
+                    IsNew = true,
+                    NewTime = (decimal)time,
+                    NewName = name
                 };
 
-                optionsToSubmit.Add(option);
+                modificationsToSubmit.Add(mod);
 
                 //Clear input boxes
                 boxSize = "";
@@ -83,10 +89,30 @@ namespace RouteConfigurator.ViewModel
 
         private void submit()
         {
-            if (optionsToSubmit.Count > 0)
+            if (modificationsToSubmit.Count > 0)
             {
-                MessageBox.Show("Hi\nPlaceholder for sending options to director");
-                //optionsToSubmit.Clear();
+                try
+                {
+                    foreach (Modification mod in modificationsToSubmit)
+                    {
+                        _serviceProxy.addModificationRequest(mod);
+                    }
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                    return;
+                }
+                //Clear input boxes
+                modificationsToSubmit.Clear();
+                optionCode = "";
+                boxSize = "";
+                time = null;
+                name = "";
+                description = "";
+
+                informationText = "Options have been submitted.  Waiting for director approval.";
             }
             else
             {
@@ -166,16 +192,16 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public ObservableCollection<Option> optionsToSubmit
+        public ObservableCollection<Modification> modificationsToSubmit
         {
             get
             {
-                return _optionsToSubmit;
+                return _modificationsToSubmit;
             }
             set
             {
-                _optionsToSubmit = value;
-                RaisePropertyChanged("optionsToSubmit");
+                _modificationsToSubmit = value;
+                RaisePropertyChanged("modificationsToSubmit");
                 informationText = "";
             }
 
@@ -207,22 +233,8 @@ namespace RouteConfigurator.ViewModel
             bool valid = checkComplete();
             if (valid)
             {
-                using(RouteConfiguratorDB context = new RouteConfiguratorDB())
-                {
-                    List<Option> result = context.Options.Where(option => option.OptionCode.Equals(optionCode) &&
-                                                                          option.BoxSize.Equals(boxSize)).ToList();
-
-                    if(result.Count > 0)
-                    {
-                    informationText = "This option already exists";
-                    valid = false;
-
-                    }
-
-                }
                 //Check that the option doesn't already exist in the database
-                ObservableCollection<Option> options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionCode, boxSize));
-                if (options.Count > 0)
+                if(_serviceProxy.getFilteredOptions(optionCode, boxSize, true).ToList().Count > 0)
                 {
                     informationText = "This option already exists";
                     valid = false;
@@ -230,25 +242,15 @@ namespace RouteConfigurator.ViewModel
                 else
                 {
                     //Check that the option isn't a duplicate in the ready to submit list
-                    foreach (Option option in optionsToSubmit)
+                    foreach (Modification newOption in modificationsToSubmit)
                     {
-                        if (option.OptionCode.Equals(optionCode) && option.BoxSize.Equals(boxSize))
+                        if (newOption.OptionCode.Equals(optionCode) && newOption.BoxSize.Equals(boxSize))
                         {
                             informationText = "This option is already ready to submit";
                             valid = false;
                             break;
                         }
                     }
-                }
-
-                if (!string.IsNullOrWhiteSpace(boxSize) &&
-                time != null && time > 0)
-                {
-                }
-                else
-                {
-                    informationText = "Necessary information missing";
-                    valid = false;
                 }
             }
 
@@ -257,7 +259,7 @@ namespace RouteConfigurator.ViewModel
 
         private bool checkComplete()
         {
-            bool complete = false;
+            bool complete = true;
 
             if (!string.IsNullOrWhiteSpace(optionCode))
             {
@@ -273,6 +275,12 @@ namespace RouteConfigurator.ViewModel
                         informationText = "Option Code must start with a 'P' or 'T'";
                         complete = false;
                     }
+                }
+
+                if (string.IsNullOrWhiteSpace(boxSize) || time == null || time <= 0)
+                {
+                    informationText = "Necessary information missing";
+                    complete = false;
                 }
             }
             else

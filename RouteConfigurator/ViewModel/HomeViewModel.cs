@@ -259,6 +259,14 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void searchModel()
         {
+
+            if (string.IsNullOrWhiteSpace(_modelBase))
+            {
+                routeText = "";
+                prodSupCodeText = "";
+                productionTimeText = "";
+                return;
+            }
             try
             {
                 //Retrieves a model from the database
@@ -306,6 +314,7 @@ namespace RouteConfigurator.ViewModel
 
             if (string.IsNullOrWhiteSpace(model))
             {
+                timeTrials.Clear();
                 _modelBase = "";
                 _options = "";
             }
@@ -416,7 +425,7 @@ namespace RouteConfigurator.ViewModel
                     foreach (string option in _optionsList)
                     {
                         foundOption = false;
-                        if (_serviceProxy.getFilteredOptions(option, model.BoxSize).ToList().Count == 1)
+                        if (_serviceProxy.getFilteredOptions(option, model.BoxSize, true).ToList().Count == 1)
                         {
                             foundOption = true;
                         }

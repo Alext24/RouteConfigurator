@@ -230,20 +230,10 @@ namespace RouteConfigurator.ViewModel
                 _selectedModel = value;
                 RaisePropertyChanged("selectedModel");
 
-                // Reset Time Trial Filters
-                if(!string.IsNullOrWhiteSpace(optionTextFilter))
-                    optionTextFilter = "";
-                if(!string.IsNullOrWhiteSpace(salesFilter))
-                    salesFilter = "";
-                if(!string.IsNullOrWhiteSpace(productionNumFilter))
-                    productionNumFilter = "";
-
                 if (value != null)
                 {
                     TTVisible = true;
-                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getTimeTrials(selectedModel.Base));
-
-                    calcTTAverages();
+                    updateTTTable();
                 }
                 else
                 {
@@ -561,7 +551,7 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateOptionTable()
         {
-            options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter));
+            options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter, false));
         }
 
         /// <summary>
@@ -572,14 +562,7 @@ namespace RouteConfigurator.ViewModel
         {
             if (selectedModel != null)
             {
-                if (optionTextChecked)
-                {
-                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getStrictFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter));
-                }
-                else
-                {
-                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter));
-                }
+                timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter, optionTextChecked));
                 calcTTAverages();
             }
         }
