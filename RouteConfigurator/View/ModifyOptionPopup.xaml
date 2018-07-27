@@ -7,9 +7,9 @@
         xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d" 
-        MinHeight="475"
+        MinHeight="525"
         MinWidth="700"
-        Height="475"
+        Height="525"
         Width="700"
         Title="Modify Option"
         DataContext="{Binding ModifyOption, Source={StaticResource Locator}}">
@@ -40,11 +40,12 @@
                         <RowDefinition Height="auto"/>      <!--Row 2-->
                         <RowDefinition Height="auto"/>      <!--Row 3-->
                         <RowDefinition Height="auto"/>      <!--Row 4-->
-                        <RowDefinition Height="20"/>        <!--Row 5-->
+                        <RowDefinition Height="10"/>        <!--Row 5-->
                         <RowDefinition Height="auto"/>      <!--Row 6-->
                         <RowDefinition Height="auto"/>      <!--Row 7-->
                         <RowDefinition Height="auto"/>      <!--Row 8-->
                         <RowDefinition Height="auto"/>      <!--Row 9-->
+                        <RowDefinition Height="auto"/>      <!--Row 10-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -72,8 +73,29 @@
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Options found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
                     <TextBlock Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding optionsFound.Count}" FontSize="16"/>
 
+                    <!--Row 5 setup: Blank, Spacing-->
+
+                    <!--Row 6 setup: New Time-->
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="New Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding newTime, TargetNullValue=''}" FontSize="16"/>
+
+                    <!--Row 7-8 setup: Option Description Header-->
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="New Name/" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 5 5 0"/>
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Option Description" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="0 0 5 5"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5 5 0 5" MaxWidth="350" 
+                             Text="{Binding newName}" TextWrapping="WrapWithOverflow" FontSize="16" MaxLines="2" VerticalScrollBarVisibility="Auto"/>
+
+                    <!--Row 9 setup: Description Header-->
+                    <TextBlock Grid.Row="9" Grid.Column="0" Text="Request Description" VerticalAlignment="Center" FontSize="16" Padding="5"/>
+                    <TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Margin="5 5 0 5" MaxWidth="350"
+                             Text="{Binding description}" TextWrapping="WrapWithOverflow" FontSize="16" MaxLines="2" VerticalScrollBarVisibility="Auto"/>
+
+                    <!--Row 10 setup: Submit Button-->
+                    <Button Grid.Row="10" Grid.Column="2" Content="Submit" HorizontalAlignment="Right"
+                            Command="{Binding submitCommand}"/>
+
                     <!--Row 2 setup: Option Table-->
-                    <DataGrid  Grid.Row="2" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" x:Name="OptionTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                    <DataGrid  Grid.Row="2" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" Height="100" x:Name="OptionTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
                                    CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" SelectionMode="Single"
                                    ItemsSource="{Binding optionsFound}" SelectedValue="{Binding selectedOption}">
 
@@ -88,19 +110,6 @@
                                                     Binding="{Binding Name}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-
-                    <!--Row 5 setup: Blank, Spacing-->
-
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="New Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding newTime}" FontSize="16"/>
-
-                    <TextBlock Grid.Row="7" Grid.Column="0" Text="New Name/" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Option Description" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBox Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5 0 0 0" MaxWidth="400" 
-                             Text="{Binding newName}" TextWrapping="WrapWithOverflow" FontSize="16" MaxLines="2" VerticalScrollBarVisibility="Auto"/>
-
-                    <Button Grid.Row="9" Grid.Column="2" Content="Submit" Margin="0 5 0 0" HorizontalAlignment="Right"
-                            Command="{Binding submitCommand}"/>
                 </Grid>
             </Border>
             <!--Information text-->

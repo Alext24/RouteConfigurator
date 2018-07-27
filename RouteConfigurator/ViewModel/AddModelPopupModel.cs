@@ -16,7 +16,6 @@ namespace RouteConfigurator.ViewModel
     public class AddModelPopupModel : ViewModelBase
     {
         #region PrivateVariables
-
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
@@ -65,6 +64,9 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Commands
+        /// <summary>
+        /// Submits the new model modification to the database
+        /// </summary>
         private void submit()
         {
             if (checkValid())
@@ -74,7 +76,7 @@ namespace RouteConfigurator.ViewModel
                     RequestDate = DateTime.Now,
                     ModelBase = modelNum.Substring(0,8),
                     BoxSize = boxSize,
-                    Description = description,
+                    Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
                     State = 0,
                     Sender = "TEMPORARY PLACEHOLDER",
                     IsOption = false,
@@ -432,36 +434,30 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// 
+        /// Checks that the model does not already exist
         /// Calls checkComplete
         /// </summary>
-        /// <returns></returns>
+        /// <returns> true if the model is valid and doesn't already exist, false otherwise</returns>
         private bool checkValid()
         {
             bool valid = checkComplete();
             if (valid)
             {
-                using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+                //Check if the model already exists in the database as a model
+                string modelBase = modelNum.Substring(0, 8);
+
+                if (_serviceProxy.getModel(modelBase) != null)
                 {
-                    //Check if the model already exists in the database as a model or as a new model request
-                    string modelBase = modelNum.Substring(0, 8);
-
-                    List<Model.Model> result = context.Models.Where(model => model.Base.Equals(modelBase)).ToList();
-
-                    if (result.Count > 0)
+                    informationText = string.Format("Model {0} already exists.", modelBase);
+                    valid = false;
+                }
+                else
+                {
+                    //Check if the model already exists in the database as a new model request
+                    if (_serviceProxy.getFilteredNewModels("", modelBase, "").ToList().Count > 0)
                     {
-                        informationText = string.Format("Model {0} already exists.", modelBase);
+                        informationText = string.Format("Model {0} is already waiting for approval.", modelBase);
                         valid = false;
-                    }
-                    else
-                    {
-                        List<Modification> result2 = context.Modifications.Where(model => model.ModelBase.Equals(modelBase) &&
-                                                                                          model.IsNew == true).ToList();
-                        if (result2.Count > 0)
-                        {
-                            informationText = string.Format("Model {0} is already waiting for approval.", modelBase);
-                            valid = false;
-                        }
                     }
                 }
             }

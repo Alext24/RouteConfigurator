@@ -16,7 +16,6 @@ namespace RouteConfigurator.ViewModel
     public class AddTimeTrialPopupModel : ViewModelBase
     {
         #region PrivateVariables
-
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
@@ -59,8 +58,6 @@ namespace RouteConfigurator.ViewModel
         public AddTimeTrialPopupModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
-
-            //models = _serviceProxy.getModels();
 
             loadedCommand = new RelayCommand(loaded);
             addTTCommand = new RelayCommand(addTT);
@@ -129,7 +126,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Submits the time trials to the database
+        /// Submits each of the time trials to the database
         /// </summary>
         private void submit()
         {
@@ -140,8 +137,6 @@ namespace RouteConfigurator.ViewModel
                 try
                 {
                     _serviceProxy.addTimeTrials(timeTrials);
-                    informationText = "Time Trials submitted to database.";
-                    timeTrials.Clear();
                 }
                 catch (Exception e)
                 {
@@ -149,6 +144,17 @@ namespace RouteConfigurator.ViewModel
                     Console.WriteLine(e);
                     return;
                 }
+                //Clear input boxes
+                timeTrials.Clear();
+                selectedModel = null;
+                date = null;
+                salesOrder = null;
+                productionNum = null;
+                driveTime = null;
+                AVTime = null;
+                numOptions = null;
+
+                informationText = "Time Trials submitted to database.";
             }
             else
             {
@@ -171,9 +177,6 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        /// <summary>
-        /// Updates the model list if empty
-        /// </summary>
         public string modelText
         {
             get
@@ -184,13 +187,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _modelText = value.ToUpper();
                 RaisePropertyChanged("modelText");
-
                 informationText = "";
-
-                if(models == null || models.Count == 0)
-                {
-                    models = new ObservableCollection<Model.Model>(_serviceProxy.getModels());
-                }
             }
         }
 
@@ -217,6 +214,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _selectedModel = value;
                 RaisePropertyChanged("selectedModel");
+                informationText = "";
             }
         }
 
@@ -230,7 +228,6 @@ namespace RouteConfigurator.ViewModel
             {
                 _date = value;
                 RaisePropertyChanged("date");
-
                 informationText = "";
             }
         }
@@ -245,7 +242,6 @@ namespace RouteConfigurator.ViewModel
             {
                 _salesOrder = value;
                 RaisePropertyChanged("salesOrder");
-
                 informationText = "";
             }
         }
@@ -260,7 +256,6 @@ namespace RouteConfigurator.ViewModel
             {
                 _productionNum = value;
                 RaisePropertyChanged("productionNum");
-
                 informationText = "";
             }
         }
@@ -275,7 +270,6 @@ namespace RouteConfigurator.ViewModel
             {
                 _driveTime = value;
                 RaisePropertyChanged("driveTime");
-
                 informationText = "";
             }
         }
@@ -290,7 +284,6 @@ namespace RouteConfigurator.ViewModel
             {
                 _AVTime = value;
                 RaisePropertyChanged("AVTime");
-
                 informationText = "";
             }
         }
@@ -312,6 +305,7 @@ namespace RouteConfigurator.ViewModel
 
                 informationText = "";
 
+                //Change the count of TTOptions to match the number of options.
                 if(value != null && value > 0)
                 {
                     hasOptions = true;
@@ -388,8 +382,6 @@ namespace RouteConfigurator.ViewModel
         /// <returns>Total time</returns>
         private decimal calcTotalTime()
         {
-            informationText = "";
-
             decimal totalTime = 0;
 
             totalTime = (decimal)(driveTime + AVTime);
@@ -402,7 +394,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// 
+        /// Checks that the time trials does not already exist
         /// Calls checkComplete
         /// </summary>
         /// <returns></returns>
@@ -411,22 +403,22 @@ namespace RouteConfigurator.ViewModel
             bool valid = checkComplete();
             if (valid)
             {
-                //If everything is filled out
-                using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+                //Check if time trial production number exists in the database
+                if (_serviceProxy.getTimeTrial((int)productionNum) != null)
                 {
-                    //Check if time trial production number exists in the database
-                    if (context.TimeTrials.Find(productionNum) != null)
-                    {
-                        informationText = string.Format("Time Trial for Production Number {0} already exists.", productionNum);
-                        valid = false;
-                    }
+                    informationText = string.Format("Time Trial for Production Number {0} already exists.", productionNum);
+                    valid = false;
                 }
-                foreach(TimeTrial TT in timeTrials)
+                else
                 {
-                    if(productionNum == TT.ProductionNumber)
+                    //Check if time trial is a duplicate in the ready to submit list
+                    foreach (TimeTrial TT in timeTrials)
                     {
-                        informationText = string.Format("Time Trial for Production Number {0} is already ready to submit", productionNum);
-                        valid = false;
+                        if (productionNum == TT.ProductionNumber)
+                        {
+                            informationText = string.Format("Time Trial for Production Number {0} is already ready to submit", productionNum);
+                            valid = false;
+                        }
                     }
                 }
             }
@@ -434,8 +426,8 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Checks to see if all necessary fields are filled out before the time
-        /// trial can be added.  
+        /// Checks to see if all necessary fields are filled out with correct formatting
+        /// before the time trial can be added.  
         /// </summary>
         /// <returns> true if the form is complete, otherwise false </returns>
         private bool checkComplete()
@@ -450,9 +442,9 @@ namespace RouteConfigurator.ViewModel
                 informationText = "Please select a valid model.";
             }
             else if (salesOrder == null || salesOrder <= 0 ||
-               productionNum == null || productionNum <= 0 ||
-               driveTime == null || driveTime <= 0 ||
-               AVTime == null || AVTime <= 0)
+                     productionNum == null || productionNum <= 0 ||
+                     driveTime == null || driveTime <= 0 ||
+                     AVTime == null || AVTime <= 0)
             {
                 complete = false;
                 informationText = "Fill out all fields before adding time trial.";
@@ -461,8 +453,7 @@ namespace RouteConfigurator.ViewModel
             {
                 foreach (TimeTrialsOptionTime option in TTOptions)
                 {
-                    if (string.IsNullOrWhiteSpace(option.OptionCode) ||
-                        option.Time <= 0)
+                    if (string.IsNullOrWhiteSpace(option.OptionCode) || option.Time <= 0)
                     {
                         complete = false;
                         informationText = "Fill out all options before adding time trial.";
@@ -480,6 +471,12 @@ namespace RouteConfigurator.ViewModel
                                 !option.OptionCode.ElementAt(0).Equals('p') && !option.OptionCode.ElementAt(0).Equals('t'))
                             {
                                 informationText = "Option Code must start with a 'P' or 'T'";
+                                complete = false;
+                            }
+                            else if (option.OptionCode.ElementAt(1).Equals('P') || option.OptionCode.ElementAt(1).Equals('T') ||
+                                     option.OptionCode.ElementAt(1).Equals('p') || option.OptionCode.ElementAt(1).Equals('t'))
+                            {
+                                informationText = "Option Code cannot end with a 'P' or 'T'";
                                 complete = false;
                             }
                         }

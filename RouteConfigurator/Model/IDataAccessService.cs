@@ -33,6 +33,7 @@ namespace RouteConfigurator.Model
         #endregion
 
         #region Time Trial Read
+        TimeTrial getTimeTrial(int productionNumber);
         IEnumerable<TimeTrial> getTimeTrials(string modelBase);
         IEnumerable<TimeTrial> getTimeTrials(string modelBase, List<string> options);
         IEnumerable<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter, bool exact);
@@ -51,5 +52,6 @@ namespace RouteConfigurator.Model
 
         void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);
         void addModificationRequest(Modification mod);
+        void addOverrideRequest(OverrideRequest ov);
     }
 }

@@ -16,7 +16,6 @@ namespace RouteConfigurator.ViewModel
     public class ModifyModelPopupModel : ViewModelBase
     {
         #region PrivateVariables
-
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
@@ -29,7 +28,7 @@ namespace RouteConfigurator.ViewModel
 
         private ObservableCollection<string> _driveTypes = new ObservableCollection<string>();
 
-        private string _selectedDrive;
+        private string _selectedDrive = "";
 
         private bool _driveNotSelected = true;
 
@@ -39,13 +38,15 @@ namespace RouteConfigurator.ViewModel
 
         private bool _exactBoxSize = false;
 
-        private ObservableCollection<Model.Model> _modelsFound;
+        private ObservableCollection<Model.Model> _modelsFound = new ObservableCollection<Model.Model>();
 
         private Model.Model _selectedModel;
 
-        private decimal _newDriveTime;
+        private decimal? _newDriveTime;
 
-        private decimal _newAVTime;
+        private decimal? _newAVTime;
+
+        private string _description;
 
         private string _informationText;
         #endregion
@@ -74,9 +75,57 @@ namespace RouteConfigurator.ViewModel
             driveTypes = new ObservableCollection<string>(_serviceProxy.getDriveTypes());
         }
 
+        /// <summary>
+        /// Submits each model modification to the database
+        /// </summary>
         private void submit()
         {
-            MessageBox.Show("Placeholder for sending updates to director");
+            if (modelsFound.Count <= 0)
+            {
+                informationText = "No models selected to update.";
+            }
+            else if (checkValid())
+            {
+                try
+                {
+                    foreach (Model.Model model in modelsFound)
+                    {
+                        Modification modifiedModel = new Modification()
+                        {
+                            RequestDate = DateTime.Now,
+                            ModelBase = model.Base,
+                            BoxSize = model.BoxSize,
+                            Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
+                            State = 0,
+                            Sender = "TEMPORARY PLACEHOLDER",
+                            IsOption = false,
+                            IsNew = false,
+                            NewDriveTime = newDriveTime == null || newDriveTime <= 0 ? model.DriveTime : (decimal)newDriveTime,
+                            NewAVTime = newAVTime == null || newAVTime <= 0 ? model.AVTime : (decimal)newAVTime,
+                            OldModelDriveTime = model.DriveTime,
+                            OldModelAVTime = model.AVTime
+                        };
+
+                        _serviceProxy.addModificationRequest(modifiedModel);
+                    }
+
+                    //Clear input boxes
+                    selectedDrive = null;
+                    AVText = "";
+                    boxSize = "";
+                    modelsFound.Clear();
+                    newDriveTime = null;
+                    newAVTime = null;
+                    description = "";
+                    informationText = "Model modifications have been submitted.  Waiting for director approval.";
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                    return;
+                }
+            }
         }
         #endregion
 
@@ -94,6 +143,10 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Updates driveNotSelected
+        /// Calls updateModelsTable
+        /// </summary>
         public string selectedDrive
         {
             get
@@ -107,11 +160,7 @@ namespace RouteConfigurator.ViewModel
                 informationText = "";
 
                 updateModelsTable();
-
                 driveNotSelected = value != null ? false : true;
-
-                AVText = "";
-                boxSize = "";
             }
         }
 
@@ -128,6 +177,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateModelsTable
+        /// </summary>
         public string AVText
         {
             get
@@ -144,6 +196,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateModelsTable
+        /// </summary>
         public string boxSize
         {
             get
@@ -160,6 +215,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateModelsTable
+        /// </summary>
         public bool exactBoxSize
         {
             get
@@ -189,9 +247,6 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        /// <summary>
-        /// Turns off rename
-        /// </summary>
         public Model.Model selectedModel
         {
             get
@@ -206,7 +261,7 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public decimal newDriveTime
+        public decimal? newDriveTime
         {
             get
             {
@@ -219,7 +274,7 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public decimal newAVTime
+        public decimal? newAVTime
         {
             get
             {
@@ -229,6 +284,20 @@ namespace RouteConfigurator.ViewModel
             {
                 _newAVTime = value;
                 RaisePropertyChanged("newAVTime");
+            }
+        }
+
+        public string description 
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                _description = value;
+                RaisePropertyChanged("description");
+                informationText = "";
             }
         }
 
@@ -247,9 +316,63 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions 
+        /// <summary>
+        /// Updates the models table with the filtered information
+        /// </summary>
         private void updateModelsTable()
         {
-            modelsFound = new ObservableCollection<Model.Model>(_serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize, exactBoxSize));
+            if(string.IsNullOrWhiteSpace(selectedDrive) && string.IsNullOrWhiteSpace(AVText) && string.IsNullOrWhiteSpace(boxSize))
+            {
+                modelsFound.Clear();
+            }
+            else
+            {
+                modelsFound = new ObservableCollection<Model.Model>(_serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize, exactBoxSize));
+            }
+        }
+
+        /// <summary>
+        /// Calls checkComplete
+        /// </summary>
+        /// <returns> checkComplete value </returns>
+        private bool checkValid()
+        {
+            bool valid = checkComplete();
+
+            /*  I'm not sure how to handle an already existing modification request for a model 
+            *  so I will allow multiple of the same model requests.
+            if (valid)
+            {
+                //Check if the model already exists in the database as a model modification request
+                string modelBase = string.Concat(selectedDrive, AVText);
+                List<Modification> mods = _serviceProxy.getFilteredModifiedModels("", modelBase).ToList();
+                if (mods.Count > 0)
+                {
+                    informationText = string.Format("Model {0} is already waiting for approval.", modelBase);
+                    valid = false;
+                }
+            }
+            */
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Checks to see if new drive time or new av time is filled out correctly
+        /// before the modification can be added.  
+        /// </summary>
+        /// <returns> true if the form is complete, otherwise false </returns>
+        private bool checkComplete()
+        {
+            bool complete = true;
+
+            if ((newDriveTime == null || newDriveTime <= 0) && (newAVTime == null || newAVTime <= 0))
+            {
+                informationText = "No new information associated with modification.";
+                complete = false;
+            }
+
+            return complete;
         }
         #endregion
     }

@@ -80,24 +80,6 @@
 
                     <!--Row 5 setup: Blank, Spacing-->
                     
-                    <!--Row 6 setup: Options table header-->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Options" FontSize="16" Padding="20 5 0 5"/>
-
-                    <!--Row 7 setup: Columns 0-1: Options table-->
-                    <DataGrid  Height="130" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True" AutoGenerateColumns="False"
-                               Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="10 0"
-                               ItemsSource="{Binding options}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
-
-                        <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Option"
-                                                Binding="{Binding OptionCode}"/>
-                            <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Time"
-                                                Binding="{Binding Time}"/>
-                            <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Name"
-                                                Binding="{Binding Name}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-
                     <!--Row 7 setup: Columns 2-3: Model Information-->
                     <Grid Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
@@ -151,6 +133,25 @@
                                FontSize="10" TextWrapping="WrapWithOverflow"/>
 
                     <Button Grid.Row="8" Grid.Column="3" Content="Submit Model" Command="{Binding submitCommand}" Margin="0 10 0 0"/>
+
+                    <!--Row 6 setup: Options table header-->
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Options" FontSize="16" Padding="20 5 0 5"/>
+
+                    <!--Row 7 setup: Columns 0-1: Options table-->
+                    <DataGrid  Height="130" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True" AutoGenerateColumns="False"
+                               Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="10 0"
+                               ItemsSource="{Binding options}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Option"
+                                                Binding="{Binding OptionCode}"/>
+                            <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Time"
+                                                Binding="{Binding Time}"/>
+                            <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Name"
+                                                Binding="{Binding Name}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
                 </Grid>
             </Border>
 

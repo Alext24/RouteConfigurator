@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:RouteConfigurator.View"
         xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
         mc:Ignorable="d" 
-        MinHeight="500"
+        MinHeight="550"
         MinWidth="750"
-        Height="500"
+        Height="550"
         Width="750"
         Title="Override Model"
         DataContext="{Binding OverrideModel, Source={StaticResource Locator}}">
@@ -33,11 +33,12 @@
                         <RowDefinition Height="auto"/>      <!--Row 2-->
                         <RowDefinition Height="10"/>        <!--Row 3-->
                         <RowDefinition Height="auto"/>      <!--Row 4-->
-                        <RowDefinition Height="auto"/>      <!--Row 5-->
-                        <RowDefinition Height="10"/>        <!--Row 6-->
+                        <RowDefinition Height="10"/>        <!--Row 5-->
+                        <RowDefinition Height="auto"/>      <!--Row 6-->
                         <RowDefinition Height="auto"/>      <!--Row 7-->
-                        <RowDefinition Height="1"/>         <!--Row 8-->
+                        <RowDefinition Height="10"/>      <!--Row 8-->
                         <RowDefinition Height="auto"/>      <!--Row 9-->
+                        <RowDefinition Height="auto"/>      <!--Row 10-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -60,34 +61,47 @@
                     <!--Row 2 setup: Input boxes-->
                     <TextBox Grid.Row="2" Grid.Column="0" Margin="10 0" VerticalContentAlignment="Center" 
                              Text="{Binding modelText}" FontSize="16"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="10 0" VerticalContentAlignment="Center" 
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="10 0" VerticalContentAlignment="Center" Width="120"
                              Text="{Binding overrideTime, TargetNullValue=''}" FontSize="16"/>
-                    <TextBox Grid.Row="2" Grid.Column="2" Margin="10 0" VerticalContentAlignment="Center" 
+                    <TextBox Grid.Row="2" Grid.Column="2" Margin="10 0" VerticalContentAlignment="Center" Width="130"
                              Text="{Binding overrideRoute, TargetNullValue=''}" FontSize="16"/>
-
-                    <Button Grid.Row="2" Grid.Column="4" Content="Add Override" FontSize="16" HorizontalAlignment="Center" 
-                            Command="{Binding addOverrideCommand}"/>
 
                     <!--Row 3 setup: Blank, Spacing-->
 
-                    <!--Row 4 setup: Old info headers-->
-                    <TextBlock Grid.Row="4" Grid.Column="1" Text="Time" FontSize="16" Padding="20 0"/>
-                    <TextBlock Grid.Row="4" Grid.Column="2" Text="Route" FontSize="16" Padding="20 0"/>
+                    <!--Row 4 setup: Description Header-->
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Request Description" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="16" Padding="5"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="10 5 10 5" MaxWidth="270"
+                             Text="{Binding description}" TextWrapping="WrapWithOverflow" FontSize="16" MaxLines="2" VerticalScrollBarVisibility="Auto"/>
 
-                    <!--Row 5 setup: Old info-->
-                    <TextBox Grid.Row="5" Grid.Column="1" Margin="10 0"
-                             Text="{Binding modelTime}" FontSize="16" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                    <TextBox Grid.Row="5" Grid.Column="2" Margin="10 0"
+                        <!--Add Override Button-->
+                    <Button Grid.Row="3" Grid.RowSpan="2" Grid.Column="4" Content="Add Override" FontSize="16"
+                            Command="{Binding addOverrideCommand}" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+
+                    <!--Row 5 setup: Blank, Spacing-->
+
+                    <!--Row 6 setup: Calculated info headers-->
+                    <TextBlock Grid.Row="6" Grid.Column="1" Text="Time" FontSize="16" Padding="20 0"/>
+                    <TextBlock Grid.Row="6" Grid.Column="2" Text="Route" FontSize="16" Padding="20 0"/>
+
+                    <!--Row 5 setup: Calculated info-->
+                    <TextBlock Grid.Row="7" Grid.Column="0" Padding="0 0 5 0" Text="Calculated" FontSize="16" HorizontalAlignment="Right"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" Margin="10 0" Width="120"
+                             Text="{Binding modelTime, TargetNullValue=''}" FontSize="16" VerticalContentAlignment="Center" IsReadOnly="True"/>
+                    <TextBox Grid.Row="7" Grid.Column="2" Margin="10 0" Width="130"
                              Text="{Binding modelRoute}" FontSize="16" VerticalContentAlignment="Center" IsReadOnly="True"/>
 
-                    <!--Row 6 setup: Blank, Spacing-->
+                    <!--Row 8 setup: Blank, Spacing-->
+
+                    <!--Row 10 setup: Submit Button-->
+                    <Button Grid.Row="10" Grid.Column="4" Content="Submit" VerticalAlignment="Bottom"
+                            Command="{Binding submitCommand}"/>
                     
-                    <!--Row 7 setup: Overrides table header-->
-                    <TextBlock Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 0" Padding="0 5"
+                    <!--Row 9 setup: Overrides table header-->
+                    <TextBlock Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 0" Padding="0 5"
                                Text="Current Overrides to Submit" VerticalAlignment="Bottom" FontSize="16"/>
 
-                    <!--Row 8 setup: Overrides table-->
-                    <DataGrid Grid.Row="8" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Top" Margin="0 0 50 0"
+                    <!--Row 10 setup: Overrides table-->
+                    <DataGrid Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Top" Margin="0 0 50 0"
                               Height="130" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
                               ItemsSource="{Binding overridesToSubmit}" AutoGenerateColumns="False"
                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
@@ -101,10 +115,6 @@
                                                 Binding="{Binding OverrideRoute}" FontSize="16" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
-
-                    <!--Row 4 setup: Submit Button-->
-                    <Button Grid.Row="9" Grid.Column="4" Content="Submit" VerticalAlignment="Center"
-                            Command="{Binding submitCommand}"/>
                 </Grid>
             </Border>
 

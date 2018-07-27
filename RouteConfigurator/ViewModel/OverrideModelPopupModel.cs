@@ -16,7 +16,6 @@ namespace RouteConfigurator.ViewModel
     public class OverrideModelPopupModel : ViewModelBase
     {
         #region PrivateVariables
-
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
@@ -28,18 +27,17 @@ namespace RouteConfigurator.ViewModel
         private IDataAccessService _serviceProxy = new DataAccessService();
 
         private string _modelText = "";
-
         private Model.Model _model;
 
         private decimal? _overrideTime;
-
         private int? _overrideRoute;
+        private string _description;
 
-        private decimal _modelTime;
-
+        private decimal? _modelTime;
         private string _modelRoute;
+        private int _modelRouteInt;
 
-        private ObservableCollection<Override> _overridesToSubmit = new ObservableCollection<Override>();
+        private ObservableCollection<OverrideRequest> _overridesToSubmit = new ObservableCollection<OverrideRequest>();
 
         private string _informationText;
         #endregion
@@ -70,21 +68,60 @@ namespace RouteConfigurator.ViewModel
         {
             if (checkValid())
             {
-                Override ov = new Override
+                OverrideRequest ov = new OverrideRequest()
                 {
-                    Model = model,
+                    RequestDate = DateTime.Now,
                     ModelNum = modelText,
-                    OverrideTime = (decimal)overrideTime,
-                    OverrideRoute = (int)overrideRoute,
+                    Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
+                    State = 0,
+                    Sender = "TEMPORARY PLACEHOLDER",
+                    OverrideTime = (decimal) overrideTime,
+                    OverrideRoute = (int) overrideRoute,
+                    ModelTime = (decimal) modelTime,
+                    ModelRoute = _modelRouteInt
                 };
                 
                 _overridesToSubmit.Add(ov);
             }
         }
 
+        /// <summary>
+        /// Submits each of the override requests to the database
+        /// </summary>
         private void submit()
         {
-            MessageBox.Show("Placeholder");
+            informationText = "";
+
+            if (overridesToSubmit.Count > 0)
+            {
+                try
+                {
+                    foreach (OverrideRequest ov in overridesToSubmit)
+                    {
+                        _serviceProxy.addOverrideRequest(ov);
+                    }
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                    return;
+                }
+                //Clear input boxes
+                overridesToSubmit.Clear();
+                modelText = "";
+                overrideTime = null; 
+                overrideRoute = null;
+                modelTime = null;
+                modelRoute = null;
+                description = "";
+
+                informationText = "Overrides have been submitted.  Waiting for director approval.";
+            }
+            else
+            {
+                informationText = "No overrides to submit.";
+            }
         }
         #endregion
 
@@ -109,13 +146,20 @@ namespace RouteConfigurator.ViewModel
                 if(modelText.Length >= 8)
                 {
                     model = _serviceProxy.getModel(modelText.Substring(0, 8));
-                    updateModelTime();
-                    updateModelRoute();
+                    if(model != null)
+                    {
+                        updateModelTime();
+                        updateModelRoute();
+                    }
                 }
                 else
                 {
+                    if (!string.IsNullOrWhiteSpace(modelText))
+                    {
+                        informationText = "Invalid model format";
+                    }
                     model = null;
-                    modelTime = 0;
+                    modelTime = null;
                     modelRoute = "";
                 }
             }
@@ -144,7 +188,6 @@ namespace RouteConfigurator.ViewModel
             {
                 _overrideTime = value;
                 RaisePropertyChanged("overrideTime");
-
                 informationText = "";
             }
         }
@@ -159,12 +202,25 @@ namespace RouteConfigurator.ViewModel
             {
                 _overrideRoute = value;
                 RaisePropertyChanged("overrideRoute");
-
                 informationText = "";
             }
         }
 
-        public decimal modelTime
+        public string description 
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                _description = value;
+                RaisePropertyChanged("description");
+                informationText = "";
+            }
+        }
+
+        public decimal? modelTime
         {
             get
             {
@@ -177,6 +233,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Updates _modelRouteInt
+        /// </summary>
         public string modelRoute 
         {
             get
@@ -187,10 +246,26 @@ namespace RouteConfigurator.ViewModel
             {
                 _modelRoute = value;
                 RaisePropertyChanged("modelRoute");
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    _modelRouteInt = 0;
+                }
+                else
+                {
+                    try
+                    {
+                        _modelRouteInt = int.Parse(modelRoute);
+                    }
+                    catch (Exception)
+                    {
+                        modelRoute = null;
+                        informationText = "Problem with model route";
+                    }
+                }
             }
         }
 
-        public ObservableCollection<Override> overridesToSubmit 
+        public ObservableCollection<OverrideRequest> overridesToSubmit 
         {
             get
             {
@@ -274,7 +349,45 @@ namespace RouteConfigurator.ViewModel
             totalTime += model.DriveTime;
             totalTime += model.AVTime;
 
-            totalTime += _serviceProxy.getTotalOptionsTime(model.BoxSize, parseOptions());
+            List<string> options = parseOptions();
+            if(options.Count > 0)
+            {
+                string errorText = "";
+                bool missedOption = false;
+                bool foundOption;
+
+                try
+                {
+                    foreach (string option in options)
+                    {
+                        foundOption = false;
+                        if (_serviceProxy.getFilteredOptions(option, model.BoxSize, true).ToList().Count == 1)
+                        {
+                            foundOption = true;
+                        }
+
+                        if (!foundOption)
+                        {
+                            missedOption = true;
+                            errorText += string.Format("Option {0} not found\n", option);
+                        }
+                    }
+
+                    totalTime += _serviceProxy.getTotalOptionsTime(model.BoxSize, options);
+
+                    if (missedOption)
+                    {
+                        errorText += "Information may be inaccurate.";
+                        MessageBox.Show(errorText);
+                    }
+                }
+                catch (Exception e)
+                {
+                    totalTime = 0;
+                    informationText = "There was a problem accessing the database.";
+                    Console.WriteLine(e.Message);
+                }
+            }
 
             modelTime = totalTime;
         }
@@ -285,10 +398,11 @@ namespace RouteConfigurator.ViewModel
         private void updateModelRoute()
         {
             TimeSpan time = TimeSpan.FromHours((double)modelTime);
+            string route = "";
 
             if (time.TotalMinutes <= 0)
             {
-                modelRoute = "0";
+                route = "0";
             }
             else
             {
@@ -297,69 +411,77 @@ namespace RouteConfigurator.ViewModel
                 //      0 if minutes < 30; 1 if > 30,
                 //      extra 2 digits for unique route if necessary
 
-                modelRoute = "501";
+                route = "501";
 
                 decimal hours = (time.Days * 24 + time.Hours);
                 string hoursText = "";
                 if (hours >= 100)
                 {
                     hoursText = "999";
-                    modelRoute = string.Concat(modelRoute, hoursText);
+                    route = string.Concat(route, hoursText);
                 }
                 else
                 {
                     hoursText = string.Format("{0:00}", (time.Days * 24 + time.Hours));
-                    modelRoute = string.Concat(modelRoute, hoursText);
+                    route = string.Concat(route, hoursText);
 
                     string minutesText = "0";
                     if (time.Minutes >= 30)
                     {
                         minutesText = "1";
                     }
-                    modelRoute = string.Concat(modelRoute, minutesText);
+                    route = string.Concat(route, minutesText);
                 }
 
-                modelRoute = string.Concat(modelRoute, "00");
+                route = string.Concat(route, "00");
             }
+            modelRoute = route;
         }
 
         /// <summary>
-        /// Checks if the information is valid
+        /// Ensures the model override is not a duplicate in the ready to submit list
+        /// Calls checkComplete
         /// </summary>
-        /// <returns> true if valid, false otherwise</returns>
+        /// <returns> true if the override is valid and doesn't already exist, false otherwise </returns>
         private bool checkValid()
         {
-            bool valid = true;
+            bool valid = checkComplete();
 
-            // Model needs 4 characters for the drive and 4 characters for voltage and amperage
-            if (!string.IsNullOrWhiteSpace(modelText) && modelText.Length >= 8)
-            {
-                if(model == null)
-                {
-                    valid = false;
-                    informationText = "Model does not exist, enter a different model";
-                }
-
-                if(valid && overrideTime == null || overrideTime <= 0)
-                {
-                    valid = false;
-                    informationText = "Invalid override time";
-                }
-
-                if (valid && overrideRoute == null || overrideRoute <= 0)
-                {
-                    valid = false;
-                    informationText = "Invalid override route";
-                }
-            }
-            else
-            {
-                valid = false;
-                informationText = "Invalid model";
-            }
             if (valid)
             {
-                foreach (Override ov in overridesToSubmit)
+                /* I'm not sure how to handle an already existing override request for a model
+                 * so I will allow multiple of the same model override
+                //Check if the override already exists in the database as an override
+                if(_serviceProxy.getModelOverride(modelText) != null)
+                {
+                    informationText = "This option already exists";
+                    valid = false;
+                }
+                else
+                {
+                    //Check if the option already exists in the database as a new override request
+                    if (_serviceProxy.getFilteredOverrideRequests("", modelText).ToList().Count > 0)
+                    {
+                        informationText = string.Format("Override for model {0} is already waiting for approval.", modelText);
+                        valid = false;
+                    }
+                    else
+                    {
+                        //Check if the option is a duplicate in the ready to submit list
+                        foreach (Override ov in overridesToSubmit)
+                        {
+                            if (modelText.Equals(ov.ModelNum))
+                            {
+                                informationText = string.Format("Override for model {0} is already ready to submit", modelText);
+                                valid = false;
+                            }
+                        }
+                    }
+                }
+                */
+
+                //Check if the option is a duplicate in the ready to submit list
+                foreach (OverrideRequest ov in overridesToSubmit)
                 {
                     if (modelText.Equals(ov.ModelNum))
                     {
@@ -369,6 +491,48 @@ namespace RouteConfigurator.ViewModel
                 }
             }
             return valid;
+        }
+
+        /// <summary>
+        /// Checks to see if all necessary fields are filled out before the override
+        /// can be added.  
+        /// </summary>
+        /// <returns> true if the form is complete, otherwise false </returns>
+        private bool checkComplete()
+        {
+            bool complete = true;
+
+            // Model needs 4 characters for the drive and 4 characters for voltage and amperage
+            if (!string.IsNullOrWhiteSpace(modelText) && modelText.Length >= 8)
+            {
+                if(model == null)
+                {
+                    complete = false;
+                    informationText = "Model does not exist, enter a different model";
+                }
+
+                if(complete && overrideTime == null || overrideTime <= 0)
+                {
+                    complete = false;
+                    informationText = "Invalid override time";
+                }
+
+                if (complete && overrideRoute == null || overrideRoute <= 0)
+                {
+                    complete = false;
+                    informationText = "Invalid override route";
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(modelText))
+                {
+                    informationText = "Invalid model format";
+                }
+                complete = false;
+            }
+
+            return complete;
         }
 
         #endregion

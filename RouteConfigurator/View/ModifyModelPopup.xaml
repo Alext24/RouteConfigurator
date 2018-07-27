@@ -7,10 +7,10 @@
         xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d" 
-        MinHeight="515"
-        MinWidth="725"
-        Height="515"
-        Width="725"
+        MinHeight="525"
+        MinWidth="750"
+        Height="525"
+        Width="750"
         Title="Modify Model"
         DataContext="{Binding ModifyModel, Source={StaticResource Locator}}">
 
@@ -50,34 +50,57 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>    <!--Col 0-->
-                            <ColumnDefinition Width="145"/>     <!--Col 1-->
-                            <ColumnDefinition Width="auto"/>    <!--Col 2-->
+                            <ColumnDefinition Width="auto"/>    <!--Col 1-->
+                            <ColumnDefinition Width="170"/>    <!--Col 2-->
+                            <ColumnDefinition Width="145"/>    <!--Col 2-->
                         </Grid.ColumnDefinitions>
 
                         <!--Row 0 setup: Title-->
-                        <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Modify Model"
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="Modify Model"
                                Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center"/>
 
                         <!--Row 1 setup: Search Criteria-->
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Criteria" FontSize="16"/>
 
+                        <!--Row 2 setup: Drive Type-->
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Drive Type" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" IsTextSearchEnabled="True" ItemsSource="{Binding driveTypes}" SelectedValue="{Binding selectedDrive}"/>
+                        <ComboBox Grid.Row="2" Grid.Column="1" MaxWidth="135" MaxDropDownHeight="200" Margin="5" IsTextSearchEnabled="True" ItemsSource="{Binding driveTypes}" SelectedValue="{Binding selectedDrive}"/>
 
+                        <!--Row 3 setup: AV-->
                         <TextBlock Grid.Row="3" Grid.Column="0" Text="AV" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding AVText}" FontSize="16" IsReadOnly="{Binding driveNotSelected}"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" MaxWidth="135" Margin="5" Text="{Binding AVText}" FontSize="16"/>
 
+                        <!--Row 4 setup: Box Size-->
                         <TextBlock Grid.Row="4" Grid.Column="0" Text="Box Size" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
-                            <TextBox Margin="5" Width="115" Text="{Binding boxSize}" FontSize="16" IsReadOnly="{Binding driveNotSelected}"/>
-                            <CheckBox IsChecked="{Binding exactBoxSize}" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Width="145">
+                            <TextBox Margin="5" Width="115" Text="{Binding boxSize}" FontSize="16"/>
+                            <CheckBox IsChecked="{Binding exactBoxSize}" VerticalAlignment="Center" Margin="0 0 5 0"/>
                         </StackPanel>
 
+                        <!--Row 5 setup: Models found-->
                         <TextBlock Grid.Row="5" Grid.Column="0" Text="Models found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
                         <TextBlock Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding modelsFound.Count}" FontSize="16"/>
 
-                        <!--Row 2 setup: Model Table-->
-                        <DataGrid  Grid.Row="2" Grid.Column="2" Grid.RowSpan="4" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                        <!--Row 6 setup: Blank, Spacing-->
+
+                        <!--Row 7 setup: New Times-->
+                        <TextBlock Grid.Row="7" Grid.Column="0" Text="New Drive Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                        <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding newDriveTime, TargetNullValue=''}" FontSize="16" Width="135"/>
+
+                        <TextBlock Grid.Row="7" Grid.Column="2" Text="New AV Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                        <TextBox Grid.Row="7" Grid.Column="3" Margin="5" Text="{Binding newAVTime, TargetNullValue=''}" FontSize="16" Width="135" HorizontalAlignment="Right"/>
+
+                        <!--Row 8 setup: Description Header-->
+                        <TextBlock Grid.Row="8" Grid.Column="0" Text="Request Description" FontSize="16" Margin="5"/>
+                        <TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="3" Width="450" FontSize="16" MaxLines="2" Margin="5 0" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto"
+                                 Text="{Binding description}"/>
+
+                        <!--Row 9 setup: Submit Button-->
+                        <Button Grid.Row="9" Grid.Column="3" Content="Submit" Margin="0 5 0 0" HorizontalAlignment="Right"
+                            Command="{Binding submitCommand}"/>
+
+                        <!--Row 2-5 setup: Model Table-->
+                        <DataGrid  Grid.Row="2" Grid.RowSpan="4" Grid.Column="2" Grid.ColumnSpan="2" MaxHeight="129" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
                                CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" SelectionMode="Single"
                                ItemsSource="{Binding modelsFound}" SelectedValue="{Binding selectedModel}">
 
@@ -93,16 +116,6 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <!--Row 6 setup: Blank, Spacing-->
-
-                        <TextBlock Grid.Row="7" Grid.Column="0" Text="New Drive Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding newDriveTime}" FontSize="16"/>
-
-                        <TextBlock Grid.Row="8" Grid.Column="0" Text="New AV Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <TextBox Grid.Row="8" Grid.Column="1" Margin="5" Text="{Binding newAVTime}" FontSize="16"/>
-
-                        <Button Grid.Row="9" Grid.Column="3" Content="Submit" Margin="0 5 0 0" HorizontalAlignment="Right"
-                            Command="{Binding submitCommand}"/>
                     </Grid>
                 </ScrollViewer>
             </Border>

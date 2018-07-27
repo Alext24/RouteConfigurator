@@ -198,6 +198,14 @@ namespace RouteConfigurator.Design
         #endregion
 
         #region Time Trial Read
+        public TimeTrial getTimeTrial(int productionNumber)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.TimeTrials.Find(productionNumber) as TimeTrial;
+            }
+        }
+
         /// <param name="modelBase"> model base to get time trials for</param>
         /// <returns> list of time trials with the model base </returns>
         public IEnumerable<TimeTrial> getTimeTrials(string modelBase)
@@ -215,7 +223,7 @@ namespace RouteConfigurator.Design
         {
             using (context = new RouteConfiguratorDB())
             {
-                return context.TimeTrials.Include("Model").Include("TTOptionTimes").Where(x => 
+                return context.TimeTrials.Include(a => a.Model).Include(a => a.TTOptionTimes).Where(x => 
                                x.Model.Base.Equals(modelBase) &&
                                x.TTOptionTimes.Count == options.Count &&
                                x.TTOptionTimes.All(y => options.Contains(y.OptionCode))).ToList();
@@ -234,7 +242,7 @@ namespace RouteConfigurator.Design
             {
                 if (exact)
                 {
-                    return context.TimeTrials.Include("Model").Include("TTOptionTimes").Where(tt => 
+                    return context.TimeTrials.Include(a => a.Model).Include(a => a.TTOptionTimes).Where(tt => 
                                    tt.Model.Base.Contains(modelBase) &&
                                    tt.OptionsText.Equals(optionTextFilter) &&
                                    tt.SalesOrder.ToString().Contains(salesFilter) &&
@@ -242,7 +250,7 @@ namespace RouteConfigurator.Design
                 }
                 else
                 {
-                    return context.TimeTrials.Include("Model").Include("TTOptionTimes").Where(tt => 
+                    return context.TimeTrials.Include(a => a.Model).Include(a => a.TTOptionTimes).Where(tt => 
                                    tt.Model.Base.Contains(modelBase) &&
                                    tt.OptionsText.Contains(optionTextFilter) &&
                                    tt.SalesOrder.ToString().Contains(salesFilter) &&
@@ -357,6 +365,15 @@ namespace RouteConfigurator.Design
             using (context = new RouteConfiguratorDB())
             {
                 context.Modifications.Add(mod);
+                context.SaveChanges();
+            }
+        }
+
+        public void addOverrideRequest(OverrideRequest ov)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                context.OverrideRequests.Add(ov);
                 context.SaveChanges();
             }
         }

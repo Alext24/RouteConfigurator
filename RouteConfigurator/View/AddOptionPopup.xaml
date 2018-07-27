@@ -22,15 +22,24 @@
             <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>      <!--Row 0-->
-                        <RowDefinition Height="auto"/>      <!--Row 1-->
-                        <RowDefinition Height="auto"/>      <!--Row 2-->
-                        <RowDefinition Height="auto"/>      <!--Row 3-->
-                        <RowDefinition Height="auto"/>      <!--Row 4-->
-                        <RowDefinition Height="20"/>        <!--Row 5-->
-                        <RowDefinition Height="auto"/>      <!--Row 6-->
-                        <RowDefinition Height="20"/>        <!--Row 7-->
-                        <RowDefinition Height="auto"/>      <!--Row 8-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 0-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 1-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 2-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 3-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 4-->
+                        <RowDefinition Height="20"/>
+                        <!--Row 5-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 6-->
+                        <RowDefinition Height="20"/>
+                        <!--Row 7-->
+                        <RowDefinition Height="auto"/>
+                        <!--Row 8-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -80,6 +89,14 @@
 
                     <!--Row 5 setup: Blank, Spacing-->
 
+                    <!--Row 6 Col 3 setup: Add Option Button-->
+                    <Button Grid.Row="6" Grid.Column="3" Content="Add Option" HorizontalAlignment="Right" Width="150" Command="{Binding addOptionCommand}"/>
+
+                    <!--Row 7 setup: Columns 2-3: Blank, Spacing-->
+
+                    <!--Row 8 setup: Columns 2-3: Submit Button-->
+                    <Button Grid.Row="8" Grid.Column="3" Content="Submit Options" HorizontalAlignment="Right" Width="150" Command="{Binding submitCommand}"/>
+
                     <!--Row 6 Col 0-1 setup: Options table header-->
                     <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="20 0" FontSize="16"
                                Text="Current Options to Submit" VerticalAlignment="Bottom" Padding="0 5"/>
@@ -101,21 +118,12 @@
                                                 Binding="{Binding NewName}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-
-                    <!--Row 6 Col 3 setup: Add Option Button-->
-                    <Button Grid.Row="6" Grid.Column="3" Content="Add Option" HorizontalAlignment="Right" Width="150" Command="{Binding addOptionCommand}"/>
-                    
-                    <!--Row 7 setup: Columns 2-3: Blank, Spacing-->
-
-                    <!--Row 8 setup: Columns 2-3: Submit Button-->
-                    <Button Grid.Row="8" Grid.Column="3" Content="Submit Options" HorizontalAlignment="Right" Width="150" Command="{Binding submitCommand}"/>
-
                 </Grid>
             </Border>
 
-                <!--Information text-->
-                <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
-                           FontSize="12" Text="{Binding informationText}" />
+            <!--Information text-->
+            <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
+                       FontSize="12" Text="{Binding informationText}" />
         </Grid>
     </Border>
 </Window>

@@ -28,20 +28,17 @@ namespace RouteConfigurator.ViewModel
         private IDataAccessService _serviceProxy = new DataAccessService();
 
         private ObservableCollection<string> _optionCodes = new ObservableCollection<string>();
-
         private string _selectedOptionCode;
 
         private string _boxSize = "";
-
         private bool _exactBoxSize = false;
 
-        private ObservableCollection<Option> _optionsFound;
-
+        private ObservableCollection<Option> _optionsFound = new ObservableCollection<Option>();
         private Option _selectedOption;
 
-        private decimal _newTime;
-
+        private decimal? _newTime;
         private string _newName;
+        private string _description;
 
         private string _informationText;
         #endregion
@@ -70,9 +67,55 @@ namespace RouteConfigurator.ViewModel
             optionCodes = new ObservableCollection<string>(_serviceProxy.getOptionCodes());
         }
 
+        /// <summary>
+        /// Submits each option modification to the database
+        /// </summary>
         private void submit()
         {
-            MessageBox.Show("Placeholder for sending updates to director");
+            if (optionsFound.Count <= 0)
+            {
+                informationText = "No options selected to update.";
+            }
+            else if (checkValid())
+            {
+                try
+                {
+                    foreach (Option option in optionsFound)
+                    {
+                        Modification modifiedOption = new Modification()
+                        {
+                            RequestDate = DateTime.Now,
+                            OptionCode = option.OptionCode,
+                            BoxSize = option.BoxSize,
+                            Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
+                            State = 0,
+                            Sender = "TEMPORARY PLACEHOLDER",
+                            IsOption = true,
+                            IsNew = false,
+                            NewTime = newTime == null || newTime <= 0 ? option.Time : (decimal)newTime,
+                            NewName = string.IsNullOrWhiteSpace(newName) ? option.Name : newName,
+                        };
+
+                        _serviceProxy.addModificationRequest(modifiedOption);
+                    }
+
+                    //Clear input boxes
+                    selectedOptionCode = null;
+                    boxSize = "";
+                    optionsFound.Clear();
+                    newTime = null;
+                    newName = null;
+                    description = "";
+
+                    informationText = "Option modifications have been submitted.  Waiting for director approval.";
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                    return;
+                }
+            }
         }
         #endregion
 
@@ -90,6 +133,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOptionsTable
+        /// </summary>
         public string selectedOptionCode
         {
             get
@@ -103,10 +149,12 @@ namespace RouteConfigurator.ViewModel
                 informationText = "";
 
                 updateOptionsTable();
-                boxSize = "";
             }
         }
 
+        /// <summary>
+        /// Calls updateOptionsTable
+        /// </summary>
         public string boxSize
         {
             get
@@ -123,6 +171,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOptionsTable
+        /// </summary>
         public bool exactBoxSize
         {
             get
@@ -166,7 +217,7 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public decimal newTime
+        public decimal? newTime
         {
             get
             {
@@ -176,6 +227,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _newTime = value;
                 RaisePropertyChanged("newTime");
+                informationText = "";
             }
         }
 
@@ -189,6 +241,21 @@ namespace RouteConfigurator.ViewModel
             {
                 _newName = value;
                 RaisePropertyChanged("newName");
+                informationText = "";
+            }
+        }
+
+        public string description 
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                _description = value;
+                RaisePropertyChanged("description");
+                informationText = "";
             }
         }
 
@@ -207,9 +274,55 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions 
+        /// <summary>
+        /// Updates the options table with the filtered information
+        /// </summary>
         private void updateOptionsTable()
         {
             optionsFound = new ObservableCollection<Option>(_serviceProxy.getNumOptionsFound(selectedOptionCode, boxSize, exactBoxSize));
+        }
+
+        /// <summary>
+        /// Calls checkComplete
+        /// </summary>
+        /// <returns> checkComplete value </returns>
+        private bool checkValid()
+        {
+            bool valid = checkComplete();
+
+            /*  I'm not sure how to handle an already existing modification request for an option
+            *  so I will allow multiple of the same option requests.
+            if (valid)
+            {
+                //Check if the option already exists in the database as an option modification request
+                List<Modification> mods = _serviceProxy.getFilteredModifiedOptions("", selectedOptionCode, boxSize).ToList();
+                if (mods.Count > 0)
+                {
+                    informationText = string.Format("Option {0} is already waiting for approval.", selectedOptionCode);
+                    valid = false;
+                }
+            }
+            */
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Checks to see if new time or new name is filled out correctly
+        /// before the modification can be added.  
+        /// </summary>
+        /// <returns> true if the form is complete, otherwise false </returns>
+        private bool checkComplete()
+        {
+            bool complete = true;
+
+            if ((newTime == null || newTime <= 0) && (string.IsNullOrWhiteSpace(newName)))
+            {
+                informationText = "No new information associated with modification.";
+                complete = false;
+            }
+
+            return complete;
         }
         #endregion
     }

@@ -16,7 +16,6 @@ namespace RouteConfigurator.ViewModel
     public class AddOptionPopupModel : ViewModelBase
     {
         #region PrivateVariables
-
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
@@ -58,11 +57,13 @@ namespace RouteConfigurator.ViewModel
 
         #region Commands
         /// <summary>
-        /// Creates the new option and adds it to the options to submit list
+        /// Creates the new option modification and adds it to the options to submit list
         /// Calls checkValid
         /// </summary>
         private void addOption()
         {
+            informationText = "";
+
             if (checkValid())
             {
                 Modification mod = new Modification()
@@ -70,13 +71,13 @@ namespace RouteConfigurator.ViewModel
                     RequestDate = DateTime.Now,
                     OptionCode = optionCode,
                     BoxSize = boxSize,
-                    Description = description,
+                    Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
                     State = 0,
                     Sender = "TEMPORARY PLACEHOLDER",
                     IsOption = true,
                     IsNew = true,
                     NewTime = (decimal)time,
-                    NewName = name
+                    NewName = name == null ? "" : name
                 };
 
                 modificationsToSubmit.Add(mod);
@@ -87,8 +88,13 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Submits each of the new option modifications to the database
+        /// </summary>
         private void submit()
         {
+            informationText = "";
+
             if (modificationsToSubmit.Count > 0)
             {
                 try
@@ -223,8 +229,7 @@ namespace RouteConfigurator.ViewModel
 
         #region Private Functions
         /// <summary>
-        /// Checks that all necessary fields for the option are entered
-        /// Also checks that the option does not already exist
+        /// Checks that the option does not already exist
         /// Calls checkComplete
         /// </summary>
         /// <returns> true if the option is valid and doesn't already exist, false otherwise </returns>
@@ -233,7 +238,7 @@ namespace RouteConfigurator.ViewModel
             bool valid = checkComplete();
             if (valid)
             {
-                //Check that the option doesn't already exist in the database
+                //Check if the option already exists in the database as an option
                 if(_serviceProxy.getFilteredOptions(optionCode, boxSize, true).ToList().Count > 0)
                 {
                     informationText = "This option already exists";
@@ -241,22 +246,35 @@ namespace RouteConfigurator.ViewModel
                 }
                 else
                 {
-                    //Check that the option isn't a duplicate in the ready to submit list
-                    foreach (Modification newOption in modificationsToSubmit)
+                    //Check if the option already exists in the database as a new option request
+                    if (_serviceProxy.getFilteredNewOptions("", optionCode, boxSize).ToList().Count > 0)
                     {
-                        if (newOption.OptionCode.Equals(optionCode) && newOption.BoxSize.Equals(boxSize))
+                        informationText = string.Format("Option {0}-{1} is already waiting for approval.", optionCode, boxSize);
+                        valid = false;
+                    }
+                    else
+                    {
+                        //Check if the option is a duplicate in the ready to submit list
+                        foreach (Modification newOption in modificationsToSubmit)
                         {
-                            informationText = "This option is already ready to submit";
-                            valid = false;
-                            break;
+                            if (newOption.OptionCode.Equals(optionCode) && newOption.BoxSize.Equals(boxSize))
+                            {
+                                informationText = "This option is already ready to submit";
+                                valid = false;
+                                break;
+                            }
                         }
                     }
                 }
             }
-
             return valid;
         }
 
+        /// <summary>
+        /// Checks to see if all necessary fields are filled out with correct formatting
+        /// before the option can be added.
+        /// </summary>
+        /// <returns> true if the form is complete, otherwise false</returns>
         private bool checkComplete()
         {
             bool complete = true;
@@ -273,6 +291,11 @@ namespace RouteConfigurator.ViewModel
                     if (!optionCode.ElementAt(0).Equals('P') && !optionCode.ElementAt(0).Equals('T'))
                     {
                         informationText = "Option Code must start with a 'P' or 'T'";
+                        complete = false;
+                    }
+                    else if(optionCode.ElementAt(1).Equals('P') || optionCode.ElementAt(1).Equals('T'))
+                    {
+                        informationText = "Option Code cannot end with a 'P' or 'T'";
                         complete = false;
                     }
                 }
