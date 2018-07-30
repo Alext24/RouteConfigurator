@@ -75,10 +75,12 @@ namespace RouteConfigurator.ViewModel
                     Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
                     State = 0,
                     Sender = "TEMPORARY PLACEHOLDER",
-                    OverrideTime = (decimal) overrideTime,
-                    OverrideRoute = (int) overrideRoute,
-                    ModelTime = (decimal) modelTime,
-                    ModelRoute = _modelRouteInt
+                    OverrideTime = (decimal)overrideTime,
+                    OverrideRoute = (int)overrideRoute,
+                    ModelTime = (decimal)modelTime,
+                    ModelRoute = _modelRouteInt,
+                    ModelBase = model.Base,
+                    ReviewDate = new DateTime(1900, 1, 1)
                 };
                 
                 _overridesToSubmit.Add(ov);

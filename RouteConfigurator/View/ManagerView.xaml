@@ -75,7 +75,7 @@
 
                                 <!--New Model Table-->
                                 <DataGrid  Grid.Row="1" Height="250" MaxWidth="615" x:Name="NewModelTable" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="False"
-                                       ItemsSource="{Binding newModels}" SelectedValue="{Binding selectedNewModel}" AutoGenerateColumns="False" CanUserAddRows="False"
+                                       ItemsSource="{Binding newModels}" SelectedValue="{Binding selectedNewModel, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CanUserAddRows="False"
                                        ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                                     <DataGrid.RowStyle>

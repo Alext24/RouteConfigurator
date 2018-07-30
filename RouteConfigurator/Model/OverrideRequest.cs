@@ -32,7 +32,8 @@ namespace RouteConfigurator.Model
         /// 0 - waiting
         /// 1 - approved
         /// 2 - denied
-        /// 3 - currently checked
+        /// 3 - currently approved checked
+        /// 4 - currently denied checked
         /// </summary>
         [Required]
         public int State { get; set; }
@@ -45,6 +46,11 @@ namespace RouteConfigurator.Model
         [StringLength(64, MinimumLength = 8)]
         [Display(Name = "Model Number")]
         public string ModelNum { get; set; }
+
+        [Required]
+        [StringLength(8, MinimumLength = 8, ErrorMessage = "Base has to be 8 characters")]
+        [Display(Name = "Model Base")]
+        public virtual string ModelBase { get; set; }
 
         [Required(ErrorMessage = "Override Time is Required")]
         [Display(Name = "Override Time")]

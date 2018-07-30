@@ -53,5 +53,13 @@ namespace RouteConfigurator.Model
         void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);
         void addModificationRequest(Modification mod);
         void addOverrideRequest(OverrideRequest ov);
+        void addModel(Model model);
+        void addOption(Option option);
+        void updateModel(string modelBase, decimal newDriveTime, decimal newAVTime);
+        void updateOption(string optionCode, string boxSize, decimal newTime, string newName);
+        void addOverride(Override ov, string modelBase);
+
+        void updateModification(Modification modification);
+        void updateOverrideRequest(OverrideRequest overrideRequest);
     }
 }

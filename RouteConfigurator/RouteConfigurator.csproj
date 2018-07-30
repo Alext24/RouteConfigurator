@@ -110,6 +110,10 @@
     <Compile Include="Migrations\201807232039028_updatedManagerTables.Designer.cs">
       <DependentUpon>201807232039028_updatedManagerTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201807301614041_AddedModelBasePropertyToOverrideRequest.cs" />
+    <Compile Include="Migrations\201807301614041_AddedModelBasePropertyToOverrideRequest.Designer.cs">
+      <DependentUpon>201807301614041_AddedModelBasePropertyToOverrideRequest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\IDataAccessService.cs" />
     <Compile Include="Model\IFrameNavigationService.cs" />
@@ -258,6 +262,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201807232039028_updatedManagerTables.resx">
       <DependentUpon>201807232039028_updatedManagerTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201807301614041_AddedModelBasePropertyToOverrideRequest.resx">
+      <DependentUpon>201807301614041_AddedModelBasePropertyToOverrideRequest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

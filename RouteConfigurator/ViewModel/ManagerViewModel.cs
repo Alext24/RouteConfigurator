@@ -104,7 +104,224 @@ namespace RouteConfigurator.ViewModel
 
         private void submitChecked()
         {
-            MessageBox.Show("Placeholder for submitting all selected");
+            informationText = "";
+            int numApproved = 0;
+            int numDenied = 0;
+            int numError = 0;
+            string errorText = "";
+
+            //Go through each table
+            //check for state to equal 3 (approved) or 4 (declined)
+            foreach (Modification mod in newModels)
+            {
+                if (mod.State == 3)
+                {
+                    Model.Model model = new Model.Model()
+                    {
+                        Base = mod.ModelBase,
+                        BoxSize = mod.BoxSize,
+                        DriveTime = mod.NewDriveTime,
+                        AVTime = mod.NewAVTime
+                    };
+
+                    try
+                    {
+                        _serviceProxy.addModel(model);
+                        numApproved++;
+
+                        updateModification(mod);
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error adding model {0}\n", model.Base);
+                        numError++;
+
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                else if (mod.State == 4)
+                {
+                    try
+                    {
+                        updateModification(mod);
+                        numDenied++;
+                    }
+                    catch (Exception e)
+                    {
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+
+            foreach (Modification mod in newOptions)
+            {
+                if (mod.State == 3)
+                {
+                    Option option = new Option()
+                    {
+                        OptionCode = mod.OptionCode,
+                        BoxSize = mod.BoxSize,
+                        Time = mod.NewTime,
+                        Name = mod.NewName
+                    };
+                    try
+                    {
+                        _serviceProxy.addOption(option);
+                        numApproved++;
+
+                        updateModification(mod);
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error adding option {0}-{1}\n", option.OptionCode, option.BoxSize);
+                        numError++;
+
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                else if (mod.State == 4)
+                {
+                    try
+                    {
+                        updateModification(mod);
+                        numDenied++;
+                    }
+                    catch (Exception e)
+                    {
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+
+            foreach (Modification mod in modifiedModels)
+            {
+                if (mod.State == 3)
+                {
+                    try
+                    {
+                        _serviceProxy.updateModel(mod.ModelBase, mod.NewDriveTime, mod.NewAVTime);
+                        numApproved++;
+
+                        updateModification(mod);
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error modifying model {0}\n", mod.ModelBase);
+                        numError++;
+
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                else if (mod.State == 4)
+                {
+                    try
+                    {
+                        updateModification(mod);
+                        numDenied++;
+                    }
+                    catch (Exception e)
+                    {
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+
+            foreach (Modification mod in modifiedOptions)
+            {
+                if (mod.State == 3)
+                {
+                    try
+                    {
+                        _serviceProxy.updateOption(mod.OptionCode, mod.BoxSize, mod.NewTime, mod.NewName);
+                        numApproved++;
+
+                        updateModification(mod);
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error modifying option {0}-{1}\n", mod.OptionCode, mod.BoxSize);
+                        numError++;
+
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                else if (mod.State == 4)
+                {
+                    try
+                    {
+                        updateModification(mod);
+                        numDenied++;
+                    }
+                    catch (Exception e)
+                    {
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+
+            foreach (OverrideRequest or in overrides)
+            {
+                if (or.State == 3)
+                {
+                    Override ov = new Override()
+                    {
+                        ModelNum = or.ModelNum,
+                        OverrideRoute = or.OverrideRoute,
+                        OverrideTime = or.OverrideTime
+                    };
+                    try
+                    {
+                        _serviceProxy.addOverride(ov, or.ModelBase);
+                        numApproved++;
+
+                        updateOverride(or);
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error adding override {0}\n", ov.ModelNum);
+                        numError++;
+
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                else if (or.State == 4)
+                {
+                    try
+                    {
+                        updateOverride(or);
+                        numDenied++;
+                    }
+                    catch (Exception e)
+                    {
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+
+            if (numError > 0)
+            {
+                MessageBox.Show(string.Format("Approved: {0}\n" +
+                                              "Denied: {1}\n" +
+                                              "Errors: {2}\n" +
+                                              "{3}", numApproved, numDenied, numError, errorText));
+            }
+            else
+            {
+                MessageBox.Show(string.Format("Approved: {0}\n" +
+                                              "Denied: {1}", numApproved, numDenied));
+            }
+
+            refreshTables();
         }
 
         private void goBack()
@@ -179,6 +396,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateNewModelTable
+        /// </summary>
         public string NMSenderFilter
         {
             get
@@ -195,6 +415,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateNewModelTable
+        /// </summary>
         public string NMBaseFilter
         {
             get
@@ -211,6 +434,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateNewModelTable
+        /// </summary>
         public string NMBoxSizeFilter
         {
             get
@@ -240,6 +466,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateNewOptionTable
+        /// </summary>
         public string NOSenderFilter
         {
             get
@@ -256,6 +485,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateNewOptionTable
+        /// </summary>
         public string NOOptionCodeFilter
         {
             get
@@ -272,6 +504,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateNewOptionTable
+        /// </summary>
         public string NOBoxSizeFilter
         {
             get
@@ -301,6 +536,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateModelModificationTable
+        /// </summary>
         public string MMSenderFilter
         {
             get
@@ -317,6 +555,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateModelModificationTable
+        /// </summary>
         public string MMModelNameFilter
         {
             get
@@ -346,6 +587,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOptionModificationTable
+        /// </summary>
         public string OMSenderFilter
         {
             get
@@ -362,6 +606,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOptionModificationTable
+        /// </summary>
         public string OMOptionCodeFilter
         {
             get
@@ -378,6 +625,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOptionModificationTable
+        /// </summary>
         public string OMBoxSizeFilter
         {
             get
@@ -407,6 +657,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOverrideTable
+        /// </summary>
         public string ORSenderFilter
         {
             get
@@ -423,6 +676,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOverrideTable
+        /// </summary>
         public string ORModelNameFilter
         {
             get
@@ -452,7 +708,7 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public string informationText 
+        public string informationText
         {
             get
             {
@@ -467,6 +723,15 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions
+        private void refreshTables()
+        {
+            updateNewModelTable();
+            updateNewOptionTable();
+            updateModelModificationTable();
+            updateOptionModificationTable();
+            updateOverrideTable();
+        }
+
         private void updateNewModelTable()
         {
             newModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter));
@@ -490,6 +755,32 @@ namespace RouteConfigurator.ViewModel
         private void updateOverrideTable()
         {
             overrides = new ObservableCollection<OverrideRequest>(_serviceProxy.getFilteredOverrideRequests(ORSenderFilter, ORModelNameFilter));
+        }
+
+        /// <summary>
+        /// Updates the modification review date and reviewer.
+        /// Should be surrounded by a try catch
+        /// </summary>
+        /// <param name="mod"></param>
+        private void updateModification(Modification mod)
+        {
+            mod.ReviewDate = DateTime.Now;
+            mod.Reviewer = "TEMPORARY REVIEWER";
+
+            _serviceProxy.updateModification(mod);
+        }
+
+        /// <summary>
+        /// Updates the override request review date and reviewer.
+        /// Should be surrounded by a try catch
+        /// </summary>
+        /// <param name="mod"></param>
+        private void updateOverride(OverrideRequest or)
+        {
+            or.ReviewDate = DateTime.Now;
+            or.Reviewer = "TEMPORARY REVIEWER";
+
+            _serviceProxy.updateOverrideRequest(or);
         }
         #endregion
     }

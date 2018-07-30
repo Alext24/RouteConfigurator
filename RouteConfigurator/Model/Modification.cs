@@ -32,7 +32,8 @@ namespace RouteConfigurator.Model
         /// 0 - waiting
         /// 1 - approved
         /// 2 - denied
-        /// 3 - currently checked
+        /// 3 - currently approved checked
+        /// 4 - currently denied checked
         /// </summary>
         [Required]
         public int State { get; set; }

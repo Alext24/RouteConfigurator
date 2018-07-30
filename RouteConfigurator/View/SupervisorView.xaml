@@ -53,7 +53,7 @@
                         <TextBlock Grid.Row="0" Text="All Models" FontSize="16"/>
 
                         <!--Row 1 setup: Model Table-->
-                        <DataGrid  Grid.Row="1" Height="275" MinWidth="250" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                        <DataGrid  Grid.Row="1" Height="275" MaxWidth="300" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
                                    CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible"
                                    ItemsSource="{Binding models}" SelectedItem="{Binding selectedModel}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
@@ -144,7 +144,7 @@
                         <TextBlock Grid.Row="3" Text="All Options" FontSize="16"/>
 
                         <!--Row 4 setup: Options table-->
-                        <DataGrid  Grid.Row="4" Height="275" x:Name="OptionTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
+                        <DataGrid  Grid.Row="4" Height="275" MaxWidth="300" x:Name="OptionTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
                                    CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible"
                                    ItemsSource="{Binding options}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
@@ -209,7 +209,7 @@
                                 </DataGridTextColumn>
 
                                 <!--Column 4: Option Name-->
-                                <DataGridTextColumn x:Name="OptionName" Width="auto" MaxWidth="100" FontSize="16" Binding="{Binding Name}">
+                                <DataGridTextColumn x:Name="OptionName" Width="auto" FontSize="16" Binding="{Binding Name}">
                                     <DataGridTextColumn.HeaderStyle>
                                         <Style TargetType="DataGridColumnHeader">
                                             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>

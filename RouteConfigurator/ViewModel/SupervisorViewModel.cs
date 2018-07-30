@@ -190,8 +190,11 @@ namespace RouteConfigurator.ViewModel
 
         private void deleteOverride()
         {
-            MessageBox.Show(string.Format("Placeholder for deleting override for {0}", selectedOverride.ModelNum));
-            //Send to director for approval
+            if (selectedOverride != null)
+            {
+                MessageBox.Show(string.Format("Placeholder for deleting override for {0}", selectedOverride.ModelNum));
+                //Send to director for approval
+            }
         }
 
         private void goHome()
