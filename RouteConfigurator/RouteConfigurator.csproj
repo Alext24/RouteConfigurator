@@ -84,6 +84,7 @@
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\CheckBoxToModStateConverter.cs" />
     <Compile Include="Converters\DecimalTimeToStringConverter.cs" />
+    <Compile Include="Converters\IntStateToTextStateConverter.cs" />
     <Compile Include="Design\DataAccessService.cs" />
     <Compile Include="Design\FrameNavigationService.cs" />
     <Compile Include="Migrations\201807161826584_initialDatabase3.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="ViewModel\ModifyOptionPopupModel.cs" />
     <Compile Include="ViewModel\ModifyModelPopupModel.cs" />
     <Compile Include="ViewModel\OverrideModelPopupModel.cs" />
+    <Compile Include="ViewModel\RequestsViewModel.cs" />
     <Compile Include="ViewModel\SupervisorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AddModelPopup.xaml.cs">
@@ -158,6 +160,9 @@
     </Compile>
     <Compile Include="View\OverrideModelPopup.xaml.cs">
       <DependentUpon>OverrideModelPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RequestsView.xaml.cs">
+      <DependentUpon>RequestsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SupervisorView.xaml.cs">
       <DependentUpon>SupervisorView.xaml</DependentUpon>
@@ -223,6 +228,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\OverrideModelPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RequestsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

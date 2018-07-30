@@ -78,6 +78,7 @@ namespace RouteConfigurator.ViewModel
         public RelayCommand overrideModelCommand { get; set; }
         public RelayCommand deleteOverrideCommand { get; set; }
 
+        public RelayCommand viewRequestsCommand { get; set; }
         public RelayCommand goHomeCommand { get; set; }
         #endregion
 
@@ -109,24 +110,12 @@ namespace RouteConfigurator.ViewModel
             overrideModelCommand = new RelayCommand(overrideModel);
             deleteOverrideCommand = new RelayCommand(deleteOverride);
 
+            viewRequestsCommand = new RelayCommand(viewRequests);
             goHomeCommand = new RelayCommand(goHome);
         }
         #endregion
 
         #region Commands
-        public bool goHomeAllowed
-        {
-            get
-            {
-                return _goHomeAllowed;
-            }
-            set
-            {
-                _goHomeAllowed = value;
-                RaisePropertyChanged("goHomeAllowed");
-            }
-        }
-
         private void loadModels()
         {
             updateModelTable();
@@ -197,6 +186,12 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        private void viewRequests()
+        {
+            RequestsView requests = new RequestsView();
+            requests.Show();
+        }
+
         private void goHome()
         {
             _navigationService.NavigateTo("HomeView");
@@ -205,6 +200,19 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Public Variables
+        public bool goHomeAllowed
+        {
+            get
+            {
+                return _goHomeAllowed;
+            }
+            set
+            {
+                _goHomeAllowed = value;
+                RaisePropertyChanged("goHomeAllowed");
+            }
+        }
+
         public ObservableCollection<Model.Model> models
         {
             get

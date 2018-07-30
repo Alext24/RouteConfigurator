@@ -262,6 +262,14 @@ namespace RouteConfigurator.Design
         #endregion
 
         #region Modifications Read
+        public IEnumerable<Modification> getModifications()
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Modifications.ToList();
+            }
+        }
+
         /// <param name="Sender"> User who sent the modification </param>
         /// <param name="Base"> Model base (drive and av) </param>
         /// <param name="BoxSize"> Box size for the model</param>
@@ -326,6 +334,14 @@ namespace RouteConfigurator.Design
         #endregion
 
         #region Override Requests Read
+        public IEnumerable<OverrideRequest> getOverrideRequests()
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.OverrideRequests.ToList();
+            }
+        }
+
         /// <param name="Sender"> User who sent the request </param>
         /// <param name="ModelNum"> Full model number with options </param>
         /// <returns> List of override requests that meet the filters</returns>
@@ -475,7 +491,7 @@ namespace RouteConfigurator.Design
                 //Update modification info for approval or denial
                 or.ReviewDate = overrideRequest.ReviewDate;
                 or.Reviewer = overrideRequest.Reviewer;
-                or.State = overrideRequest.State;
+                or.State = overrideRequest.State == 3 ? 1 : overrideRequest.State == 4 ? 2 : overrideRequest.State;
 
                 context.SaveChanges();
             }

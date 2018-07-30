@@ -42,6 +42,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<ModifyModelPopupModel>();
             SimpleIoc.Default.Register<OverrideModelPopupModel>();
             SimpleIoc.Default.Register<ModifyOptionPopupModel>();
+            SimpleIoc.Default.Register<RequestsViewModel>();
         }
 
         public HomeViewModel Home
@@ -134,6 +135,16 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public RequestsViewModel Requests 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<RequestsViewModel>();
+                SimpleIoc.Default.Register<RequestsViewModel>();
+                return ServiceLocator.Current.GetInstance<RequestsViewModel>();
+            }
+        }
+
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>
@@ -148,6 +159,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<ModifyModelPopupModel>();
             SimpleIoc.Default.Unregister<OverrideModelPopupModel>();
             SimpleIoc.Default.Unregister<ModifyOptionPopupModel>();
+            SimpleIoc.Default.Unregister<RequestsViewModel>();
         }
 
         public static void setupNavigation()

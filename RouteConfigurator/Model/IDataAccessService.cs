@@ -40,6 +40,7 @@ namespace RouteConfigurator.Model
         #endregion
 
         #region Modifications Read
+        IEnumerable<Modification> getModifications();
         IEnumerable<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize);
         IEnumerable<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize);
         IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelName);
@@ -47,6 +48,7 @@ namespace RouteConfigurator.Model
         #endregion
 
         #region Override Requests Read
+        IEnumerable<OverrideRequest> getOverrideRequests();
         IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum);
         #endregion
 
