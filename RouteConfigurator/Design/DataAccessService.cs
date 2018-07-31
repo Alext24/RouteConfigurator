@@ -537,13 +537,60 @@ namespace RouteConfigurator.Design
                 mod.ReviewDate = modification.ReviewDate;
                 mod.Reviewer = modification.Reviewer;
 
-                mod.State = modification.State == 3 ? 1 : modification.State == 4 ? 2 : modification.State;
+                if (modification.State == 3)
+                {
+                    bool changed = false;
 
-                //Update modification info for possible director changes
-                mod.ModelBase = modification.ModelBase;
-                mod.BoxSize = modification.BoxSize;
-                mod.NewDriveTime = modification.NewDriveTime;
-                mod.NewAVTime = modification.NewAVTime;
+                    if ((!modification.ModelBase.Equals(mod.ModelBase)) ||
+                        (!modification.BoxSize.Equals(mod.BoxSize)) ||
+                        (modification.NewDriveTime != mod.NewDriveTime) ||
+                        (modification.NewAVTime != mod.NewAVTime) ||
+                        (!modification.OptionCode.Equals(mod.OptionCode)) ||
+                        (modification.NewTime != mod.NewTime) ||
+                        (!modification.NewName.Equals(mod.NewName)))
+                    {
+                        changed = true;
+                    }
+
+                    if (changed)
+                    {
+                        //Deny the old request.  Create a new request for the manager.  Add it.
+                        mod.State = 2;   //Database Override Request Denied
+
+                        Modification newMod = new Modification()
+                        {
+                            RequestDate = DateTime.Now,
+                            ReviewDate = DateTime.Now,
+                            Description = "Manager updated supervisor request",
+                            State = 1,
+                            Sender = modification.Reviewer,
+                            Reviewer = modification.Reviewer,
+                            IsOption = modification.IsOption,
+                            IsNew = modification.IsNew,
+                            BoxSize = modification.BoxSize,
+                            ModelBase = modification.ModelBase,
+                            NewDriveTime = modification.NewDriveTime,
+                            NewAVTime = modification.NewAVTime,
+                            OldModelDriveTime = modification.OldModelDriveTime,
+                            OldModelAVTime = modification.OldModelAVTime,
+                            OptionCode = modification.OptionCode,
+                            NewTime = modification.NewTime,
+                            NewName = modification.NewName,
+                            OldOptionTime = modification.OldOptionTime,
+                            OldOptionName = modification.OldOptionName
+                        };
+
+                        context.Modifications.Add(newMod);
+                    }
+                    else
+                    {
+                        mod.State = 1;
+                    }
+                }
+                else if (modification.State == 4) 
+                {
+                    mod.State = 2;
+                }
 
                 context.SaveChanges();
             }
@@ -566,28 +613,16 @@ namespace RouteConfigurator.Design
                     bool changed = false;
                     bool modelNumChanged = false;
 
-                    if (overrideRequest.ModelNum != or.ModelNum)
+                    if (!overrideRequest.ModelNum.Equals(or.ModelNum))
                     {
                         changed = true;
                         modelNumChanged = true;
-                        if(overrideRequest.ModelNum.Length < 8)
-                        {
-                            throw new Exception("Invalid Model Number Format");
-                        }
                     }
 
                     if (overrideRequest.OverrideTime != or.OverrideTime ||
                         overrideRequest.OverrideRoute != or.OverrideRoute)
                     {
                         changed = true;
-                        if(overrideRequest.OverrideTime <= 0)
-                        {
-                            throw new Exception("Invalid Override Time");
-                        }
-                        if(overrideRequest.OverrideRoute <= 0)
-                        {
-                            throw new Exception("Invalid Override Route");
-                        }
                     }
 
                     if (changed)
@@ -633,7 +668,7 @@ namespace RouteConfigurator.Design
                     }
                     else
                     {
-                        or.State = overrideRequest.State == 3 ? 1 : overrideRequest.State == 4 ? 2 : overrideRequest.State;
+                        or.State = 1;   //Approved
                     }
                 }
                 else if(overrideRequest.State == 4)
