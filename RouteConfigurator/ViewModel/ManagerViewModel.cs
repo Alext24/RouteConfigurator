@@ -64,6 +64,7 @@ namespace RouteConfigurator.ViewModel
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
         public RelayCommand openSupervisorCommand { get; set; }
+        public RelayCommand refreshTablesCommand { get; set; }
         public RelayCommand submitCheckedCommand { get; set; }
         public RelayCommand goBackCommand { get; set; }
         #endregion
@@ -78,6 +79,7 @@ namespace RouteConfigurator.ViewModel
 
             loadedCommand = new RelayCommand(loaded);
             openSupervisorCommand = new RelayCommand(openSupervisorView);
+            refreshTablesCommand = new RelayCommand(refreshTables);
             submitCheckedCommand = new RelayCommand(submitChecked);
             goBackCommand = new RelayCommand(goBack);
         }
@@ -100,6 +102,32 @@ namespace RouteConfigurator.ViewModel
 
             secondWindow.Show();
             secondWindow.Content = sup;
+            secondWindow.MinHeight = 700;
+            secondWindow.MinWidth = 1400;
+        }
+
+        private void refreshTables()
+        {
+            //Clear all filters
+            NMBaseFilter = "";
+            NMBoxSizeFilter = "";
+            NMSenderFilter = "";
+            NOBoxSizeFilter = "";
+            NOOptionCodeFilter = "";
+            NOSenderFilter = "";
+            MMModelNameFilter = "";
+            MMSenderFilter = "";
+            OMBoxSizeFilter = "";
+            OMOptionCodeFilter = "";
+            OMSenderFilter = "";
+            ORModelNameFilter = "";
+            ORSenderFilter = "";
+
+            updateNewModelTable();
+            updateNewOptionTable();
+            updateModelModificationTable();
+            updateOptionModificationTable();
+            updateOverrideTable();
         }
 
         private void submitChecked()
@@ -271,26 +299,50 @@ namespace RouteConfigurator.ViewModel
             {
                 if (or.State == 3)
                 {
-                    Override ov = new Override()
+                    or.ModelNum = or.ModelNum.ToUpper();
+                    if (or.ModelNum.Length < 8)
                     {
-                        ModelNum = or.ModelNum,
-                        OverrideRoute = or.OverrideRoute,
-                        OverrideTime = or.OverrideTime
-                    };
-                    try
-                    {
-                        _serviceProxy.addOverride(ov, or.ModelBase);
-                        numApproved++;
-
-                        updateOverride(or);
-                    }
-                    catch (Exception e)
-                    {
-                        errorText += string.Format("Error adding override {0}\n", ov.ModelNum);
+                        errorText += "Error adding override.  Invalid Model Number format.";
                         numError++;
+                    }
+                    else if (_serviceProxy.getModel(or.ModelNum.Substring(0, 8)) == null)
+                    {
+                        errorText += "Error adding override.  Invalid Model.";
+                        numError++;
+                    }
+                    else if (or.OverrideTime <= 0)
+                    {
+                        errorText += "Error adding override.  Invalid Override Time.";
+                        numError++;
+                    }
+                    else if (or.OverrideRoute <= 0)
+                    {
+                        errorText += "Error adding override.  Invalid Override Route.";
+                        numError++;
+                    }
+                    else
+                    {
+                        Override ov = new Override()
+                        {
+                            ModelNum = or.ModelNum,
+                            OverrideRoute = or.OverrideRoute,
+                            OverrideTime = or.OverrideTime
+                        };
+                        try
+                        {
+                            _serviceProxy.addOverride(ov, or.ModelBase);
+                            numApproved++;
 
-                        informationText = "There was a problem accessing the database.";
-                        Console.WriteLine(e.Message);
+                            updateOverride(or);
+                        }
+                        catch (Exception e)
+                        {
+                            errorText += string.Format("Error adding override {0}\n", ov.ModelNum);
+                            numError++;
+
+                            informationText = "There was a problem accessing the database.";
+                            Console.WriteLine(e.Message);
+                        }
                     }
                 }
                 else if (or.State == 4)
@@ -723,15 +775,6 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions
-        private void refreshTables()
-        {
-            updateNewModelTable();
-            updateNewOptionTable();
-            updateModelModificationTable();
-            updateOptionModificationTable();
-            updateOverrideTable();
-        }
-
         private void updateNewModelTable()
         {
             newModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter));

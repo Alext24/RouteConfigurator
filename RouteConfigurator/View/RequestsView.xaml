@@ -7,9 +7,9 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
         mc:Ignorable="d"
-        MinHeight="800"
+        MinHeight="700"
         MinWidth="1000"
-        Height="800"
+        Height="700"
         Width="1000"
         Title="Requests"
         DataContext="{Binding Requests, Source={StaticResource Locator}}">
@@ -27,18 +27,18 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
+            <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0" HorizontalAlignment="Center">
                 <Grid x:Name="Grid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="2*" x:Name="ModTableRow"/>
+                        <RowDefinition Height="2*"/>
                         <RowDefinition Height="10"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*" x:Name="OverrideTableRow"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid.Resources>
@@ -62,8 +62,8 @@
                     <TextBlock Grid.Row="0" Text="Modification Requests" FontSize="16"/>
 
                     <!--Modification Request Table-->
-                    <DataGrid  Grid.Row="1" MaxWidth="{Binding ElementName=Grid, Path=ActualWidth}" x:Name="ModificationTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
-                               ItemsSource="{Binding modifications}" SelectedValue="{Binding selectedModification, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CanUserAddRows="False"
+                    <DataGrid  Grid.Row="1" x:Name="ModificationTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
+                               ItemsSource="{Binding modifications}" SelectedValue="{Binding selectedModification}" AutoGenerateColumns="False" CanUserAddRows="False"
                                ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                         <DataGrid.RowStyle>
@@ -352,8 +352,8 @@
                     <TextBlock Grid.Row="3" Text="Override Requests" FontSize="16"/>
 
                     <!--Override Request Table-->
-                    <DataGrid  Grid.Row="4" MaxWidth="{Binding ElementName=Grid, Path=ActualWidth}" x:Name="OverrideTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
-                               ItemsSource="{Binding overrides}" SelectedValue="{Binding selectedOverride, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CanUserAddRows="False"
+                    <DataGrid  Grid.Row="4" x:Name="OverrideTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
+                               ItemsSource="{Binding overrides}" SelectedValue="{Binding selectedOverride}" AutoGenerateColumns="False" CanUserAddRows="False"
                                ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                         <DataGrid.RowStyle>

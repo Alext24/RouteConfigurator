@@ -6,18 +6,17 @@
       xmlns:local="clr-namespace:RouteConfigurator.View"
       xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
       mc:Ignorable="d" 
-      MinHeight="800"
-      MinWidth="1300"
+      MinHeight="700"
+      MinWidth="1400"
       Title="SupervisorView"
       DataContext="{Binding Supervisor, Source={StaticResource Locator}}">
       
-    <Border Padding="10">
+    <Border Padding="50">
         <Border.Background>
             <ImageBrush ImageSource="/Backgrounds/MountainLakeBackground.jpg"/>
         </Border.Background>
 
-        <Border Background="{StaticResource LightBlue}" Padding="10 10 10 0" CornerRadius="20"
-                HorizontalAlignment="Center" MaxWidth="1200" MaxHeight="700">
+        <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20" HorizontalAlignment="Center">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -33,29 +32,30 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>      <!--Row 0-->
-                            <RowDefinition Height="auto"/>      <!--Row 1-->
-                            <RowDefinition Height="20"/>        <!--Row 2: Spacing-->
-                            <RowDefinition Height="auto"/>      <!--Row 3-->
+                            <RowDefinition Height="*"/>         <!--Row 1-->
+                            <RowDefinition Height="auto"/>      <!--Row 2-->
+                            <RowDefinition Height="10"/>        <!--Row 3: Spacing-->
                             <RowDefinition Height="auto"/>      <!--Row 4-->
+                            <RowDefinition Height="*"/>         <!--Row 5-->
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>    <!--Col 0-->
+                            <ColumnDefinition Width="*"/>    <!--Col 0-->
                             <ColumnDefinition Width="10"/>      <!--Col 1: Spacing-->
                             <ColumnDefinition Width="auto"/>    <!--Col 2-->
                             <ColumnDefinition Width="10"/>      <!--Col 3: Spacing-->
-                            <ColumnDefinition Width="auto"/>    <!--Col 4-->
+                            <ColumnDefinition Width="2*"/>    <!--Col 4-->
                             <ColumnDefinition Width="10"/>      <!--Col 5: Spacing-->
                             <ColumnDefinition Width="auto"/>    <!--Col 6-->
                         </Grid.ColumnDefinitions>
 
                         <!--Row 0 setup: Model Table Name-->
-                        <TextBlock Grid.Row="0" Text="All Models" FontSize="16"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="All Models" FontSize="16"/>
 
                         <!--Row 1 setup: Model Table-->
-                        <DataGrid  Grid.Row="1" Height="275" MaxWidth="300" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
-                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible"
-                                   ItemsSource="{Binding models}" SelectedItem="{Binding selectedModel}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                        <DataGrid  Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" x:Name="ModelTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                                   ItemsSource="{Binding models}" SelectedItem="{Binding selectedModel}" AutoGenerateColumns="False"
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                             <DataGrid.Columns>
                                 <!--Column 1: Model Name-->
@@ -138,15 +138,15 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <!--Row 2 setup: Blank, Spacing-->
+                        <!--Row 3 setup: Blank, Spacing-->
 
-                        <!--Row 3 setup: Options table name-->
-                        <TextBlock Grid.Row="3" Text="All Options" FontSize="16"/>
+                        <!--Row 4 setup: Options table name-->
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="All Options" FontSize="16"/>
 
-                        <!--Row 4 setup: Options table-->
-                        <DataGrid  Grid.Row="4" Height="275" MaxWidth="300" x:Name="OptionTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
-                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Top" VerticalScrollBarVisibility="Visible"
-                                   ItemsSource="{Binding options}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                        <!--Row 5 setup: Options table-->
+                        <DataGrid  Grid.Row="5" Grid.Column="0" x:Name="OptionTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                                   ItemsSource="{Binding options}" AutoGenerateColumns="False"
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                             <DataGrid.Columns>
                                 <!--Column 1: Option Code-->
@@ -235,9 +235,9 @@
                                    Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"/>
 
                         <!--Row 1 setup: Time Trial Table-->
-                        <DataGrid  Grid.Row="1" Grid.Column="4" Height="255" MaxWidth="700" x:Name="TimeTrialTable" BorderBrush="LightGray" IsReadOnly="True" VerticalAlignment="Top"
-                                   AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto"
-                                   ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                        <DataGrid  Grid.Row="1" Grid.Column="4" x:Name="TimeTrialTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                                   ItemsSource="{Binding timeTrials}" SelectedValue="{Binding selectedTimeTrial}" AutoGenerateColumns="False"
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                             <DataGrid.Columns>
                                 <!--Column 1: Delete Button-->
@@ -267,7 +267,7 @@
                                 </DataGridTemplateColumn>
 
                                 <!--Column 2: Options Text-->
-                                <DataGridTextColumn x:Name="OptionsText" Width="auto" FontSize="16" MinWidth="80" Binding="{Binding OptionsText}">
+                                <DataGridTextColumn x:Name="OptionsText" Width="auto" MinWidth="80" FontSize="16" Binding="{Binding OptionsText}">
                                     <DataGridTextColumn.HeaderStyle>
                                         <Style TargetType="DataGridColumnHeader">
                                             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
@@ -444,7 +444,7 @@
                         </DataGrid>
 
                         <!--Under Time Trials Table setup: Average times-->
-                        <Grid Grid.Row="1" Grid.Column="4" VerticalAlignment="Bottom"
+                        <Grid Grid.Row="2" Grid.Column="4"
                               Visibility ="{Binding TTVisible, Converter={StaticResource VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -467,13 +467,13 @@
                             <TextBlock Grid.Column="5" HorizontalAlignment="Left"  Text="{Binding averageAVTime, Converter={StaticResource TimeConverter}}" FontSize="16"/>
                         </Grid>
 
-                        <!--Row 3 setup: Overrides table name-->
-                        <TextBlock Grid.Row="3" Grid.Column="4" Text="Overrides" FontSize="16"/>
+                        <!--Row 4 setup: Overrides table name-->
+                        <TextBlock Grid.Row="4" Grid.Column="4" Text="Overrides" FontSize="16"/>
 
-                        <!--Row 4 setup: Overrides Table-->
-                        <DataGrid  Grid.Row="4" Grid.Column="4" Height="275" x:Name="OverrideTable" BorderBrush="LightGray" IsReadOnly="True" 
-                                   AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" VerticalScrollBarVisibility="Visible"
-                                   ItemsSource="{Binding overrides}" SelectedValue="{Binding selectedOverride}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                        <!--Row 5 setup: Overrides Table-->
+                        <DataGrid Grid.Row="5" Grid.Column="4" x:Name="OverrideTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True" 
+                                  ItemsSource="{Binding overrides}" SelectedValue="{Binding selectedOverride}" AutoGenerateColumns="False"
+                                  ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                             <DataGrid.Columns>
                                 <!--Column 1: Delete Button-->
@@ -597,7 +597,7 @@
                         </StackPanel>
 
                         <!--Option Buttons-->
-                        <StackPanel Grid.Row="4" Grid.Column="2">
+                        <StackPanel Grid.Row="5" Grid.Column="2">
                             <!--Load Options Button-->
                             <Button Margin="0 0 0 5" FontSize="16" VerticalAlignment="Center" Command="{Binding loadOptionsCommand}">
                                 <Button.Content>
@@ -643,7 +643,7 @@
                         </StackPanel>
 
                         <!--Override Buttons-->
-                        <Grid Grid.Row="4" Grid.Column="6">
+                        <Grid Grid.Row="5" Grid.Column="6">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
@@ -689,7 +689,7 @@
                 </Border>
 
                 <!--Information text-->
-                <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
+                <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 10" TextWrapping="WrapWithOverflow"
                            FontSize="12" Text="{Binding informationText}" />
             </Grid>
         </Border>

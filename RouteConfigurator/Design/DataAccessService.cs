@@ -536,6 +536,7 @@ namespace RouteConfigurator.Design
                 //Update modification info for approval or denial
                 mod.ReviewDate = modification.ReviewDate;
                 mod.Reviewer = modification.Reviewer;
+
                 mod.State = modification.State == 3 ? 1 : modification.State == 4 ? 2 : modification.State;
 
                 //Update modification info for possible director changes
@@ -554,15 +555,91 @@ namespace RouteConfigurator.Design
             {
                 OverrideRequest or = context.OverrideRequests.Find(overrideRequest.OverrideRequestID);
 
-                //Update modification info for possible director changes
-                or.ModelNum = overrideRequest.ModelNum;
-                or.OverrideTime = overrideRequest.OverrideTime;
-                or.OverrideRoute = overrideRequest.OverrideRoute;
-
                 //Update modification info for approval or denial
                 or.ReviewDate = overrideRequest.ReviewDate;
                 or.Reviewer = overrideRequest.Reviewer;
-                or.State = overrideRequest.State == 3 ? 1 : overrideRequest.State == 4 ? 2 : overrideRequest.State;
+
+                if (overrideRequest.State == 3)
+                {
+                    //Check if the Database Override Request has any different elements than the passed in Override Request
+                    //Only if the request is getting approved.
+                    bool changed = false;
+                    bool modelNumChanged = false;
+
+                    if (overrideRequest.ModelNum != or.ModelNum)
+                    {
+                        changed = true;
+                        modelNumChanged = true;
+                        if(overrideRequest.ModelNum.Length < 8)
+                        {
+                            throw new Exception("Invalid Model Number Format");
+                        }
+                    }
+
+                    if (overrideRequest.OverrideTime != or.OverrideTime ||
+                        overrideRequest.OverrideRoute != or.OverrideRoute)
+                    {
+                        changed = true;
+                        if(overrideRequest.OverrideTime <= 0)
+                        {
+                            throw new Exception("Invalid Override Time");
+                        }
+                        if(overrideRequest.OverrideRoute <= 0)
+                        {
+                            throw new Exception("Invalid Override Route");
+                        }
+                    }
+
+                    if (changed)
+                    {
+                        //Deny the old request.  Create a new request for the manager.  Add it.
+                        or.State = 2;   //Database Override Request Denied
+
+                        OverrideRequest newOR = new OverrideRequest()
+                        {
+                            RequestDate = DateTime.Now,
+                            Description = "Manager updated supervisor request",
+                            State = 1,
+                            Sender = overrideRequest.Reviewer,
+                            Reviewer = overrideRequest.Reviewer,
+                            ReviewDate = DateTime.Now,
+
+                            OverrideTime = overrideRequest.OverrideTime,
+                            OverrideRoute = overrideRequest.OverrideRoute,
+                            ModelNum = overrideRequest.ModelNum
+                        };
+
+                        if (modelNumChanged)
+                        {
+                            if(context.Models.Find(newOR.ModelNum.Substring(0, 8)) != null)
+                            {
+                                newOR.ModelBase = newOR.ModelNum.Substring(0, 8);
+                                newOR.ModelTime = 0;
+                                newOR.ModelRoute = 0;
+                            }
+                            else
+                            {
+                                throw new Exception("Invalid Model");
+                            }
+                        }
+                        else
+                        {
+                            newOR.ModelBase = overrideRequest.ModelBase;
+                            newOR.ModelTime = overrideRequest.ModelTime;
+                            newOR.ModelRoute = overrideRequest.ModelRoute;
+                        }
+
+                        context.OverrideRequests.Add(newOR);
+                    }
+                    else
+                    {
+                        or.State = overrideRequest.State == 3 ? 1 : overrideRequest.State == 4 ? 2 : overrideRequest.State;
+                    }
+                }
+                else if(overrideRequest.State == 4)
+                {
+                    or.State = 2;   //Denied
+                }
 
                 context.SaveChanges();
             }
