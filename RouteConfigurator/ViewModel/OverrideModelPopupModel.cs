@@ -80,7 +80,9 @@ namespace RouteConfigurator.ViewModel
                     ModelTime = (decimal)modelTime,
                     ModelRoute = _modelRouteInt,
                     ModelBase = model.Base,
-                    ReviewDate = new DateTime(1900, 1, 1)
+
+                    ReviewDate = new DateTime(1900, 1, 1),
+                    Reviewer = ""
                 };
                 
                 _overridesToSubmit.Add(ov);

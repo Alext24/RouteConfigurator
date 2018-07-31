@@ -99,6 +99,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _MStateFilter = value.ToUpper();
                 RaisePropertyChanged("MStateFilter");
+                informationText = "";
+
+                updateModificationsTable();
             }
         }
 
@@ -109,6 +112,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _MBaseFilter = value.ToUpper();
                 RaisePropertyChanged("MBaseFilter");
+                informationText = "";
+
+                updateModificationsTable();
             }
         }
         
@@ -119,6 +125,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _MBoxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("MBoxSizeFilter");
+                informationText = "";
+
+                updateModificationsTable();
             }
         }
 
@@ -129,6 +138,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _MOptionCodeFilter = value.ToUpper();
                 RaisePropertyChanged("MOptionCodeFilter");
+                informationText = "";
+
+                updateModificationsTable();
             }
         }
 
@@ -139,6 +151,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _MSenderFilter = value.ToUpper();
                 RaisePropertyChanged("MSenderFilter");
+                informationText = "";
+
+                updateModificationsTable();
             }
         }
 
@@ -149,6 +164,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _MReviewerFilter = value.ToUpper();
                 RaisePropertyChanged("MReviewerFilter");
+                informationText = "";
+
+                updateModificationsTable();
             }
         }
 
@@ -179,6 +197,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _ORStateFilter = value.ToUpper();
                 RaisePropertyChanged("ORStateFilter");
+                informationText = "";
+
+                updateOverridesTable();
             }
         }
 
@@ -189,6 +210,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _ORModelNameFilter = value.ToUpper();
                 RaisePropertyChanged("ORModelNameFilter");
+                informationText = "";
+
+                updateOverridesTable();
             }
         }
 
@@ -199,6 +223,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _ORSenderFilter = value.ToUpper();
                 RaisePropertyChanged("ORSenderFilter");
+                informationText = "";
+
+                updateOverridesTable();
             }
         }
 
@@ -209,6 +236,9 @@ namespace RouteConfigurator.ViewModel
             {
                 _ORReviewerFilter = value.ToUpper();
                 RaisePropertyChanged("ORReviewerFilter");
+                informationText = "";
+
+                updateOverridesTable();
             }
         }
 
@@ -224,6 +254,71 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+        #endregion
+
+        #region Private Functions
+        private void updateModificationsTable()
+        {
+            int stateFilter = getStateFilter(MStateFilter);
+
+            if (stateFilter == -1)
+            {
+                modifications = new ObservableCollection<Modification>(
+                    _serviceProxy.getFilteredModifications(MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
+            }
+            else if(stateFilter == 0)
+            {
+                modifications = new ObservableCollection<Modification>(
+                    _serviceProxy.getFilteredWaitingModifications(MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
+            }
+            else
+            {
+                modifications = new ObservableCollection<Modification>(
+                    _serviceProxy.getFilteredStateModifications(stateFilter, MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
+            }
+        }
+
+        private void updateOverridesTable()
+        {
+            int stateFilter = getStateFilter(ORStateFilter);
+
+            overrides = new ObservableCollection<OverrideRequest>(
+                _serviceProxy.getFilteredOverrideRequests(stateFilter, ORModelNameFilter, ORSenderFilter, ORReviewerFilter));
+        }
+
+        private int getStateFilter(string stateText)
+        {
+            int stateFilter = -1;
+            if (string.IsNullOrWhiteSpace(stateText))
+                return stateFilter;
+
+            switch (stateText.ElementAt(0))
+            {
+                case ('W'): //Waiting
+                    {
+                        stateFilter = 0; //Should also include 3 and 4
+                        break;
+                    }
+                case ('A'): //Approved
+                    {
+                        stateFilter = 1;
+                        break;
+                    }
+                case ('D'): //Declined
+                    {
+                        stateFilter = 2;
+                        break;
+                    }
+                default:
+                    {
+                        stateFilter = -1;
+                        break;
+                    }
+            }
+
+            return stateFilter;
+        }
+
         #endregion
     }
 }

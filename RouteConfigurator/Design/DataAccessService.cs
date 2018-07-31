@@ -270,6 +270,46 @@ namespace RouteConfigurator.Design
             }
         }
 
+        // Include all states but filter other parameters
+        public IEnumerable<Modification> getFilteredModifications(string ModelBase, string BoxSize, string OptionCode, string Sender, string Reviewer)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Modifications.Where(item => item.ModelBase.Contains(ModelBase) &&
+                                                           item.BoxSize.Contains(BoxSize) &&
+                                                           item.OptionCode.Contains(OptionCode) &&
+                                                           item.Sender.Contains(Sender) &&
+                                                           item.Reviewer.Contains(Reviewer)).ToList();
+            }
+        }
+
+        // If filtered for waiting state, also include states 3 and 4 (Currently checked to approve or decline)
+        public IEnumerable<Modification> getFilteredWaitingModifications(string ModelBase, string BoxSize, string OptionCode, string Sender, string Reviewer)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Modifications.Where(item => (item.State == 0 || item.State == 3 || item.State == 4) &&
+                                                            item.ModelBase.Contains(ModelBase) &&
+                                                            item.BoxSize.Contains(BoxSize) &&
+                                                            item.OptionCode.Contains(OptionCode) &&
+                                                            item.Sender.Contains(Sender) &&
+                                                            item.Reviewer.Contains(Reviewer)).ToList();
+            }
+        }
+
+        public IEnumerable<Modification> getFilteredStateModifications(int State, string ModelBase, string BoxSize, string OptionCode, string Sender, string Reviewer)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return context.Modifications.Where(item => item.State == State &&
+                                                           item.ModelBase.Contains(ModelBase) &&
+                                                           item.BoxSize.Contains(BoxSize) &&
+                                                           item.OptionCode.Contains(OptionCode) &&
+                                                           item.Sender.Contains(Sender) &&
+                                                           item.Reviewer.Contains(Reviewer)).ToList();
+            }
+        }
+
         /// <param name="Sender"> User who sent the modification </param>
         /// <param name="Base"> Model base (drive and av) </param>
         /// <param name="BoxSize"> Box size for the model</param>
@@ -354,6 +394,37 @@ namespace RouteConfigurator.Design
                                                               item.ModelNum.Contains(ModelNum)).ToList();
             }
         }
+
+        public IEnumerable<OverrideRequest> getFilteredOverrideRequests(int State, string ModelNum, string Sender, string Reviewer)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                // Include all states but filter other parameters
+                if(State == -1)
+                {
+                    return context.OverrideRequests.Where(item => item.ModelNum.Contains(ModelNum) &&
+                                                                  item.Sender.Contains(Sender) &&
+                                                                  item.Reviewer.Contains(Reviewer)).ToList();
+                }
+                // If filtered for waiting state, also include states 3 and 4 (Currently checked to approve or decline)
+                else if (State == 0)
+                {
+                    return context.OverrideRequests.Where(item => (item.State == 0 || item.State == 3 || item.State == 4) &&
+                                                                   item.ModelNum.Contains(ModelNum) &&
+                                                                   item.Sender.Contains(Sender) &&
+                                                                   item.Reviewer.Contains(Reviewer)).ToList();
+                }
+                else
+                {
+                    return context.OverrideRequests.Where(item => item.State == State &&
+                                                                  item.ModelNum.Contains(ModelNum) &&
+                                                                  item.Sender.Contains(Sender) &&
+                                                                  item.Reviewer.Contains(Reviewer)).ToList();
+                }
+            }
+        }
+
+            
         #endregion 
 
         /// <summary>

@@ -51,7 +51,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>    <!--Col 0-->
                         <ColumnDefinition Width="145"/>     <!--Col 1-->
-                        <ColumnDefinition Width="auto"/>    <!--Col 2-->
+                        <ColumnDefinition Width="*"/>    <!--Col 2-->
                     </Grid.ColumnDefinitions>
 
                     <!--Row 0 setup: Title-->
@@ -82,12 +82,12 @@
                     <!--Row 7-8 setup: Option Description Header-->
                     <TextBlock Grid.Row="7" Grid.Column="0" Text="New Name/" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 5 5 0"/>
                     <TextBlock Grid.Row="8" Grid.Column="0" Text="Option Description" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="0 0 5 5"/>
-                    <TextBox Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5 5 0 5" MaxWidth="350" 
+                    <TextBox Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5 5 0 5" Width="350" HorizontalAlignment="Left"
                              Text="{Binding newName}" TextWrapping="WrapWithOverflow" FontSize="16" MaxLines="2" VerticalScrollBarVisibility="Auto"/>
 
                     <!--Row 9 setup: Description Header-->
                     <TextBlock Grid.Row="9" Grid.Column="0" Text="Request Description" VerticalAlignment="Center" FontSize="16" Padding="5"/>
-                    <TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Margin="5 5 0 5" MaxWidth="350"
+                    <TextBox Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Margin="5 5 0 5" Width="350" HorizontalAlignment="Left"
                              Text="{Binding description}" TextWrapping="WrapWithOverflow" FontSize="16" MaxLines="2" VerticalScrollBarVisibility="Auto"/>
 
                     <!--Row 10 setup: Submit Button-->

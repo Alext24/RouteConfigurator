@@ -74,7 +74,7 @@ namespace RouteConfigurator.ViewModel
                 Modification newModel = new Modification()
                 {
                     RequestDate = DateTime.Now,
-                    ModelBase = modelNum.Substring(0,8),
+                    ModelBase = modelNum.Substring(0, 8),
                     BoxSize = boxSize,
                     Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
                     State = 0,
@@ -83,6 +83,12 @@ namespace RouteConfigurator.ViewModel
                     IsNew = true,
                     NewDriveTime = (decimal)driveTime,
                     NewAVTime = (decimal)AVTime,
+
+                    Reviewer = "",
+                    ReviewDate = new DateTime(1900,1,1),
+                    NewName = "",
+                    OldOptionName = "",
+                    OptionCode = ""
                 };
 
                 try

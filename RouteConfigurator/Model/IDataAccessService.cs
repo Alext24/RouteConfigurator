@@ -41,6 +41,11 @@ namespace RouteConfigurator.Model
 
         #region Modifications Read
         IEnumerable<Modification> getModifications();
+
+        IEnumerable<Modification> getFilteredModifications(string ModelBase, string BoxSize, string OptionCode, string Sender, string Reviewer);
+        IEnumerable<Modification> getFilteredWaitingModifications(string ModelBase, string BoxSize, string OptionCode, string Sender, string Reviewer);
+        IEnumerable<Modification> getFilteredStateModifications(int State, string ModelBase, string BoxSize, string OptionCode, string Sender, string Reviewer);
+
         IEnumerable<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize);
         IEnumerable<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize);
         IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelName);
@@ -50,6 +55,7 @@ namespace RouteConfigurator.Model
         #region Override Requests Read
         IEnumerable<OverrideRequest> getOverrideRequests();
         IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum);
+        IEnumerable<OverrideRequest> getFilteredOverrideRequests(int State, string ModelNum, string Sender, string Reviewer);
         #endregion
 
         void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);

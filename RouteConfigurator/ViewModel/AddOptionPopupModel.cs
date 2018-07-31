@@ -77,7 +77,12 @@ namespace RouteConfigurator.ViewModel
                     IsOption = true,
                     IsNew = true,
                     NewTime = (decimal)time,
-                    NewName = name == null ? "" : name
+                    NewName = name == null ? "" : name,
+
+                    Reviewer = "",
+                    ReviewDate = new DateTime(1900, 1, 1),
+                    ModelBase = "",
+                    OldOptionName = ""
                 };
 
                 modificationsToSubmit.Add(mod);

@@ -103,7 +103,13 @@ namespace RouteConfigurator.ViewModel
                             NewDriveTime = newDriveTime == null || newDriveTime <= 0 ? model.DriveTime : (decimal)newDriveTime,
                             NewAVTime = newAVTime == null || newAVTime <= 0 ? model.AVTime : (decimal)newAVTime,
                             OldModelDriveTime = model.DriveTime,
-                            OldModelAVTime = model.AVTime
+                            OldModelAVTime = model.AVTime,
+
+                            Reviewer = "",
+                            ReviewDate = new DateTime(1900,1,1),
+                            NewName = "",
+                            OldOptionName = "",
+                            OptionCode = ""
                         };
 
                         _serviceProxy.addModificationRequest(modifiedModel);

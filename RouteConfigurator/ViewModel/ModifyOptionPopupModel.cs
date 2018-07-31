@@ -94,6 +94,12 @@ namespace RouteConfigurator.ViewModel
                             IsNew = false,
                             NewTime = newTime == null || newTime <= 0 ? option.Time : (decimal)newTime,
                             NewName = string.IsNullOrWhiteSpace(newName) ? option.Name : newName,
+                            OldOptionTime = option.Time,
+                            OldOptionName = option.Name,
+
+                            Reviewer = "",
+                            ReviewDate = new DateTime(1900, 1, 1),
+                            ModelBase = "",
                         };
 
                         _serviceProxy.addModificationRequest(modifiedOption);

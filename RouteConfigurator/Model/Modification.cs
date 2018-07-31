@@ -63,7 +63,7 @@ namespace RouteConfigurator.Model
         [StringLength(5, MinimumLength = 2)]
         public string BoxSize { get; set; }
 
-        [StringLength(8, MinimumLength = 8, ErrorMessage = "Base has to be 8 characters")]
+        [StringLength(8, ErrorMessage = "Base has to be 8 characters")]
         public string ModelBase { get; set; }
 
         public decimal NewDriveTime { get; set; }
@@ -72,7 +72,7 @@ namespace RouteConfigurator.Model
         public decimal OldModelDriveTime { get; set; }
         public decimal OldModelAVTime { get; set; }
 
-        [StringLength(2, MinimumLength = 2, ErrorMessage = "Option Code format must be 'PX' or 'TX'")]
+        [StringLength(2, ErrorMessage = "Option Code format must be 'PX' or 'TX'")]
         public string OptionCode { get; set; }
 
         public decimal NewTime { get; set; }
