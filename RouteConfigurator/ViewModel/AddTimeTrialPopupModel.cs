@@ -68,7 +68,15 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loaded()
         {
-            models = new ObservableCollection<Model.Model>(_serviceProxy.getModels());
+            try
+            {
+                models = new ObservableCollection<Model.Model>(_serviceProxy.getModels());
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         /// <summary>
@@ -403,23 +411,31 @@ namespace RouteConfigurator.ViewModel
             bool valid = checkComplete();
             if (valid)
             {
-                //Check if time trial production number exists in the database
-                if (_serviceProxy.getTimeTrial((int)productionNum) != null)
+                try
                 {
-                    informationText = string.Format("Time Trial for Production Number {0} already exists.", productionNum);
-                    valid = false;
-                }
-                else
-                {
-                    //Check if time trial is a duplicate in the ready to submit list
-                    foreach (TimeTrial TT in timeTrials)
+                    //Check if time trial production number exists in the database
+                    if (_serviceProxy.getTimeTrial((int)productionNum) != null)
                     {
-                        if (productionNum == TT.ProductionNumber)
+                        informationText = string.Format("Time Trial for Production Number {0} already exists.", productionNum);
+                        valid = false;
+                    }
+                    else
+                    {
+                        //Check if time trial is a duplicate in the ready to submit list
+                        foreach (TimeTrial TT in timeTrials)
                         {
-                            informationText = string.Format("Time Trial for Production Number {0} is already ready to submit", productionNum);
-                            valid = false;
+                            if (productionNum == TT.ProductionNumber)
+                            {
+                                informationText = string.Format("Time Trial for Production Number {0} is already ready to submit", productionNum);
+                                valid = false;
+                            }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
                 }
             }
             return valid;

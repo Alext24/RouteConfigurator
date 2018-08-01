@@ -64,7 +64,15 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loaded()
         {
-            optionCodes = new ObservableCollection<string>(_serviceProxy.getOptionCodes());
+            try
+            {
+                optionCodes = new ObservableCollection<string>(_serviceProxy.getOptionCodes());
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         /// <summary>
@@ -285,7 +293,15 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateOptionsTable()
         {
-            optionsFound = new ObservableCollection<Option>(_serviceProxy.getNumOptionsFound(selectedOptionCode, boxSize, exactBoxSize));
+            try
+            {
+                optionsFound = new ObservableCollection<Option>(_serviceProxy.getNumOptionsFound(selectedOptionCode, boxSize, exactBoxSize));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         /// <summary>

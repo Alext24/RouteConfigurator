@@ -243,33 +243,41 @@ namespace RouteConfigurator.ViewModel
             bool valid = checkComplete();
             if (valid)
             {
-                //Check if the option already exists in the database as an option
-                if(_serviceProxy.getFilteredOptions(optionCode, boxSize, true).ToList().Count > 0)
+                try
                 {
-                    informationText = "This option already exists";
-                    valid = false;
-                }
-                else
-                {
-                    //Check if the option already exists in the database as a new option request
-                    if (_serviceProxy.getFilteredNewOptions("", optionCode, boxSize).ToList().Count > 0)
+                    //Check if the option already exists in the database as an option
+                    if (_serviceProxy.getFilteredOptions(optionCode, boxSize, true).ToList().Count > 0)
                     {
-                        informationText = string.Format("Option {0}-{1} is already waiting for approval.", optionCode, boxSize);
+                        informationText = "This option already exists";
                         valid = false;
                     }
                     else
                     {
-                        //Check if the option is a duplicate in the ready to submit list
-                        foreach (Modification newOption in modificationsToSubmit)
+                        //Check if the option already exists in the database as a new option request
+                        if (_serviceProxy.getFilteredNewOptions("", optionCode, boxSize).ToList().Count > 0)
                         {
-                            if (newOption.OptionCode.Equals(optionCode) && newOption.BoxSize.Equals(boxSize))
+                            informationText = string.Format("Option {0}-{1} is already waiting for approval.", optionCode, boxSize);
+                            valid = false;
+                        }
+                        else
+                        {
+                            //Check if the option is a duplicate in the ready to submit list
+                            foreach (Modification newOption in modificationsToSubmit)
                             {
-                                informationText = "This option is already ready to submit";
-                                valid = false;
-                                break;
+                                if (newOption.OptionCode.Equals(optionCode) && newOption.BoxSize.Equals(boxSize))
+                                {
+                                    informationText = "This option is already ready to submit";
+                                    valid = false;
+                                    break;
+                                }
                             }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
                 }
             }
             return valid;

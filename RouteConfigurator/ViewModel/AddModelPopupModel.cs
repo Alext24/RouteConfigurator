@@ -344,7 +344,16 @@ namespace RouteConfigurator.ViewModel
         {
             List<String> optionsList = parseOptions(modelNum);
 
-            options = new ObservableCollection<Option>(_serviceProxy.getModelOptions(optionsList, boxSize));
+            try
+            {
+                options = new ObservableCollection<Option>(_serviceProxy.getModelOptions(optionsList, boxSize));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+                return;
+            }
         }
 
         /// <summary>
@@ -452,19 +461,27 @@ namespace RouteConfigurator.ViewModel
                 //Check if the model already exists in the database as a model
                 string modelBase = modelNum.Substring(0, 8);
 
-                if (_serviceProxy.getModel(modelBase) != null)
+                try
                 {
-                    informationText = string.Format("Model {0} already exists.", modelBase);
-                    valid = false;
-                }
-                else
-                {
-                    //Check if the model already exists in the database as a new model request
-                    if (_serviceProxy.getFilteredNewModels("", modelBase, "").ToList().Count > 0)
+                    if (_serviceProxy.getModel(modelBase) != null)
                     {
-                        informationText = string.Format("Model {0} is already waiting for approval.", modelBase);
+                        informationText = string.Format("Model {0} already exists.", modelBase);
                         valid = false;
                     }
+                    else
+                    {
+                        //Check if the model already exists in the database as a new model request
+                        if (_serviceProxy.getFilteredNewModels("", modelBase, "").ToList().Count > 0)
+                        {
+                            informationText = string.Format("Model {0} is already waiting for approval.", modelBase);
+                            valid = false;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
                 }
             }
             return valid;

@@ -72,7 +72,15 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loaded()
         {
-            driveTypes = new ObservableCollection<string>(_serviceProxy.getDriveTypes());
+            try
+            {
+                driveTypes = new ObservableCollection<string>(_serviceProxy.getDriveTypes());
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         /// <summary>
@@ -131,7 +139,6 @@ namespace RouteConfigurator.ViewModel
                 {
                     informationText = "There was a problem accessing the database";
                     Console.WriteLine(e);
-                    return;
                 }
             }
         }
@@ -335,7 +342,15 @@ namespace RouteConfigurator.ViewModel
             }
             else
             {
-                modelsFound = new ObservableCollection<Model.Model>(_serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize, exactBoxSize));
+                try
+                {
+                    modelsFound = new ObservableCollection<Model.Model>(_serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize, exactBoxSize));
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                }
             }
         }
 

@@ -66,8 +66,16 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loaded()
         {
-            modifications = new ObservableCollection<Modification>(_serviceProxy.getModifications());
-            overrides = new ObservableCollection<OverrideRequest>(_serviceProxy.getOverrideRequests());
+            try
+            {
+                modifications = new ObservableCollection<Modification>(_serviceProxy.getModifications());
+                overrides = new ObservableCollection<OverrideRequest>(_serviceProxy.getOverrideRequests());
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
         #endregion
 
@@ -261,20 +269,28 @@ namespace RouteConfigurator.ViewModel
         {
             int stateFilter = getStateFilter(MStateFilter);
 
-            if (stateFilter == -1)
+            try
             {
-                modifications = new ObservableCollection<Modification>(
-                    _serviceProxy.getFilteredModifications(MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
+                if (stateFilter == -1)
+                {
+                    modifications = new ObservableCollection<Modification>(
+                        _serviceProxy.getFilteredModifications(MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
+                }
+                else if (stateFilter == 0)
+                {
+                    modifications = new ObservableCollection<Modification>(
+                        _serviceProxy.getFilteredWaitingModifications(MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
+                }
+                else
+                {
+                    modifications = new ObservableCollection<Modification>(
+                        _serviceProxy.getFilteredStateModifications(stateFilter, MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
+                }
             }
-            else if(stateFilter == 0)
+            catch (Exception e)
             {
-                modifications = new ObservableCollection<Modification>(
-                    _serviceProxy.getFilteredWaitingModifications(MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
-            }
-            else
-            {
-                modifications = new ObservableCollection<Modification>(
-                    _serviceProxy.getFilteredStateModifications(stateFilter, MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
             }
         }
 
@@ -282,8 +298,16 @@ namespace RouteConfigurator.ViewModel
         {
             int stateFilter = getStateFilter(ORStateFilter);
 
-            overrides = new ObservableCollection<OverrideRequest>(
-                _serviceProxy.getFilteredOverrideRequests(stateFilter, ORModelNameFilter, ORSenderFilter, ORReviewerFilter));
+            try
+            {
+                overrides = new ObservableCollection<OverrideRequest>(
+                    _serviceProxy.getFilteredOverrideRequests(stateFilter, ORModelNameFilter, ORSenderFilter, ORReviewerFilter));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         private int getStateFilter(string stateText)

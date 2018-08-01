@@ -149,11 +149,19 @@ namespace RouteConfigurator.ViewModel
 
                 if(modelText.Length >= 8)
                 {
-                    model = _serviceProxy.getModel(modelText.Substring(0, 8));
-                    if(model != null)
+                    try
                     {
-                        updateModelTime();
-                        updateModelRoute();
+                        model = _serviceProxy.getModel(modelText.Substring(0, 8));
+                        if (model != null)
+                        {
+                            updateModelTime();
+                            updateModelRoute();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        informationText = "There was a problem accessing the database";
+                        Console.WriteLine(e);
                     }
                 }
                 else

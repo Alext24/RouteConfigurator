@@ -184,41 +184,49 @@ namespace RouteConfigurator.ViewModel
         {
             informationText = "";
 
-            if (selectedOverride != null)
+            try
             {
-                //Check if override is waiting to be deleted.
-                Modification mod = new Modification()
+                if (selectedOverride != null)
                 {
-                    RequestDate = DateTime.Now,
-                    ReviewDate = new DateTime(1900, 1, 1),
-                    Description = string.Format("Deleting override for {0}.  Override Time was: {1}.  Override Route was: {2}", selectedOverride.ModelNum, selectedOverride.OverrideTime, selectedOverride.OverrideRoute),
-                    State = 0,
-                    Sender = "TEMPORARY SENDER",
-                    Reviewer = "",
-                    IsOption = false,
-                    IsNew = false,
-                    BoxSize = selectedOverride.Model.BoxSize,
-                    ModelBase = selectedOverride.Model.Base,
-                    NewDriveTime = selectedOverride.Model.DriveTime,
-                    NewAVTime = selectedOverride.Model.AVTime,
-                    OldModelDriveTime = 0,
-                    OldModelAVTime = 0,
-                    OptionCode = "",
-                    NewTime = 0,
-                    NewName = "",
-                    OldOptionTime = 0,
-                    OldOptionName = ""
-                };
+                    //Check if override is waiting to be deleted.
+                    Modification mod = new Modification()
+                    {
+                        RequestDate = DateTime.Now,
+                        ReviewDate = new DateTime(1900, 1, 1),
+                        Description = string.Format("Deleting override for {0}.  Override Time was: {1}.  Override Route was: {2}", selectedOverride.ModelNum, selectedOverride.OverrideTime, selectedOverride.OverrideRoute),
+                        State = 0,
+                        Sender = "TEMPORARY SENDER",
+                        Reviewer = "",
+                        IsOption = false,
+                        IsNew = false,
+                        BoxSize = selectedOverride.Model.BoxSize,
+                        ModelBase = selectedOverride.Model.Base,
+                        NewDriveTime = selectedOverride.Model.DriveTime,
+                        NewAVTime = selectedOverride.Model.AVTime,
+                        OldModelDriveTime = 0,
+                        OldModelAVTime = 0,
+                        OptionCode = "",
+                        NewTime = 0,
+                        NewName = "",
+                        OldOptionTime = 0,
+                        OldOptionName = ""
+                    };
 
-                if (_serviceProxy.checkDuplicateOverrideDeletion(mod))
-                {
-                    informationText = "Override deletion already waiting for manager approval.";
+                    if (_serviceProxy.checkDuplicateOverrideDeletion(mod))
+                    {
+                        informationText = "Override deletion already waiting for manager approval.";
+                    }
+                    else
+                    {
+                        _serviceProxy.addModificationRequest(mod);
+                        informationText = "Override deletion sent to manager for approval.";
+                    }
                 }
-                else
-                {
-                    _serviceProxy.addModificationRequest(mod);
-                    informationText = "Override deletion sent to manager for approval.";
-                }
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
             }
         }
 
@@ -590,7 +598,15 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateModelTable()
         {
-            models = new ObservableCollection<Model.Model>(_serviceProxy.getFilteredModels(modelFilter, boxSizeFilter));
+            try
+            {
+                models = new ObservableCollection<Model.Model>(_serviceProxy.getFilteredModels(modelFilter, boxSizeFilter));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         /// <summary>
@@ -598,7 +614,15 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateOptionTable()
         {
-            options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter, false));
+            try
+            {
+                options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter, false));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         /// <summary>
@@ -607,10 +631,18 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateTTTable()
         {
-            if (selectedModel != null)
+            try
             {
-                timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter, optionTextChecked));
-                calcTTAverages();
+                if (selectedModel != null)
+                {
+                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter, optionTextChecked));
+                    calcTTAverages();
+                }
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
             }
         }
 
@@ -640,7 +672,15 @@ namespace RouteConfigurator.ViewModel
 
         private void updateOverrideTable()
         {
-            overrides =new ObservableCollection<Override>(_serviceProxy.getFilteredOverrides(overrideFilter));
+            try
+            {
+                overrides =new ObservableCollection<Override>(_serviceProxy.getFilteredOverrides(overrideFilter));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
         #endregion
     }

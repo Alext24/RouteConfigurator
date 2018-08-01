@@ -147,56 +147,55 @@ namespace RouteConfigurator.ViewModel
                     mod.ModelBase = mod.ModelBase.ToUpper();
                     mod.BoxSize = mod.BoxSize.ToUpper();
 
-                    if (mod.ModelBase.Length != 8)
+                    try
                     {
-                        errorText += string.Format("Error adding Model {0}. Invalid Model format.", mod.ModelBase);
-                        numError++;
-                    }
-                    else if (_serviceProxy.getModel(mod.ModelBase) != null)
-                    {
-                        errorText += string.Format("Error adding Model {0}. Model already exists.", mod.ModelBase);
-                        numError++;
-                    }
-                    else if (string.IsNullOrWhiteSpace(mod.BoxSize))
-                    {
-                        errorText += string.Format("Error adding Model {0}. Invalid Box Size.", mod.ModelBase);
-                        numError++;
-                    }
-                    else if (mod.NewDriveTime <= 0)
-                    {
-                        errorText += string.Format("Error adding Model {0}. Invalid Drive Time: {1}.", mod.ModelBase, mod.NewDriveTime);
-                        numError++;
-                    }
-                    else if (mod.NewAVTime <= 0)
-                    {
-                        errorText += string.Format("Error adding Model {0}. Invalid AV Time: {1}.", mod.ModelBase, mod.NewAVTime);
-                        numError++;
-                    }
-                    else
-                    {
-                        Model.Model model = new Model.Model()
+                        if (mod.ModelBase.Length != 8)
                         {
-                            Base = mod.ModelBase,
-                            BoxSize = mod.BoxSize,
-                            DriveTime = mod.NewDriveTime,
-                            AVTime = mod.NewAVTime
-                        };
+                            errorText += string.Format("Error adding Model {0}. Invalid Model format.", mod.ModelBase);
+                            numError++;
+                        }
+                        else if (_serviceProxy.getModel(mod.ModelBase) != null)
+                        {
+                            errorText += string.Format("Error adding Model {0}. Model already exists.", mod.ModelBase);
+                            numError++;
+                        }
+                        else if (string.IsNullOrWhiteSpace(mod.BoxSize))
+                        {
+                            errorText += string.Format("Error adding Model {0}. Invalid Box Size.", mod.ModelBase);
+                            numError++;
+                        }
+                        else if (mod.NewDriveTime <= 0)
+                        {
+                            errorText += string.Format("Error adding Model {0}. Invalid Drive Time: {1}.", mod.ModelBase, mod.NewDriveTime);
+                            numError++;
+                        }
+                        else if (mod.NewAVTime <= 0)
+                        {
+                            errorText += string.Format("Error adding Model {0}. Invalid AV Time: {1}.", mod.ModelBase, mod.NewAVTime);
+                            numError++;
+                        }
+                        else
+                        {
+                            Model.Model model = new Model.Model()
+                            {
+                                Base = mod.ModelBase,
+                                BoxSize = mod.BoxSize,
+                                DriveTime = mod.NewDriveTime,
+                                AVTime = mod.NewAVTime
+                            };
 
-                        try
-                        {
                             _serviceProxy.addModel(model);
                             numApproved++;
 
                             updateModification(mod);
                         }
-                        catch (Exception e)
-                        {
-                            errorText += string.Format("Error adding model {0}\n", model.Base);
-                            numError++;
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error adding model {0}. Problem accessing the database\n", mod.ModelBase);
+                        numError++;
 
-                            informationText = "There was a problem accessing the database.";
-                            Console.WriteLine(e.Message);
-                        }
+                        Console.WriteLine(e.Message);
                     }
                 }
                 else if (mod.State == 4)
@@ -221,59 +220,61 @@ namespace RouteConfigurator.ViewModel
                     mod.OptionCode = mod.OptionCode.ToUpper();
                     mod.BoxSize = mod.BoxSize.ToUpper();
 
-                    if (mod.OptionCode.Length != 2)
+                    try
                     {
-                        errorText += string.Format("Error adding Option {0}. Option Code must be 2 characters.", mod.OptionCode);
-                        numError++;
-                    }
-                    else if (!mod.OptionCode.ElementAt(0).Equals('P') && !mod.OptionCode.ElementAt(0).Equals('T'))
-                    {
-                        errorText += string.Format("Error adding Option {0}. Option Code must start with P or T.", mod.OptionCode);
-                        numError++;
-                    }
-                    else if (mod.OptionCode.ElementAt(1).Equals('P') || mod.OptionCode.ElementAt(1).Equals('T'))
-                    {
-                        errorText += string.Format("Error adding Option {0}. Option Code must not end with P or T.", mod.OptionCode);
-                        numError++;
-                    }
-                    else if (string.IsNullOrWhiteSpace(mod.BoxSize))
-                    {
-                        errorText += string.Format("Error adding Option {0}. Invalid Box Size.", mod.OptionCode);
-                        numError++;
-                    }
-                    else if (_serviceProxy.getFilteredOptions(mod.OptionCode, mod.BoxSize, true).ToList().Count > 0){
-                        errorText += string.Format("Error adding Option {0}. Option already exists.", mod.OptionCode);
-                        numError++;
-                    }
-                    else if (mod.NewTime <= 0)
-                    {
-                        errorText += string.Format("Error adding Option {0}. Invalid Time: {1}.", mod.OptionCode, mod.NewTime);
-                        numError++;
-                    }
-                    else
-                    {
-                        Option option = new Option()
+                        if (mod.OptionCode.Length != 2)
                         {
-                            OptionCode = mod.OptionCode,
-                            BoxSize = mod.BoxSize,
-                            Time = mod.NewTime,
-                            Name = mod.NewName
-                        };
-                        try
+                            errorText += string.Format("Error adding Option {0}. Option Code must be 2 characters.", mod.OptionCode);
+                            numError++;
+                        }
+                        else if (!mod.OptionCode.ElementAt(0).Equals('P') && !mod.OptionCode.ElementAt(0).Equals('T'))
                         {
+                            errorText += string.Format("Error adding Option {0}. Option Code must start with P or T.", mod.OptionCode);
+                            numError++;
+                        }
+                        else if (mod.OptionCode.ElementAt(1).Equals('P') || mod.OptionCode.ElementAt(1).Equals('T'))
+                        {
+                            errorText += string.Format("Error adding Option {0}. Option Code must not end with P or T.", mod.OptionCode);
+                            numError++;
+                        }
+                        else if (string.IsNullOrWhiteSpace(mod.BoxSize))
+                        {
+                            errorText += string.Format("Error adding Option {0}. Invalid Box Size.", mod.OptionCode);
+                            numError++;
+                        }
+                        else if (_serviceProxy.getFilteredOptions(mod.OptionCode, mod.BoxSize, true).ToList().Count > 0)
+                        {
+                            errorText += string.Format("Error adding Option {0}. Option already exists.", mod.OptionCode);
+                            numError++;
+                        }
+                        else if (mod.NewTime <= 0)
+                        {
+                            errorText += string.Format("Error adding Option {0}. Invalid Time: {1}.", mod.OptionCode, mod.NewTime);
+                            numError++;
+                        }
+                        else
+                        {
+                            Option option = new Option()
+                            {
+                                OptionCode = mod.OptionCode,
+                                BoxSize = mod.BoxSize,
+                                Time = mod.NewTime,
+                                Name = mod.NewName
+                            };
+
                             _serviceProxy.addOption(option);
                             numApproved++;
 
                             updateModification(mod);
                         }
-                        catch (Exception e)
-                        {
-                            errorText += string.Format("Error adding option {0}-{1}\n", option.OptionCode, option.BoxSize);
-                            numError++;
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error adding option {0}-{1}\n", mod.OptionCode, mod.BoxSize);
+                        numError++;
 
-                            informationText = "There was a problem accessing the database.";
-                            Console.WriteLine(e.Message);
-                        }
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
                     }
                 }
                 else if (mod.State == 4)
@@ -398,49 +399,50 @@ namespace RouteConfigurator.ViewModel
                 if (or.State == 3)
                 {
                     or.ModelNum = or.ModelNum.ToUpper();
-                    if (or.ModelNum.Length < 8)
+
+                    try
                     {
-                        errorText += string.Format("Error adding override {0}.  Invalid Model Number format.", or.ModelNum);
-                        numError++;
-                    }
-                    else if (_serviceProxy.getModel(or.ModelNum.Substring(0, 8)) == null)
-                    {
-                        errorText += string.Format("Error adding override {0}.  Invalid Model: {1}.", or.ModelNum, or.ModelBase);
-                        numError++;
-                    }
-                    else if (or.OverrideTime <= 0)
-                    {
-                        errorText += string.Format("Error adding override {0}.  Invalid Override Time: {1}.", or.ModelNum, or.OverrideTime);
-                        numError++;
-                    }
-                    else if (or.OverrideRoute <= 0)
-                    {
-                        errorText += string.Format("Error adding override {0}.  Invalid Override Route: {1}.", or.ModelNum, or.OverrideRoute);
-                        numError++;
-                    }
-                    else
-                    {
-                        Override ov = new Override()
+                        if (or.ModelNum.Length < 8)
                         {
-                            ModelNum = or.ModelNum,
-                            OverrideRoute = or.OverrideRoute,
-                            OverrideTime = or.OverrideTime
-                        };
-                        try
+                            errorText += string.Format("Error adding override {0}.  Invalid Model Number format.", or.ModelNum);
+                            numError++;
+                        }
+                        else if (_serviceProxy.getModel(or.ModelNum.Substring(0, 8)) == null)
                         {
+                            errorText += string.Format("Error adding override {0}.  Invalid Model: {1}.", or.ModelNum, or.ModelBase);
+                            numError++;
+                        }
+                        else if (or.OverrideTime <= 0)
+                        {
+                            errorText += string.Format("Error adding override {0}.  Invalid Override Time: {1}.", or.ModelNum, or.OverrideTime);
+                            numError++;
+                        }
+                        else if (or.OverrideRoute <= 0)
+                        {
+                            errorText += string.Format("Error adding override {0}.  Invalid Override Route: {1}.", or.ModelNum, or.OverrideRoute);
+                            numError++;
+                        }
+                        else
+                        {
+                            Override ov = new Override()
+                            {
+                                ModelNum = or.ModelNum,
+                                OverrideRoute = or.OverrideRoute,
+                                OverrideTime = or.OverrideTime
+                            };
                             _serviceProxy.addOverride(ov, or.ModelBase);
                             numApproved++;
 
                             updateOverride(or);
                         }
-                        catch (Exception e)
-                        {
-                            errorText += string.Format("Error adding override {0}\n", ov.ModelNum);
-                            numError++;
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error adding override {0}\n", or.ModelNum);
+                        numError++;
 
-                            informationText = "There was a problem accessing the database.";
-                            Console.WriteLine(e.Message);
-                        }
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
                     }
                 }
                 else if (or.State == 4)
@@ -875,27 +877,68 @@ namespace RouteConfigurator.ViewModel
         #region Private Functions
         private void updateNewModelTable()
         {
-            newModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter));
+            try
+            {
+                newModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         private void updateNewOptionTable()
         {
-            newOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewOptions(NOSenderFilter, NOOptionCodeFilter, NOBoxSizeFilter));
+            try
+            {
+                newOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewOptions(NOSenderFilter, NOOptionCodeFilter, NOBoxSizeFilter));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         private void updateModelModificationTable()
         {
+            try
+            {
+                newModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
             modifiedModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedModels(MMSenderFilter, MMModelNameFilter));
         }
 
         private void updateOptionModificationTable()
         {
-            modifiedOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedOptions(OMSenderFilter, OMOptionCodeFilter, OMBoxSizeFilter));
+            try
+            {
+                modifiedOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedOptions(OMSenderFilter, OMOptionCodeFilter, OMBoxSizeFilter));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         private void updateOverrideTable()
         {
-            overrides = new ObservableCollection<OverrideRequest>(_serviceProxy.getFilteredOverrideRequests(ORSenderFilter, ORModelNameFilter));
+            try
+            {
+                overrides = new ObservableCollection<OverrideRequest>(_serviceProxy.getFilteredOverrideRequests(ORSenderFilter, ORModelNameFilter));
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         /// <summary>
