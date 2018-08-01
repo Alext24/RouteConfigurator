@@ -182,7 +182,7 @@ namespace RouteConfigurator.Design
         {
             using (context = new RouteConfiguratorDB())
             {
-                return context.Overrides.ToList();
+                return context.Overrides.Include("Model").ToList();
             }
         }
 
@@ -192,7 +192,7 @@ namespace RouteConfigurator.Design
         {
             using (context = new RouteConfiguratorDB())
             {
-                return context.Overrides.Where(item => item.ModelNum.Contains(overrideFilter)).ToList();
+                return context.Overrides.Include("Model").Where(item => item.ModelNum.Contains(overrideFilter)).ToList();
             }
         }
         #endregion
@@ -371,6 +371,17 @@ namespace RouteConfigurator.Design
                                                            item.BoxSize.Contains(BoxSize)).ToList();
             }
         }
+
+        /// <param name="mod"></param>
+        /// <returns> true if modification is a duplicate, false otherwise </returns>
+        public bool checkDuplicateOverrideDeletion(Modification mod)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                return (context.Modifications.Where(item => item.Description.Equals(mod.Description) &&
+                                                           (item.State == 0 || item.State == 3 || item.State == 4)).FirstOrDefault() == null ? false : true);
+            }
+        }
         #endregion
 
         #region Override Requests Read
@@ -504,6 +515,17 @@ namespace RouteConfigurator.Design
                 option.Time = newTime;
                 option.Name = newName;
 
+                context.SaveChanges();
+            }
+        }
+
+        public void deleteOverride(string modelNum)
+        {
+            using(context = new RouteConfiguratorDB())
+            {
+                Override ov = context.Overrides.Find(modelNum);
+
+                context.Overrides.Remove(ov);
                 context.SaveChanges();
             }
         }

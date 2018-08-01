@@ -109,7 +109,9 @@ namespace RouteConfigurator.ViewModel
                             ReviewDate = new DateTime(1900,1,1),
                             NewName = "",
                             OldOptionName = "",
-                            OptionCode = ""
+                            OptionCode = "",
+                            NewTime = 0,
+                            OldOptionTime = 0
                         };
 
                         _serviceProxy.addModificationRequest(modifiedModel);

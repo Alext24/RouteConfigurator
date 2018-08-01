@@ -25,7 +25,6 @@ namespace RouteConfigurator.Model
         public DateTime ReviewDate { get; set; }
 
         [Display(Name = "Description")]
-        [Column(TypeName = "text")]
         public string Description { get; set; }
 
         /// <summary>

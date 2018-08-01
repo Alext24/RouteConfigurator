@@ -118,6 +118,7 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loadModels()
         {
+            informationText = "";
             updateModelTable();
         }
 
@@ -151,6 +152,7 @@ namespace RouteConfigurator.ViewModel
 
         private void loadOptions()
         {
+            informationText = "";
             updateOptionTable();
         }
 
@@ -168,6 +170,7 @@ namespace RouteConfigurator.ViewModel
 
         private void loadOverrides()
         {
+            informationText = "";
             updateOverrideTable();
         }
 
@@ -179,10 +182,43 @@ namespace RouteConfigurator.ViewModel
 
         private void deleteOverride()
         {
+            informationText = "";
+
             if (selectedOverride != null)
             {
-                MessageBox.Show(string.Format("Placeholder for deleting override for {0}", selectedOverride.ModelNum));
-                //Send to director for approval
+                //Check if override is waiting to be deleted.
+                Modification mod = new Modification()
+                {
+                    RequestDate = DateTime.Now,
+                    ReviewDate = new DateTime(1900, 1, 1),
+                    Description = string.Format("Deleting override for {0}.  Override Time was: {1}.  Override Route was: {2}", selectedOverride.ModelNum, selectedOverride.OverrideTime, selectedOverride.OverrideRoute),
+                    State = 0,
+                    Sender = "TEMPORARY SENDER",
+                    Reviewer = "",
+                    IsOption = false,
+                    IsNew = false,
+                    BoxSize = selectedOverride.Model.BoxSize,
+                    ModelBase = selectedOverride.Model.Base,
+                    NewDriveTime = selectedOverride.Model.DriveTime,
+                    NewAVTime = selectedOverride.Model.AVTime,
+                    OldModelDriveTime = 0,
+                    OldModelAVTime = 0,
+                    OptionCode = "",
+                    NewTime = 0,
+                    NewName = "",
+                    OldOptionTime = 0,
+                    OldOptionName = ""
+                };
+
+                if (_serviceProxy.checkDuplicateOverrideDeletion(mod))
+                {
+                    informationText = "Override deletion already waiting for manager approval.";
+                }
+                else
+                {
+                    _serviceProxy.addModificationRequest(mod);
+                    informationText = "Override deletion sent to manager for approval.";
+                }
             }
         }
 

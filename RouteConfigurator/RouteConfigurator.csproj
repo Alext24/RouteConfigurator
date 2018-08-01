@@ -119,6 +119,10 @@
     <Compile Include="Migrations\201807311625279_RemovedConstraintForModification.Designer.cs">
       <DependentUpon>201807311625279_RemovedConstraintForModification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808011415038_ChangedModificationDescription.cs" />
+    <Compile Include="Migrations\201808011415038_ChangedModificationDescription.Designer.cs">
+      <DependentUpon>201808011415038_ChangedModificationDescription.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\IDataAccessService.cs" />
     <Compile Include="Model\IFrameNavigationService.cs" />
@@ -281,6 +285,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201807311625279_RemovedConstraintForModification.resx">
       <DependentUpon>201807311625279_RemovedConstraintForModification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808011415038_ChangedModificationDescription.resx">
+      <DependentUpon>201808011415038_ChangedModificationDescription.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

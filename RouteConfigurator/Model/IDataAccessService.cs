@@ -50,6 +50,8 @@ namespace RouteConfigurator.Model
         IEnumerable<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize);
         IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelName);
         IEnumerable<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize);
+
+        bool checkDuplicateOverrideDeletion(Modification mod);
         #endregion
 
         #region Override Requests Read
@@ -65,6 +67,7 @@ namespace RouteConfigurator.Model
         void addOption(Option option);
         void updateModel(string modelBase, decimal newDriveTime, decimal newAVTime);
         void updateOption(string optionCode, string boxSize, decimal newTime, string newName);
+        void deleteOverride(string modelNum);
         void addOverride(Override ov, string modelBase);
 
         void updateModification(Modification modification);

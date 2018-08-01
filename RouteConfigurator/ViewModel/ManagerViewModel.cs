@@ -309,8 +309,19 @@ namespace RouteConfigurator.ViewModel
                     {
                         try
                         {
-                            _serviceProxy.updateModel(mod.ModelBase, mod.NewDriveTime, mod.NewAVTime);
-                            numApproved++;
+                            string descriptionStart = "Deleting override for ";
+                            if (mod.Description.StartsWith(descriptionStart))
+                            {
+                                string modelNum = mod.Description.Remove(0, descriptionStart.Length);
+                                modelNum = modelNum.Remove(modelNum.IndexOf("."));
+                                _serviceProxy.deleteOverride(modelNum);
+                                numApproved++;
+                            }
+                            else
+                            {
+                                _serviceProxy.updateModel(mod.ModelBase, mod.NewDriveTime, mod.NewAVTime);
+                                numApproved++;
+                            }
 
                             updateModification(mod);
                         }
