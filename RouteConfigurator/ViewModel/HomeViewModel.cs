@@ -60,7 +60,7 @@ namespace RouteConfigurator.ViewModel
         /// <summary>
         /// Average time for all of the time trials loaded for that model
         /// </summary>
-        private decimal _averageTime;
+        private decimal? _averageTime;
 
         private string _informationText;
 
@@ -211,7 +211,7 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public decimal averageTime
+        public decimal? averageTime
         {
             get
             {
@@ -317,10 +317,15 @@ namespace RouteConfigurator.ViewModel
                 timeTrials.Clear();
                 _modelBase = "";
                 _options = "";
+                averageTime = null;
             }
             else if(model.Length < 8)
             {
                 informationText = "Invalid Model Format";
+                timeTrials.Clear();
+                _modelBase = "";
+                _options = "";
+                averageTime = null;
             }
             else
             {

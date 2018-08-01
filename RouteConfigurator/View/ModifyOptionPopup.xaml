@@ -77,7 +77,7 @@
 
                     <!--Row 6 setup: New Time-->
                     <TextBlock Grid.Row="6" Grid.Column="0" Text="New Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding newTime, TargetNullValue=''}" FontSize="16"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding newTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16"/>
 
                     <!--Row 7-8 setup: Option Description Header-->
                     <TextBlock Grid.Row="7" Grid.Column="0" Text="New Name/" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 5 5 0"/>
@@ -96,18 +96,18 @@
 
                     <!--Row 2 setup: Option Table-->
                     <DataGrid  Grid.Row="2" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" Height="100" x:Name="OptionTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
-                                   CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" SelectionMode="Single"
-                                   ItemsSource="{Binding optionsFound}" SelectedValue="{Binding selectedOption}">
+                               CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" SelectionMode="Single"
+                               ItemsSource="{Binding optionsFound}" SelectedValue="{Binding selectedOption}">
 
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="OptionCode" Width="auto" FontSize="16" Header="Option"
-                                                    Binding="{Binding OptionCode}"/>
+                                                Binding="{Binding OptionCode}"/>
                             <DataGridTextColumn x:Name="BoxSize" Width="auto" FontSize="16" Header="Box Size"
-                                                    Binding="{Binding BoxSize}"/>
+                                                Binding="{Binding BoxSize}"/>
                             <DataGridTextColumn x:Name="Time" Width="auto" FontSize="16" Header="Time"
-                                                    Binding="{Binding Time}"/>
+                                                Binding="{Binding Time, Converter={StaticResource TimeConverter}}"/>
                             <DataGridTextColumn x:Name="OptionName" Width="auto" FontSize="16" Header="Name"
-                                                    Binding="{Binding Name}"/>
+                                                Binding="{Binding Name}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

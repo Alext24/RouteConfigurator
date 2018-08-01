@@ -25,7 +25,7 @@ namespace RouteConfigurator.Design
         {
             using (context = new RouteConfiguratorDB())
             {
-                return context.Models.Find(modelName) as Model.Model;
+                return context.Models.Find(modelName) ;
             }
         }
 
@@ -182,7 +182,7 @@ namespace RouteConfigurator.Design
         {
             using (context = new RouteConfiguratorDB())
             {
-                return context.Overrides.Include("Model").ToList();
+                return context.Overrides.Include(x => x.Model).ToList();
             }
         }
 
@@ -192,7 +192,7 @@ namespace RouteConfigurator.Design
         {
             using (context = new RouteConfiguratorDB())
             {
-                return context.Overrides.Include("Model").Where(item => item.ModelNum.Contains(overrideFilter)).ToList();
+                return context.Overrides.Include(x => x.Model).Where(item => item.ModelNum.Contains(overrideFilter)).ToList();
             }
         }
         #endregion
@@ -202,7 +202,7 @@ namespace RouteConfigurator.Design
         {
             using (context = new RouteConfiguratorDB())
             {
-                return context.TimeTrials.Find(productionNumber) as TimeTrial;
+                return context.TimeTrials.Find(productionNumber);
             }
         }
 

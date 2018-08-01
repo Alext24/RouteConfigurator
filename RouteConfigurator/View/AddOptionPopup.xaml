@@ -4,15 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RouteConfigurator.View"
+        xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
         mc:Ignorable="d"
-        MinHeight="500"
-        MinWidth="800"
-        Height="500" 
-        Width="800"
+        MinHeight="550"
+        MinWidth="850"
+        Height="550" 
+        Width="850"
         Title="Add Option" 
         DataContext="{Binding AddOption, Source={StaticResource Locator}}">
 
-    <Border Padding="20" Background="{StaticResource LightBlue}">
+    <Border Padding="40" Background="{StaticResource LightBlue}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -22,24 +23,15 @@
             <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <!--Row 0-->
-                        <RowDefinition Height="auto"/>
-                        <!--Row 1-->
-                        <RowDefinition Height="auto"/>
-                        <!--Row 2-->
-                        <RowDefinition Height="auto"/>
-                        <!--Row 3-->
-                        <RowDefinition Height="auto"/>
-                        <!--Row 4-->
-                        <RowDefinition Height="20"/>
-                        <!--Row 5-->
-                        <RowDefinition Height="auto"/>
-                        <!--Row 6-->
-                        <RowDefinition Height="20"/>
-                        <!--Row 7-->
-                        <RowDefinition Height="auto"/>
-                        <!--Row 8-->
+                        <RowDefinition Height="auto"/>      <!--Row 0-->
+                        <RowDefinition Height="auto"/>      <!--Row 1-->
+                        <RowDefinition Height="auto"/>      <!--Row 2-->
+                        <RowDefinition Height="auto"/>      <!--Row 3-->
+                        <RowDefinition Height="auto"/>      <!--Row 4-->
+                        <RowDefinition Height="20"/>        <!--Row 5-->
+                        <RowDefinition Height="auto"/>      <!--Row 6-->
+                        <RowDefinition Height="20"/>        <!--Row 7-->
+                        <RowDefinition Height="auto"/>      <!--Row 8-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -48,6 +40,10 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
+
+                    <Grid.Resources>
+                        <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
+                    </Grid.Resources>
 
                     <!--Row 0 setup: Title-->
                     <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="ADD NEW OPTION"
@@ -74,7 +70,7 @@
                              Text="{Binding boxSize}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0" Width="140"
-                             Text="{Binding time, TargetNullValue=''}" ToolTip="Format Example: '12.34' hours"/>
+                             Text="{Binding time, TargetNullValue='', Converter={StaticResource TimeConverter}}" ToolTip="Format Example: '12.34' hours"/>
 
                     <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0"
                              Text="{Binding name}"/>
@@ -113,7 +109,7 @@
                             <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size" IsReadOnly="True"
                                                 Binding="{Binding BoxSize}"/>
                             <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Time"
-                                                Binding="{Binding NewTime}"/>
+                                                Binding="{Binding NewTime, Converter={StaticResource TimeConverter}}"/>
                             <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="Name"
                                                 Binding="{Binding NewName}"/>
                         </DataGrid.Columns>

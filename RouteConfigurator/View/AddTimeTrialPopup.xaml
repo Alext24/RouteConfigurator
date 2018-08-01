@@ -104,10 +104,10 @@
                              Text="{Binding productionNum, TargetNullValue=''}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="4" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
-                             Text="{Binding driveTime, TargetNullValue=''}"/>
+                             Text="{Binding driveTime, TargetNullValue='', Converter={StaticResource TimeConverter}}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="5" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
-                             Text="{Binding AVTime, TargetNullValue=''}"/>
+                             Text="{Binding AVTime, TargetNullValue='', Converter={StaticResource TimeConverter}}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="6" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
                              Text="{Binding numOptions, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}"/>
@@ -122,7 +122,7 @@
                                                 Binding="{Binding OptionCode}"/>
 
                             <DataGridTextColumn Width="auto" MaxWidth="80" FontSize="12" Header="Time"
-                                                Binding="{Binding Time}"/>
+                                                Binding="{Binding Time, Converter={StaticResource TimeConverter}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
 

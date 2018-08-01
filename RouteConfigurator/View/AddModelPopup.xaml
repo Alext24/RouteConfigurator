@@ -4,15 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RouteConfigurator.View"
+        xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
         mc:Ignorable="d"
-        MinHeight="510"
+        MinHeight="550"
         MinWidth="850"
-        Height="510"
+        Height="550"
         Width="850"
         Title="Add Model"
         DataContext="{Binding AddModel, Source={StaticResource Locator}}">
 
-    <Border Padding="20" Background="{StaticResource LightBlue}">
+    <Border Padding="40" Background="{StaticResource LightBlue}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -40,6 +41,10 @@
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
+                    <Grid.Resources>
+                        <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
+                    </Grid.Resources>
+
                     <!--Row 0 setup: Title-->
                     <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="ADD NEW MODEL"
                                Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center" />
@@ -58,17 +63,17 @@
                                FontSize="16" Padding="20 0"/>
 
                     <!--Row 2 setup: Input boxes-->
-                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0" MinWidth="200"
+                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0" MinWidth="160"
                              Text="{Binding modelNum}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" Width="80"
                              Text="{Binding boxSize}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0" Width="180"
-                             Text="{Binding driveTime, TargetNullValue=''}" ToolTip="Format Example: '12.34' hours"/>
+                             Text="{Binding driveTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" ToolTip="Format Example: '12.34' hours"/>
 
                     <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0" Width="180"
-                             Text="{Binding AVTime, TargetNullValue=''}" ToolTip="Format Example: '12.34' hours"/>
+                             Text="{Binding AVTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" ToolTip="Format Example: '12.34' hours"/>
 
                     <!--Row 3 setup: Description Header-->
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Request Description"
@@ -146,7 +151,7 @@
                             <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Option"
                                                 Binding="{Binding OptionCode}"/>
                             <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Time"
-                                                Binding="{Binding Time}"/>
+                                                Binding="{Binding Time, Converter={StaticResource TimeConverter}}"/>
                             <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Name"
                                                 Binding="{Binding Name}"/>
                         </DataGrid.Columns>

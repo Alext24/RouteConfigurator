@@ -12,7 +12,7 @@ namespace RouteConfigurator
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
-                return "0";
+                return "";
 
             decimal hours = Math.Truncate((decimal)value);
             decimal minutes = Math.Round(((decimal)value - hours) * 60);
@@ -24,7 +24,7 @@ namespace RouteConfigurator
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
-                return 0;
+                return null;
 
             string timeText = value.ToString();
             decimal time = 0;

@@ -62,7 +62,7 @@
                     <TextBox Grid.Row="2" Grid.Column="0" Margin="10 0" VerticalContentAlignment="Center" 
                              Text="{Binding modelText}" FontSize="16"/>
                     <TextBox Grid.Row="2" Grid.Column="1" Margin="10 0" VerticalContentAlignment="Center" Width="120"
-                             Text="{Binding overrideTime, TargetNullValue=''}" FontSize="16"/>
+                             Text="{Binding overrideTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16"/>
                     <TextBox Grid.Row="2" Grid.Column="2" Margin="10 0" VerticalContentAlignment="Center" Width="130"
                              Text="{Binding overrideRoute, TargetNullValue=''}" FontSize="16"/>
 
@@ -86,7 +86,7 @@
                     <!--Row 5 setup: Calculated info-->
                     <TextBlock Grid.Row="7" Grid.Column="0" Padding="0 0 5 0" Text="Calculated" FontSize="16" HorizontalAlignment="Right"/>
                     <TextBox Grid.Row="7" Grid.Column="1" Margin="10 0" Width="120"
-                             Text="{Binding modelTime, TargetNullValue=''}" FontSize="16" VerticalContentAlignment="Center" IsReadOnly="True"/>
+                             Text="{Binding modelTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16" VerticalContentAlignment="Center" IsReadOnly="True"/>
                     <TextBox Grid.Row="7" Grid.Column="2" Margin="10 0" Width="130"
                              Text="{Binding modelRoute}" FontSize="16" VerticalContentAlignment="Center" IsReadOnly="True"/>
 
@@ -110,7 +110,7 @@
                             <DataGridTextColumn x:Name="Header1" Width="auto" Header="Model"
                                                 Binding="{Binding ModelNum}" FontSize="16" IsReadOnly="True"/>
                             <DataGridTextColumn x:Name="Header2" Width="auto" Header="Override Time"
-                                                Binding="{Binding OverrideTime}" FontSize="16" IsReadOnly="True"/>
+                                                Binding="{Binding OverrideTime, Converter={StaticResource TimeConverter}}" FontSize="16" IsReadOnly="True"/>
                             <DataGridTextColumn x:Name="Header3" Width="auto" Header="Override Route"
                                                 Binding="{Binding OverrideRoute}" FontSize="16" IsReadOnly="True"/>
                         </DataGrid.Columns>

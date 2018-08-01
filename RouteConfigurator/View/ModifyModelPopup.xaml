@@ -29,7 +29,6 @@
 
             <Grid.Resources>
                 <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
-                <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
             </Grid.Resources>
 
             <Border x:Name="content" Background="White" Padding="20" CornerRadius="20" Grid.Row="0" Width="auto" HorizontalAlignment="Center">
@@ -85,10 +84,10 @@
 
                         <!--Row 7 setup: New Times-->
                         <TextBlock Grid.Row="7" Grid.Column="0" Text="New Drive Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding newDriveTime, TargetNullValue=''}" FontSize="16" Width="135"/>
+                        <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding newDriveTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16" Width="135"/>
 
                         <TextBlock Grid.Row="7" Grid.Column="2" Text="New AV Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <TextBox Grid.Row="7" Grid.Column="3" Margin="5" Text="{Binding newAVTime, TargetNullValue=''}" FontSize="16" Width="135" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="7" Grid.Column="3" Margin="5" Text="{Binding newAVTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16" Width="135" HorizontalAlignment="Right"/>
 
                         <!--Row 8 setup: Description Header-->
                         <TextBlock Grid.Row="8" Grid.Column="0" Text="Request Description" FontSize="16" Margin="5"/>
@@ -110,9 +109,9 @@
                                 <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size"
                                                     Binding="{Binding BoxSize}"/>
                                 <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Drive Time"
-                                                    Binding="{Binding DriveTime}"/>
+                                                    Binding="{Binding DriveTime, Converter={StaticResource TimeConverter}}"/>
                                 <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
-                                                    Binding="{Binding AVTime}"/>
+                                                    Binding="{Binding AVTime, Converter={StaticResource TimeConverter}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
 
