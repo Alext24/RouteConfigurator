@@ -12,8 +12,6 @@ namespace RouteConfigurator.Design
 {
     public class DataAccessService : IDataAccessService
     {
-        private RouteConfiguratorDB context;
-
         #region Constructor
         public DataAccessService() { }
         #endregion
@@ -23,7 +21,7 @@ namespace RouteConfigurator.Design
         /// <returns> returns the model specified by the model name </returns>
         public Model.Model getModel(string modelName)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Models.Find(modelName) ;
             }
@@ -32,7 +30,7 @@ namespace RouteConfigurator.Design
         /// <returns> returns all models </returns>
         public IEnumerable<Model.Model> getModels()
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Models.ToList();
             }
@@ -43,7 +41,7 @@ namespace RouteConfigurator.Design
         /// <returns> returns a list of the models that meet the filters</returns>
         public IEnumerable<Model.Model> getFilteredModels(string modelFilter, string boxSizeFilter)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Models.Where(model => model.Base.Contains(modelFilter) &&
                                                      model.BoxSize.Contains(boxSizeFilter)).ToList();
@@ -53,7 +51,7 @@ namespace RouteConfigurator.Design
         /// <returns> list of unique drive types</returns>
         public IEnumerable<string> getDriveTypes()
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Models.Select(x => x.Base.Substring(0, 4)).ToList().Distinct();
             }
@@ -67,7 +65,7 @@ namespace RouteConfigurator.Design
         public IEnumerable<Model.Model> getNumModelsFound(string drive, string av, string boxSize, bool exact)
         {
 
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 if (exact)
                 {
@@ -89,7 +87,7 @@ namespace RouteConfigurator.Design
         /// <returns> returns all options </returns>
         public IEnumerable<Option> getOptions()
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Options.ToList();
             }
@@ -101,7 +99,7 @@ namespace RouteConfigurator.Design
         /// <returns> returns a list of the options that meet the filters</returns>
         public IEnumerable<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter, bool exact)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 if (exact)
                 {
@@ -121,7 +119,7 @@ namespace RouteConfigurator.Design
         /// <returns> list of options </returns>
         public IEnumerable<Option> getModelOptions(List<string> optionsList, string boxSize)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Options.Where(option => optionsList.Any(optionCode => option.OptionCode.Contains(optionCode)) &&
                                                        option.BoxSize.Equals(boxSize)).ToList();
@@ -133,7 +131,7 @@ namespace RouteConfigurator.Design
         /// <returns> total time for the options </returns>
         public decimal getTotalOptionsTime(string boxSize, List<string> options)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Options.Where(x => x.BoxSize.Equals(boxSize) &&
                                                   options.Contains(x.OptionCode)).Sum(y => y.Time);
@@ -142,7 +140,7 @@ namespace RouteConfigurator.Design
 
         public IEnumerable<string> getOptionCodes()
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Options.Select(x => x.OptionCode).ToList().Distinct();
             }
@@ -150,7 +148,7 @@ namespace RouteConfigurator.Design
 
         public IEnumerable<Option> getNumOptionsFound(string optionCode, string boxSize, bool exact)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 if (exact)
                 {
@@ -171,7 +169,7 @@ namespace RouteConfigurator.Design
         /// <returns> returns the override info for a model</returns>
         public Override getModelOverride(string modelNum)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Overrides.Find(modelNum) as Override;
             }
@@ -180,7 +178,7 @@ namespace RouteConfigurator.Design
         /// <returns> list of active overrides</returns>
         public IEnumerable<Override> getOverrides()
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Overrides.Include(x => x.Model).ToList();
             }
@@ -190,7 +188,7 @@ namespace RouteConfigurator.Design
         /// <returns> list of active overrides that contain the model number</returns>
         public IEnumerable<Override> getFilteredOverrides(string overrideFilter)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Overrides.Include(x => x.Model).Where(item => item.ModelNum.Contains(overrideFilter)).ToList();
             }
@@ -200,7 +198,7 @@ namespace RouteConfigurator.Design
         #region Time Trial Read
         public TimeTrial getTimeTrial(int productionNumber)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.TimeTrials.Find(productionNumber);
             }
@@ -210,7 +208,7 @@ namespace RouteConfigurator.Design
         /// <returns> list of time trials with the model base </returns>
         public IEnumerable<TimeTrial> getTimeTrials(string modelBase)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.TimeTrials.Include(a => a.TTOptionTimes).Where(x => x.Model.Base.Equals(modelBase)).ToList();
             }
@@ -221,7 +219,7 @@ namespace RouteConfigurator.Design
         /// <returns> list of time trials for a specific model </returns>
         public IEnumerable<TimeTrial> getTimeTrials(string modelBase, List<string> options)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.TimeTrials.Include(a => a.Model).Include(a => a.TTOptionTimes).Where(x => 
                                x.Model.Base.Equals(modelBase) &&
@@ -238,7 +236,7 @@ namespace RouteConfigurator.Design
         /// <returns> a list of time trials that meet the filters</returns>
         public IEnumerable<TimeTrial> getFilteredTimeTrials(string modelBase, string optionTextFilter, string salesFilter, string productionNumFilter, bool exact)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 if (exact)
                 {
@@ -264,7 +262,7 @@ namespace RouteConfigurator.Design
         #region Modifications Read
         public IEnumerable<Modification> getModifications()
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Modifications.ToList();
             }
@@ -273,7 +271,7 @@ namespace RouteConfigurator.Design
         // Include all states but filter other parameters
         public IEnumerable<Modification> getFilteredModifications(string ModelBase, string BoxSize, string OptionCode, string Sender, string Reviewer)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Modifications.Where(item => item.ModelBase.Contains(ModelBase) &&
                                                            item.BoxSize.Contains(BoxSize) &&
@@ -286,7 +284,7 @@ namespace RouteConfigurator.Design
         // If filtered for waiting state, also include states 3 and 4 (Currently checked to approve or decline)
         public IEnumerable<Modification> getFilteredWaitingModifications(string ModelBase, string BoxSize, string OptionCode, string Sender, string Reviewer)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Modifications.Where(item => (item.State == 0 || item.State == 3 || item.State == 4) &&
                                                             item.ModelBase.Contains(ModelBase) &&
@@ -299,7 +297,7 @@ namespace RouteConfigurator.Design
 
         public IEnumerable<Modification> getFilteredStateModifications(int State, string ModelBase, string BoxSize, string OptionCode, string Sender, string Reviewer)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Modifications.Where(item => item.State == State &&
                                                            item.ModelBase.Contains(ModelBase) &&
@@ -316,7 +314,7 @@ namespace RouteConfigurator.Design
         /// <returns> List of unapproved new models that meet the filters</returns>
         public IEnumerable<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Modifications.Where(item => item.IsOption == false && item.IsNew == true &&
                                                            item.State == 0 &&
@@ -332,7 +330,7 @@ namespace RouteConfigurator.Design
         /// <returns> List of unapproved new options that meet the filters</returns>
         public IEnumerable<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Modifications.Where(item => item.IsOption == true && item.IsNew == true &&
                                                            item.State == 0 &&
@@ -347,7 +345,7 @@ namespace RouteConfigurator.Design
         /// <returns> List of unapproved modified models that meet the filters</returns>
         public IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelName)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Modifications.Where(item => item.IsOption == false && item.IsNew == false &&
                                                            item.State == 0 &&
@@ -362,7 +360,7 @@ namespace RouteConfigurator.Design
         /// <returns> List of unapproved modified options that meet the filters</returns>
         public IEnumerable<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Modifications.Where(item => item.IsOption == true && item.IsNew == false &&
                                                            item.State == 0 &&
@@ -376,7 +374,7 @@ namespace RouteConfigurator.Design
         /// <returns> true if modification is a duplicate, false otherwise </returns>
         public bool checkDuplicateOverrideDeletion(Modification mod)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return (context.Modifications.Where(item => item.Description.Equals(mod.Description) &&
                                                            (item.State == 0 || item.State == 3 || item.State == 4)).FirstOrDefault() == null ? false : true);
@@ -387,7 +385,7 @@ namespace RouteConfigurator.Design
         #region Override Requests Read
         public IEnumerable<OverrideRequest> getOverrideRequests()
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.OverrideRequests.ToList();
             }
@@ -398,7 +396,7 @@ namespace RouteConfigurator.Design
         /// <returns> List of override requests that meet the filters</returns>
         public IEnumerable<OverrideRequest> getFilteredOverrideRequests(string Sender, string ModelNum)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.OverrideRequests.Where(item => item.State == 0 &&
                                                               item.Sender.Contains(Sender) &&
@@ -408,7 +406,7 @@ namespace RouteConfigurator.Design
 
         public IEnumerable<OverrideRequest> getFilteredOverrideRequests(int State, string ModelNum, string Sender, string Reviewer)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 // Include all states but filter other parameters
                 if(State == -1)
@@ -444,7 +442,7 @@ namespace RouteConfigurator.Design
         /// <param name="timeTrials"> list of new time trials </param>
         public void addTimeTrials(ObservableCollection<TimeTrial> timeTrials)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 foreach (TimeTrial TT in timeTrials)
                 {
@@ -459,7 +457,7 @@ namespace RouteConfigurator.Design
 
         public void addModificationRequest(Modification mod)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 context.Modifications.Add(mod);
                 context.SaveChanges();
@@ -468,7 +466,7 @@ namespace RouteConfigurator.Design
 
         public void addOverrideRequest(OverrideRequest ov)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 context.OverrideRequests.Add(ov);
                 context.SaveChanges();
@@ -477,7 +475,7 @@ namespace RouteConfigurator.Design
 
         public void addModel(Model.Model model)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 context.Models.Add(model);
                 context.SaveChanges();
@@ -486,7 +484,7 @@ namespace RouteConfigurator.Design
 
         public void addOption(Option option)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 context.Options.Add(option);
                 context.SaveChanges();
@@ -495,7 +493,7 @@ namespace RouteConfigurator.Design
 
         public void updateModel(string modelBase, decimal newDriveTime, decimal newAVTime)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 Model.Model model = context.Models.Find(modelBase);
 
@@ -508,7 +506,7 @@ namespace RouteConfigurator.Design
 
         public void updateOption(string optionCode, string boxSize, decimal newTime, string newName)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 Option option = context.Options.Find(optionCode, boxSize);
 
@@ -521,7 +519,7 @@ namespace RouteConfigurator.Design
 
         public void deleteOverride(string modelNum)
         {
-            using(context = new RouteConfiguratorDB())
+            using(RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 Override ov = context.Overrides.Find(modelNum);
 
@@ -532,7 +530,7 @@ namespace RouteConfigurator.Design
 
         public void addOverride(Override ov, string modelBase)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 //If there is already an override for the model number, delete it
                 //and then add the new one.
@@ -551,7 +549,7 @@ namespace RouteConfigurator.Design
 
         public void updateModification(Modification modification)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 Modification mod = context.Modifications.Find(modification.ModificationID);
 
@@ -620,7 +618,7 @@ namespace RouteConfigurator.Design
 
         public void updateOverrideRequest(OverrideRequest overrideRequest)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 OverrideRequest or = context.OverrideRequests.Find(overrideRequest.OverrideRequestID);
 
@@ -704,7 +702,7 @@ namespace RouteConfigurator.Design
 
         public void deleteTimeTrial(TimeTrial tt)
         {
-            using (context = new RouteConfiguratorDB())
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 TimeTrial timeTrial = context.TimeTrials.Find(tt.ProductionNumber);
                 context.TimeTrials.Remove(timeTrial);

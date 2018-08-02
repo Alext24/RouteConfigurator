@@ -92,12 +92,12 @@ namespace RouteConfigurator.ViewModel
 
         #region Commands
         /// <summary>
-        /// Calls modelNumberSections 
+        /// Calls modelNumberSectionsAsync 
         /// </summary>
         private void timeSearch()
         {
-            modelNumberSections(timeSearchModelNumber);
-            //modelNumberSectionsCall(timeSearchModelNumber);
+            timeTrials.Clear();
+            modelNumberSectionsAsync(timeSearchModelNumber);
         }
 
         private void supervisorLogin()
@@ -114,7 +114,7 @@ namespace RouteConfigurator.ViewModel
         #region Public Variables
         /// <summary>
         /// Sets timeSearchModelNumber to the entered model number as well
-        /// Calls searchModelCall
+        /// Calls searchModelAsync
         /// </summary>
         public string modelNumber 
         {
@@ -129,7 +129,7 @@ namespace RouteConfigurator.ViewModel
                 informationText = "";
 
                 timeSearchModelNumber = modelNumber;
-                searchModel();
+                searchModelAsync();
             }
         }
 
@@ -173,7 +173,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Calls modelNumberSections
+        /// Calls timeSearch
         /// </summary>
         public string timeSearchModelNumber 
         {
@@ -187,8 +187,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("timeSearchModelNumber");
                 informationText = "";
 
-                //modelNumberSectionsCall(timeSearchModelNumber);
-                modelNumberSections(timeSearchModelNumber);
+                timeSearch();
             }
         }
 
@@ -272,16 +271,9 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Private Functions
-        private async void modelNumberSectionsCall(string model)
+        private async void modelNumberSectionsAsync(string model)
         {
-            loading = true;
-            await modelNumberSectionsAsync(model);
-            loading = false;
-        }
-
-        private Task modelNumberSectionsAsync(string model)
-        {
-            return Task.Run(() => modelNumberSections(model));
+            await Task.Run(() => modelNumberSections(model));
         }
 
         /// <summary>
@@ -304,7 +296,6 @@ namespace RouteConfigurator.ViewModel
 
             if (string.IsNullOrWhiteSpace(model))
             {
-                timeTrials.Clear();
                 _modelBase = "";
                 _options = "";
                 averageTime = null;
@@ -312,7 +303,6 @@ namespace RouteConfigurator.ViewModel
             else if(model.Length < 8)
             {
                 informationText = "Invalid Model Format";
-                timeTrials.Clear();
                 _modelBase = "";
                 _options = "";
                 averageTime = null;
@@ -365,10 +355,6 @@ namespace RouteConfigurator.ViewModel
         /// <param name="options"> list of options wanted for the model </param>
         private void searchTimeTrials(string model, List<string> options)
         {
-            //Reset the information
-            timeTrials.Clear();
-            averageTime = 0;
-
             if (!string.IsNullOrWhiteSpace(model))
             {
                 try
@@ -383,6 +369,7 @@ namespace RouteConfigurator.ViewModel
                     }
                     else
                     {
+                        averageTime = null;
                         informationText = "No time trials for this model exist";
                     }
                 }catch(Exception e)
@@ -390,10 +377,6 @@ namespace RouteConfigurator.ViewModel
                     informationText = "There was a problem accessing the database.";
                     Console.WriteLine(e.Message);
                 }
-            }
-            else
-            {
-                informationText = "Please enter model number";
             }
         }
 
@@ -417,20 +400,11 @@ namespace RouteConfigurator.ViewModel
         /// <summary>
         /// Calls searchModleAsync
         /// </summary>
-        private async void searchModelCall()
+        private async void searchModelAsync()
         {
             loading = true;
-            await searchModelAsync();
+            await Task.Run(() => searchModel());
             loading = false;
-        }
-
-        /// <summary>
-        /// Calls searchModel
-        /// </summary>
-        /// <returns></returns>
-        private Task searchModelAsync()
-        {
-            return Task.Run(() => searchModel());
         }
 
         /// <summary>
@@ -449,15 +423,14 @@ namespace RouteConfigurator.ViewModel
             }
             try
             {
-                loading = true;
-
-                System.Threading.Thread.Sleep(5000);        ///TESTING DELETE THIS AFTER I AM DONE TESTING
+                informationText = "Searching for model...";
 
                 //Retrieves a model from the database
                 model = _serviceProxy.getModel(_modelBase);
 
                 if (model != null)
                 {
+                    informationText = "Calculating model time...";
                     updateModelText();
 
                     informationText = "Model loaded";
@@ -476,10 +449,6 @@ namespace RouteConfigurator.ViewModel
                 informationText = "There was a problem accessing the database.";
                 Console.WriteLine(e.Message);
             }
-            finally
-            {
-                loading = false;
-            }
         }
 
         /// <summary>
@@ -488,10 +457,6 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateModelText()
         {
-            routeText = "";
-            prodSupCodeText = "";
-            productionTimeText = "";
-
             try
             {
                 Override modelOverride = _serviceProxy.getModelOverride(modelNumber);
@@ -675,7 +640,6 @@ namespace RouteConfigurator.ViewModel
                 routeText = string.Concat(routeText, "00");
             }
         }
-
         #endregion
     }
 }

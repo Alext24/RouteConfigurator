@@ -59,6 +59,8 @@ namespace RouteConfigurator.ViewModel
         private OverrideRequest _selectedOverride;
 
         private string _informationText;
+
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -80,7 +82,7 @@ namespace RouteConfigurator.ViewModel
             loadedCommand = new RelayCommand(loaded);
             openSupervisorCommand = new RelayCommand(openSupervisorView);
             refreshTablesCommand = new RelayCommand(refreshTables);
-            submitCheckedCommand = new RelayCommand(submitChecked);
+            submitCheckedCommand = new RelayCommand(submitCheckedAsync);
             goBackCommand = new RelayCommand(goBack);
         }
         #endregion
@@ -88,11 +90,11 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loaded()
         {
-            updateNewModelTable();
-            updateNewOptionTable();
-            updateModelModificationTable();
-            updateOptionModificationTable();
-            updateOverrideTable();
+            updateNewModelTableAsync();
+            updateNewOptionTableAsync();
+            updateModelModificationTableAsync();
+            updateOptionModificationTableAsync();
+            updateOverrideTableAsync();
         }
 
         private void openSupervisorView()
@@ -106,33 +108,62 @@ namespace RouteConfigurator.ViewModel
             secondWindow.MinWidth = 1400;
         }
 
+        private async void refreshTablesAsync()
+        {
+            loading = true;
+            await Task.Run(() => refreshTables());
+            loading = false;
+        }
+
         private void refreshTables()
         {
-            //Clear all filters
-            NMBaseFilter = "";
-            NMBoxSizeFilter = "";
-            NMSenderFilter = "";
-            NOBoxSizeFilter = "";
-            NOOptionCodeFilter = "";
-            NOSenderFilter = "";
-            MMModelNameFilter = "";
-            MMSenderFilter = "";
-            OMBoxSizeFilter = "";
-            OMOptionCodeFilter = "";
-            OMSenderFilter = "";
-            ORModelNameFilter = "";
-            ORSenderFilter = "";
+            informationText = "";
 
-            updateNewModelTable();
-            updateNewOptionTable();
-            updateModelModificationTable();
-            updateOptionModificationTable();
-            updateOverrideTable();
+            //Clear all filters
+            _NMBaseFilter = "";
+            RaisePropertyChanged("NMBaseFilter");
+            _NMBoxSizeFilter = "";
+            RaisePropertyChanged("NMBoxSizeFilter");
+            _NMSenderFilter = "";
+            RaisePropertyChanged("NMSenderFilter");
+
+            _NOBoxSizeFilter = "";
+            RaisePropertyChanged("NOBoxSizeFilter");
+            _NOOptionCodeFilter = "";
+            RaisePropertyChanged("NOOptionCodeFilter");
+            _NOSenderFilter = "";
+            RaisePropertyChanged("NOSenderFilter");
+
+            _MMModelNameFilter = "";
+            RaisePropertyChanged("MMModelNameFilter");
+            _MMSenderFilter = "";
+            RaisePropertyChanged("MMSenderFilter");
+
+            _OMBoxSizeFilter = "";
+            RaisePropertyChanged("OMBoxSizeFilter");
+            _OMOptionCodeFilter = "";
+            RaisePropertyChanged("OMOptionCodeFilter");
+            _OMSenderFilter = "";
+            RaisePropertyChanged("OMSenderFilter");
+
+            _ORModelNameFilter = "";
+            RaisePropertyChanged("ORModelNameFilter");
+            _ORSenderFilter = "";
+            RaisePropertyChanged("ORSenderFilter");
+
+            loaded();
+        }
+        
+        private async void submitCheckedAsync()
+        {
+            loading = true;
+            await Task.Run(() => submitChecked());
+            loading = false;
         }
 
         private void submitChecked()
         {
-            informationText = "";
+            informationText = "Submitting changes...";
             int numApproved = 0;
             int numDenied = 0;
             int numError = 0;
@@ -473,6 +504,7 @@ namespace RouteConfigurator.ViewModel
                                               "Denied: {1}", numApproved, numDenied));
             }
 
+            informationText = "";
             refreshTables();
         }
 
@@ -549,7 +581,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Calls updateNewModelTable
+        /// Calls updateNewModelTableAsync
         /// </summary>
         public string NMSenderFilter
         {
@@ -563,12 +595,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("NMSenderFilter");
                 informationText = "";
 
-                updateNewModelTable();
+                updateNewModelTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateNewModelTable
+        /// Calls updateNewModelTableAsync
         /// </summary>
         public string NMBaseFilter
         {
@@ -582,12 +614,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("NMBaseFilter");
                 informationText = "";
 
-                updateNewModelTable();
+                updateNewModelTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateNewModelTable
+        /// Calls updateNewModelTableAsync
         /// </summary>
         public string NMBoxSizeFilter
         {
@@ -601,7 +633,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("NMBoxSizeFilter");
                 informationText = "";
 
-                updateNewModelTable();
+                updateNewModelTableAsync();
             }
         }
 
@@ -619,7 +651,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Calls updateNewOptionTable
+        /// Calls updateNewOptionTableAsync
         /// </summary>
         public string NOSenderFilter
         {
@@ -633,12 +665,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("NOSenderFilter");
                 informationText = "";
 
-                updateNewOptionTable();
+                updateNewOptionTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateNewOptionTable
+        /// Calls updateNewOptionTableAsync
         /// </summary>
         public string NOOptionCodeFilter
         {
@@ -652,12 +684,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("NOOptionCodeFilter");
                 informationText = "";
 
-                updateNewOptionTable();
+                updateNewOptionTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateNewOptionTable
+        /// Calls updateNewOptionTableAsync
         /// </summary>
         public string NOBoxSizeFilter
         {
@@ -671,7 +703,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("NOBoxSizeFilter");
                 informationText = "";
 
-                updateNewOptionTable();
+                updateNewOptionTableAsync();
             }
         }
 
@@ -689,7 +721,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Calls updateModelModificationTable
+        /// Calls updateModelModificationTableAsync
         /// </summary>
         public string MMSenderFilter
         {
@@ -703,12 +735,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("MMSenderFilter");
                 informationText = "";
 
-                updateModelModificationTable();
+                updateModelModificationTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateModelModificationTable
+        /// Calls updateModelModificationTableAsync
         /// </summary>
         public string MMModelNameFilter
         {
@@ -722,7 +754,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("MMModelNameFilter");
                 informationText = "";
 
-                updateModelModificationTable();
+                updateModelModificationTableAsync();
             }
         }
 
@@ -740,7 +772,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Calls updateOptionModificationTable
+        /// Calls updateOptionModificationTableAsync
         /// </summary>
         public string OMSenderFilter
         {
@@ -754,12 +786,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("OMSenderFilter");
                 informationText = "";
 
-                updateOptionModificationTable();
+                updateOptionModificationTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateOptionModificationTable
+        /// Calls updateOptionModificationTableAsync
         /// </summary>
         public string OMOptionCodeFilter
         {
@@ -773,12 +805,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("OMOptionCodeFilter");
                 informationText = "";
 
-                updateOptionModificationTable();
+                updateOptionModificationTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateOptionModificationTable
+        /// Calls updateOptionModificationTableAsync
         /// </summary>
         public string OMBoxSizeFilter
         {
@@ -792,7 +824,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("OMBoxSizeFilter");
                 informationText = "";
 
-                updateOptionModificationTable();
+                updateOptionModificationTableAsync();
             }
         }
 
@@ -810,7 +842,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Calls updateOverrideTable
+        /// Calls updateOverrideTableAsync
         /// </summary>
         public string ORSenderFilter
         {
@@ -824,12 +856,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("ORSenderFilter");
                 informationText = "";
 
-                updateOverrideTable();
+                updateOverrideTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateOverrideTable
+        /// Calls updateOverrideTableAsync
         /// </summary>
         public string ORModelNameFilter
         {
@@ -843,7 +875,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("ORModelNameFilter");
                 informationText = "";
 
-                updateOverrideTable();
+                updateOverrideTableAsync();
             }
         }
 
@@ -872,13 +904,34 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
+            }
+        }
         #endregion
 
         #region Private Functions
+        private async void updateNewModelTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateNewModelTable());
+            loading = false;
+        }
+
         private void updateNewModelTable()
         {
             try
             {
+                System.Threading.Thread.Sleep(2000);
                 newModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter));
             }
             catch (Exception e)
@@ -888,10 +941,18 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        private async void updateNewOptionTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateNewOptionTable());
+            loading = false;
+        }
+
         private void updateNewOptionTable()
         {
             try
             {
+                System.Threading.Thread.Sleep(2000);
                 newOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewOptions(NOSenderFilter, NOOptionCodeFilter, NOBoxSizeFilter));
             }
             catch (Exception e)
@@ -901,24 +962,39 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        private async void updateModelModificationTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateModelModificationTable());
+            loading = false;
+        }
+
         private void updateModelModificationTable()
         {
             try
             {
-                newModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter));
+                System.Threading.Thread.Sleep(2000);
+                modifiedModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedModels(MMSenderFilter, MMModelNameFilter));
             }
             catch (Exception e)
             {
                 informationText = "There was a problem accessing the database";
                 Console.WriteLine(e);
             }
-            modifiedModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedModels(MMSenderFilter, MMModelNameFilter));
+        }
+
+        private async void updateOptionModificationTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateOptionModificationTable());
+            loading = false;
         }
 
         private void updateOptionModificationTable()
         {
             try
             {
+                System.Threading.Thread.Sleep(2000);
                 modifiedOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedOptions(OMSenderFilter, OMOptionCodeFilter, OMBoxSizeFilter));
             }
             catch (Exception e)
@@ -928,10 +1004,18 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        private async void updateOverrideTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateOverrideTable());
+            loading = false;
+        }
+
         private void updateOverrideTable()
         {
             try
             {
+                System.Threading.Thread.Sleep(2000);
                 overrides = new ObservableCollection<OverrideRequest>(_serviceProxy.getFilteredOverrideRequests(ORSenderFilter, ORModelNameFilter));
             }
             catch (Exception e)
