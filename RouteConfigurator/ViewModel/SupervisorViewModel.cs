@@ -18,7 +18,6 @@ namespace RouteConfigurator.ViewModel
     public class SupervisorViewModel : ViewModelBase
     {
         #region PrivateVariables
-
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
@@ -60,6 +59,8 @@ namespace RouteConfigurator.ViewModel
         private string _overrideFilter = "";
 
         private string _informationText = "";
+
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -95,12 +96,12 @@ namespace RouteConfigurator.ViewModel
                 goHomeAllowed = true;
             }
 
-            loadModelsCommand = new RelayCommand(updateModelTable);
+            loadModelsCommand = new RelayCommand(loadModels);
             addModelCommand = new RelayCommand(addModel);
             modifyModelCommand = new RelayCommand(modifyModel);
 
             addTimeTrialCommand = new RelayCommand(addTimeTrial);
-            deleteTTCommand = new RelayCommand(deleteTT);
+            deleteTTCommand = new RelayCommand(deleteTTAsyncCall);
 
             loadOptionsCommand = new RelayCommand(loadOptions);
             addOptionCommand = new RelayCommand(addOption);
@@ -116,10 +117,13 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region Commands
+        /// <summary>
+        /// Calls updateModelTableAsync
+        /// </summary>
         private void loadModels()
         {
             informationText = "";
-            updateModelTable();
+            updateModelTableAsync();
         }
 
         private void addModel()
@@ -140,20 +144,50 @@ namespace RouteConfigurator.ViewModel
             addTimeTrial.Show();
         }
 
-        private void deleteTT()
+        private async void deleteTTAsyncCall()
         {
-            if (selectedTimeTrial != null)
+            loading = true;
+            if (await Task.Run(() => deleteTT()))
             {
-                MessageBox.Show(
-                    string.Format("Placeholder for deleting: Time Trial {0} {1} \n" +
-                    "Not implemented yet", selectedTimeTrial.Model.Base, selectedTimeTrial.ProductionNumber));
+                await Task.Run(() => updateTTTable());
             }
+            loading = false;
         }
 
+        private bool deleteTT()
+        {
+            bool deleted = false;
+            if (selectedTimeTrial != null)
+            {
+                informationText = "";
+                if(MessageBox.Show(string.Format("Are you sure you would like to delete\n" +
+                                "Time Trial {0}{1} {2} \n", selectedTimeTrial.Model.Base, selectedTimeTrial.OptionsText, selectedTimeTrial.ProductionNumber), 
+                                "Delete Time Trial", MessageBoxButton.YesNo, MessageBoxImage.Exclamation, MessageBoxResult.Yes) == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        informationText = "Deleting Time Trial...";
+                        _serviceProxy.deleteTimeTrial(selectedTimeTrial);
+                        deleted = true;
+                        informationText = "";
+                    }
+                    catch (Exception e)
+                    {
+                        informationText = "There was a problem accessing the database";
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+            return deleted;
+        }
+
+        /// <summary>
+        /// Calls updateOptionTableAsync
+        /// </summary>
         private void loadOptions()
         {
             informationText = "";
-            updateOptionTable();
+            updateOptionTableAsync();
         }
 
         private void addOption()
@@ -168,10 +202,13 @@ namespace RouteConfigurator.ViewModel
             modifyOption.Show();
         }
 
+        /// <summary>
+        /// Calls updateOverrideTableAsync
+        /// </summary>
         private void loadOverrides()
         {
             informationText = "";
-            updateOverrideTable();
+            updateOverrideTableAsync();
         }
 
         private void overrideModel()
@@ -240,7 +277,6 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService.NavigateTo("HomeView");
         }
-
         #endregion
 
         #region Public Variables
@@ -272,7 +308,7 @@ namespace RouteConfigurator.ViewModel
 
         /// <summary>
         /// Sets TTVisible based on if model is null
-        /// Updates time trials list
+        /// Calls updateTTTableAsync 
         /// </summary>
         public Model.Model selectedModel
         {
@@ -288,18 +324,22 @@ namespace RouteConfigurator.ViewModel
                 if (value != null)
                 {
                     TTVisible = true;
-                    updateTTTable();
+                    updateTTTableAsync();
                 }
                 else
                 {
                     TTVisible = false;
                     timeTrials.Clear();
+
+                    averageProdTime = 0;
+                    averageDriveTime = 0;
+                    averageAVTime = 0;
                 }
             }
         }
 
         /// <summary>
-        /// Calls updateFilter
+        /// Calls updateModelTableAsync
         /// </summary>
         public string modelFilter
         {
@@ -312,12 +352,13 @@ namespace RouteConfigurator.ViewModel
                 _modelFilter = value.ToUpper();
                 RaisePropertyChanged("modelFilter");
                 informationText = "";
-                updateModelTable();
+
+                updateModelTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateFilter
+        /// Calls updateModelTableAsync
         /// </summary>
         public string boxSizeFilter
         {
@@ -330,7 +371,8 @@ namespace RouteConfigurator.ViewModel
                 _boxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("boxSizeFilter");
                 informationText = "";
-                updateModelTable();
+
+                updateModelTableAsync();
             }
         }
 
@@ -348,7 +390,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Calls updateOptionFilter
+        /// Calls updateOptionTableAsync
         /// </summary>
         public string optionFilter
         {
@@ -361,12 +403,13 @@ namespace RouteConfigurator.ViewModel
                 _optionFilter = value.ToUpper();
                 RaisePropertyChanged("optionFilter");
                 informationText = "";
-                updateOptionTable();
+
+                updateOptionTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateOptionFilter
+        /// Calls updateOptionTableAsync
         /// </summary>
         public string optionBoxSizeFilter
         {
@@ -379,7 +422,8 @@ namespace RouteConfigurator.ViewModel
                 _optionBoxSizeFilter = value.ToUpper();
                 RaisePropertyChanged("optionBoxSizeFilter");
                 informationText = "";
-                updateOptionTable();
+
+                updateOptionTableAsync();
             }
         }
 
@@ -423,7 +467,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Calls updateTTFilter
+        /// Calls updateTTTableAsync
         /// </summary>
         public bool optionTextChecked
         {
@@ -436,12 +480,13 @@ namespace RouteConfigurator.ViewModel
                 _optionTextChecked = value;
                 RaisePropertyChanged("optionTextChecked");
                 informationText = "";
-                updateTTTable();
+
+                updateTTTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateTTFilter
+        /// Calls updateTTTableAsync
         /// </summary>
         public string optionTextFilter
         {
@@ -454,12 +499,13 @@ namespace RouteConfigurator.ViewModel
                 _optionTextFilter = value.ToUpper();
                 RaisePropertyChanged("optionTextFilter");
                 informationText = "";
-                updateTTTable();
+
+                updateTTTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateTTFilter
+        /// Calls updateTTTableAsync
         /// </summary>
         public string salesFilter
         {
@@ -472,12 +518,13 @@ namespace RouteConfigurator.ViewModel
                 _salesFilter = value;
                 RaisePropertyChanged("salesFilter");
                 informationText = "";
-                updateTTTable();
+
+                updateTTTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateTTFilter
+        /// Calls updateTTTableAsync
         /// </summary>
         public string productionNumFilter
         {
@@ -490,7 +537,8 @@ namespace RouteConfigurator.ViewModel
                 _productionNumFilter = value;
                 RaisePropertyChanged("productionNumFilter");
                 informationText = "";
-                updateTTTable();
+
+                updateTTTableAsync();
             }
         }
 
@@ -560,7 +608,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Updates active overrides list
+        /// Calls updateOverrideTableAsync 
         /// </summary>
         public string overrideFilter
         {
@@ -574,7 +622,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("overrideFilter");
                 informationText = "";
 
-                updateOverrideTable();
+                updateOverrideTableAsync();
             }
         }
 
@@ -590,9 +638,29 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
+            }
+        }
         #endregion
 
         #region Private Functions
+        private async void updateModelTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateModelTable());
+            loading = false;
+        }
+
         /// <summary>
         /// Updates the model list to only show models with the specified filters
         /// </summary>
@@ -600,13 +668,22 @@ namespace RouteConfigurator.ViewModel
         {
             try
             {
+                informationText = "Retrieving models...";
                 models = new ObservableCollection<Model.Model>(_serviceProxy.getFilteredModels(modelFilter, boxSizeFilter));
+                informationText = "";
             }
             catch (Exception e)
             {
                 informationText = "There was a problem accessing the database";
                 Console.WriteLine(e);
             }
+        }
+
+        private async void updateOptionTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateOptionTable());
+            loading = false;
         }
 
         /// <summary>
@@ -616,13 +693,22 @@ namespace RouteConfigurator.ViewModel
         {
             try
             {
+                informationText = "Retrieving options...";
                 options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter, false));
+                informationText = "";
             }
             catch (Exception e)
             {
                 informationText = "There was a problem accessing the database";
                 Console.WriteLine(e);
             }
+        }
+
+        private async void updateTTTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateTTTable());
+            loading = false;
         }
 
         /// <summary>
@@ -633,11 +719,10 @@ namespace RouteConfigurator.ViewModel
         {
             try
             {
-                if (selectedModel != null)
-                {
-                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter, optionTextChecked));
-                    calcTTAverages();
-                }
+                informationText = "Retrieving time trials...";
+                timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter, optionTextChecked));
+                calcTTAverages();
+                informationText = "";
             }
             catch (Exception e)
             {
@@ -670,11 +755,20 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        private async void updateOverrideTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateOverrideTable());
+            loading = false;
+        }
+
         private void updateOverrideTable()
         {
             try
             {
-                overrides =new ObservableCollection<Override>(_serviceProxy.getFilteredOverrides(overrideFilter));
+                informationText = "Retrieving overrides...";
+                overrides = new ObservableCollection<Override>(_serviceProxy.getFilteredOverrides(overrideFilter));
+                informationText = "";
             }
             catch (Exception e)
             {

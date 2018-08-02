@@ -72,5 +72,7 @@ namespace RouteConfigurator.Model
 
         void updateModification(Modification modification);
         void updateOverrideRequest(OverrideRequest overrideRequest);
+
+        void deleteTimeTrial(TimeTrial tt);
     }
 }

@@ -701,5 +701,15 @@ namespace RouteConfigurator.Design
                 context.SaveChanges();
             }
         }
+
+        public void deleteTimeTrial(TimeTrial tt)
+        {
+            using (context = new RouteConfiguratorDB())
+            {
+                TimeTrial timeTrial = context.TimeTrials.Find(tt.ProductionNumber);
+                context.TimeTrials.Remove(timeTrial);
+                context.SaveChanges();
+            }
+        }
     }
 }

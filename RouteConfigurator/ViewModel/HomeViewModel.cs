@@ -55,8 +55,11 @@ namespace RouteConfigurator.ViewModel
         private string _productionTimeText;
         private string _timeSearchModelNumber;
 
+        private Model.Model _model;
+
         private TimeTrial _selectedTimeTrial;
         private ObservableCollection<TimeTrial> _timeTrials = new ObservableCollection<TimeTrial>();
+
         /// <summary>
         /// Average time for all of the time trials loaded for that model
         /// </summary>
@@ -64,7 +67,7 @@ namespace RouteConfigurator.ViewModel
 
         private string _informationText;
 
-        private Model.Model _model;
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -89,11 +92,12 @@ namespace RouteConfigurator.ViewModel
 
         #region Commands
         /// <summary>
-        /// see searchTimeTrials
+        /// Calls modelNumberSections 
         /// </summary>
         private void timeSearch()
         {
             modelNumberSections(timeSearchModelNumber);
+            //modelNumberSectionsCall(timeSearchModelNumber);
         }
 
         private void supervisorLogin()
@@ -110,7 +114,7 @@ namespace RouteConfigurator.ViewModel
         #region Public Variables
         /// <summary>
         /// Sets timeSearchModelNumber to the entered model number as well
-        /// Calls searchModel
+        /// Calls searchModelCall
         /// </summary>
         public string modelNumber 
         {
@@ -123,6 +127,7 @@ namespace RouteConfigurator.ViewModel
                 _modelNumber = value.ToUpper();
                 RaisePropertyChanged("modelNumber");
                 informationText = "";
+
                 timeSearchModelNumber = modelNumber;
                 searchModel();
             }
@@ -181,6 +186,8 @@ namespace RouteConfigurator.ViewModel
                 _timeSearchModelNumber = value.ToUpper();
                 RaisePropertyChanged("timeSearchModelNumber");
                 informationText = "";
+
+                //modelNumberSectionsCall(timeSearchModelNumber);
                 modelNumberSections(timeSearchModelNumber);
             }
         }
@@ -249,49 +256,32 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
+            }
+        }
         #endregion
 
         #region Private Functions
-
-        /// <summary>
-        /// Looks for and updates the information for the entered model number
-        /// Calls updateModelText
-        /// </summary>
-        private void searchModel()
+        private async void modelNumberSectionsCall(string model)
         {
+            loading = true;
+            await modelNumberSectionsAsync(model);
+            loading = false;
+        }
 
-            if (string.IsNullOrWhiteSpace(_modelBase))
-            {
-                routeText = "";
-                prodSupCodeText = "";
-                productionTimeText = "";
-                return;
-            }
-            try
-            {
-                //Retrieves a model from the database
-                model = _serviceProxy.getModel(_modelBase);
-
-                if (model != null)
-                {
-                    updateModelText();
-
-                    informationText = "Model loaded";
-                }
-                else
-                {
-                    informationText = "Model not found";
-
-                    routeText = string.Format("N/A");
-                    prodSupCodeText = string.Format("N/A");
-                    productionTimeText = string.Format("N/A");
-                }
-            }
-            catch (Exception e)
-            {
-                informationText = "There was a problem accessing the database.";
-                Console.WriteLine(e.Message);
-            }
+        private Task modelNumberSectionsAsync(string model)
+        {
+            return Task.Run(() => modelNumberSections(model));
         }
 
         /// <summary>
@@ -364,6 +354,131 @@ namespace RouteConfigurator.ViewModel
                     }
                 }
                 searchTimeTrials(_modelBase, _optionsList);
+            }
+        }
+
+        /// <summary>
+        /// Looks for time trials for the given model
+        /// Calls calcAverageTime
+        /// </summary>
+        /// <param name="model"> model number to search for </param>
+        /// <param name="options"> list of options wanted for the model </param>
+        private void searchTimeTrials(string model, List<string> options)
+        {
+            //Reset the information
+            timeTrials.Clear();
+            averageTime = 0;
+
+            if (!string.IsNullOrWhiteSpace(model))
+            {
+                try
+                {
+                    //Retrieve timeTrials from the database
+                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getTimeTrials(model, options));
+
+                    if (timeTrials.Count() > 0)
+                    {
+                        informationText = "Time trials loaded";
+                        calcAverageTime();
+                    }
+                    else
+                    {
+                        informationText = "No time trials for this model exist";
+                    }
+                }catch(Exception e)
+                {
+                    informationText = "There was a problem accessing the database.";
+                    Console.WriteLine(e.Message);
+                }
+            }
+            else
+            {
+                informationText = "Please enter model number";
+            }
+        }
+
+        /// <summary>
+        /// Calculates the average time for all of the time trials for the entered model
+        /// </summary>
+        private void calcAverageTime()
+        {
+            decimal sum = 0;
+            decimal count = 0;
+
+            foreach(TimeTrial timeTrial in timeTrials)
+            {
+                sum += timeTrial.TotalTime;
+                count++;
+            }
+
+            averageTime = sum/count;
+        }
+
+        /// <summary>
+        /// Calls searchModleAsync
+        /// </summary>
+        private async void searchModelCall()
+        {
+            loading = true;
+            await searchModelAsync();
+            loading = false;
+        }
+
+        /// <summary>
+        /// Calls searchModel
+        /// </summary>
+        /// <returns></returns>
+        private Task searchModelAsync()
+        {
+            return Task.Run(() => searchModel());
+        }
+
+        /// <summary>
+        /// Looks for and updates the information for the entered model number
+        /// Calls updateModelText
+        /// </summary>
+        private void searchModel()
+        {
+            routeText = "";
+            prodSupCodeText = "";
+            productionTimeText = "";
+
+            if (string.IsNullOrWhiteSpace(_modelBase))
+            {
+                return;
+            }
+            try
+            {
+                loading = true;
+
+                System.Threading.Thread.Sleep(5000);        ///TESTING DELETE THIS AFTER I AM DONE TESTING
+
+                //Retrieves a model from the database
+                model = _serviceProxy.getModel(_modelBase);
+
+                if (model != null)
+                {
+                    updateModelText();
+
+                    informationText = "Model loaded";
+                }
+                else
+                {
+                    informationText = "Model not found";
+
+                    routeText = string.Format("N/A");
+                    prodSupCodeText = string.Format("N/A");
+                    productionTimeText = string.Format("N/A");
+                }
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database.";
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                loading = false;
             }
         }
 
@@ -561,62 +676,6 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        /// <summary>
-        /// Looks for time trials for the given model
-        /// Calls calcAverageTime
-        /// </summary>
-        /// <param name="model"> model number to search for </param>
-        /// <param name="options"> list of options wanted for the model </param>
-        private void searchTimeTrials(string model, List<string> options)
-        {
-            //Reset the information
-            timeTrials.Clear();
-            averageTime = 0;
-
-            if (!string.IsNullOrWhiteSpace(model))
-            {
-                try
-                {
-                    //Retrieve timeTrials from the database
-                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getTimeTrials(model, options));
-
-                    if (timeTrials.Count() > 0)
-                    {
-                        informationText = "Time trials loaded";
-                        calcAverageTime();
-                    }
-                    else
-                    {
-                        informationText = "No time trials for this model exist";
-                    }
-                }catch(Exception e)
-                {
-                    informationText = "There was a problem accessing the database.";
-                    Console.WriteLine(e.Message);
-                }
-            }
-            else
-            {
-                informationText = "Please enter model number";
-            }
-        }
-
-        /// <summary>
-        /// Calculates the average time for all of the time trials for the entered model
-        /// </summary>
-        private void calcAverageTime()
-        {
-            decimal sum = 0;
-            decimal count = 0;
-
-            foreach(TimeTrial timeTrial in timeTrials)
-            {
-                sum += timeTrial.TotalTime;
-                count++;
-            }
-
-            averageTime = sum/count;
-        }
         #endregion
     }
 }
