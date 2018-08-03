@@ -40,6 +40,8 @@ namespace RouteConfigurator.ViewModel
         private ObservableCollection<OverrideRequest> _overridesToSubmit = new ObservableCollection<OverrideRequest>();
 
         private string _informationText;
+
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -55,12 +57,19 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
-            addOverrideCommand = new RelayCommand(addOverride);
-            submitCommand = new RelayCommand(submit);
+            addOverrideCommand = new RelayCommand(addOverrideAsync);
+            submitCommand = new RelayCommand(submitAsync);
         }
         #endregion
 
         #region Commands
+        private async void addOverrideAsync()
+        {
+            loading = true;
+            await Task.Run(() => addOverride());
+            loading = false;
+        }
+
         /// <summary>
         /// Adds the information as an override to the ready to submit list
         /// </summary>
@@ -84,9 +93,21 @@ namespace RouteConfigurator.ViewModel
                     ReviewDate = new DateTime(1900, 1, 1),
                     Reviewer = ""
                 };
-                
-                _overridesToSubmit.Add(ov);
+
+                // Since the observable collection was created on the UI thread 
+                // we have to add the override to the list using a delegate function.
+                App.Current.Dispatcher.Invoke(delegate
+                {
+                    overridesToSubmit.Add(ov);
+                });
             }
+        }
+
+        private async void submitAsync()
+        {
+            loading = true;
+            await Task.Run(() => submit());
+            loading = false;
         }
 
         /// <summary>
@@ -100,6 +121,7 @@ namespace RouteConfigurator.ViewModel
             {
                 try
                 {
+                    informationText = "Submitting overrides...";
                     foreach (OverrideRequest ov in overridesToSubmit)
                     {
                         _serviceProxy.addOverrideRequest(ov);
@@ -112,15 +134,17 @@ namespace RouteConfigurator.ViewModel
                     return;
                 }
                 //Clear input boxes
-                overridesToSubmit.Clear();
-                modelText = "";
+                _modelText = "";
+                RaisePropertyChanged("modelText");
+
                 overrideTime = null; 
                 overrideRoute = null;
                 modelTime = null;
                 modelRoute = null;
                 description = "";
+                overridesToSubmit = new ObservableCollection<OverrideRequest>();
 
-                informationText = "Overrides have been submitted.  Waiting for director approval.";
+                informationText = "Overrides have been submitted.  Waiting for managerapproval.";
             }
             else
             {
@@ -132,7 +156,7 @@ namespace RouteConfigurator.ViewModel
         #region Public Variables
         /// <summary>
         /// Updates the model if the text has 8 or more characters
-        /// Calls updateModelTime and updateModelRoute
+        /// Calls findModelAsync
         /// </summary>
         public string modelText
         {
@@ -145,24 +169,9 @@ namespace RouteConfigurator.ViewModel
                 _modelText = value.ToUpper();
                 RaisePropertyChanged("modelText");
 
-                informationText = "";
-
                 if(modelText.Length >= 8)
                 {
-                    try
-                    {
-                        model = _serviceProxy.getModel(modelText.Substring(0, 8));
-                        if (model != null)
-                        {
-                            updateModelTime();
-                            updateModelRoute();
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        informationText = "There was a problem accessing the database";
-                        Console.WriteLine(e);
-                    }
+                    findModelAsync();
                 }
                 else
                 {
@@ -302,58 +311,59 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
+            }
+        }
         #endregion
 
         #region Private Functions
-        /// <summary>
-        /// Parses the model and creates a list of the options
-        /// </summary>
-        /// <returns> list of the options</returns>
-        private List<string> parseOptions()
+        private async void findModelAsync()
         {
-            List<string> optionsList = new List<string>();
+            loading = true;
+            await Task.Run(() => findModel());
+            loading = false;
+        }
 
-            if (modelText.Length > 8)
+        /// <summary>
+        /// Calls updateModelTime and updateModelRoute
+        /// </summary>
+        private void findModel()
+        {
+            try
             {
-                string options = modelText.Substring(8);
-
-                bool isPower = false;
-                bool isControl = false;
-                foreach (char c in options)
+                informationText = "Searching for model...";
+                model = _serviceProxy.getModel(modelText.Substring(0, 8));
+                if (model != null)
                 {
-                    if (c.Equals('P'))
-                    {
-                        isPower = true;
-                        isControl = false;
-                    }
-                    else if (c.Equals('T'))
-                    {
-                        isControl = true;
-                        isPower = false;
-                    }
-                    else if (c.Equals('S'))
-                    {
-                        //Ignoring software options
-                        break;
-                    }
-                    else
-                    {
-                        if (isPower)
-                        {
-                            optionsList.Add(string.Format("P{0}", c));
-                        }
-                        else if (isControl)
-                        {
-                            optionsList.Add(string.Format("T{0}", c));
-                        }
-                    }
+                    updateModelTime();
+                    updateModelRoute();
+                    informationText = "";
+                }
+                else
+                {
+                    informationText = "Model does not exist.";
                 }
             }
-            return optionsList;
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         /// <summary>
         /// Updates the model time with the calculated time for the model
+        /// Calls parseOptions
         /// </summary>
         private void updateModelTime()
         {
@@ -402,6 +412,53 @@ namespace RouteConfigurator.ViewModel
             }
 
             modelTime = totalTime;
+        }
+
+        /// <summary>
+        /// Parses the model and creates a list of the options
+        /// </summary>
+        /// <returns> list of the options</returns>
+        private List<string> parseOptions()
+        {
+            List<string> optionsList = new List<string>();
+
+            if (modelText.Length > 8)
+            {
+                string options = modelText.Substring(8);
+
+                bool isPower = false;
+                bool isControl = false;
+                foreach (char c in options)
+                {
+                    if (c.Equals('P'))
+                    {
+                        isPower = true;
+                        isControl = false;
+                    }
+                    else if (c.Equals('T'))
+                    {
+                        isControl = true;
+                        isPower = false;
+                    }
+                    else if (c.Equals('S'))
+                    {
+                        //Ignoring software options
+                        break;
+                    }
+                    else
+                    {
+                        if (isPower)
+                        {
+                            optionsList.Add(string.Format("P{0}", c));
+                        }
+                        else if (isControl)
+                        {
+                            optionsList.Add(string.Format("T{0}", c));
+                        }
+                    }
+                }
+            }
+            return optionsList;
         }
 
         /// <summary>

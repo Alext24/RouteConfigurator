@@ -41,6 +41,8 @@ namespace RouteConfigurator.ViewModel
         private string _description;
 
         private string _informationText;
+
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -57,22 +59,38 @@ namespace RouteConfigurator.ViewModel
             _navigationService = navigationService;
 
             loadedCommand = new RelayCommand(loaded);
-            submitCommand = new RelayCommand(submit);
+            submitCommand = new RelayCommand(submitAsync);
         }
         #endregion
 
         #region Commands
-        private void loaded()
+        private async void loaded()
+        {
+            loading = true;
+            await Task.Run(() => getOptionCodes());
+            loading = false;
+        }
+
+        private void getOptionCodes()
         {
             try
             {
+                informationText = "Loading option codes...";
                 optionCodes = new ObservableCollection<string>(_serviceProxy.getOptionCodes());
+                informationText = "";
             }
             catch (Exception e)
             {
                 informationText = "There was a problem accessing the database";
                 Console.WriteLine(e);
             }
+        }
+        
+        private async void submitAsync()
+        {
+            loading = true;
+            await Task.Run(() => submit());
+            loading = false;
         }
 
         /// <summary>
@@ -88,6 +106,7 @@ namespace RouteConfigurator.ViewModel
             {
                 try
                 {
+                    informationText = "Submitting option modifications...";
                     foreach (Option option in optionsFound)
                     {
                         Modification modifiedOption = new Modification()
@@ -114,14 +133,17 @@ namespace RouteConfigurator.ViewModel
                     }
 
                     //Clear input boxes
-                    selectedOptionCode = null;
-                    boxSize = "";
-                    optionsFound.Clear();
+                    _selectedOptionCode = null;
+                    RaisePropertyChanged("selectedOptionCode");
+                    _boxSize = "";
+                    RaisePropertyChanged("boxSize");
+                    optionsFound = new ObservableCollection<Option>();
+
                     newTime = null;
                     newName = null;
                     description = "";
 
-                    informationText = "Option modifications have been submitted.  Waiting for director approval.";
+                    informationText = "Option modifications have been submitted.  Waiting for manager approval.";
                 }
                 catch (Exception e)
                 {
@@ -148,7 +170,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Calls updateOptionsTable
+        /// Calls updateOptionsTableAsync
         /// </summary>
         public string selectedOptionCode
         {
@@ -162,12 +184,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("selectedOptionCode");
                 informationText = "";
 
-                updateOptionsTable();
+                updateOptionsTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateOptionsTable
+        /// Calls updateOptionsTableAsync
         /// </summary>
         public string boxSize
         {
@@ -181,12 +203,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("boxSize");
                 informationText = "";
 
-                updateOptionsTable();
+                updateOptionsTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateOptionsTable
+        /// Calls updateOptionsTableAsync
         /// </summary>
         public bool exactBoxSize
         {
@@ -200,7 +222,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("exactBoxSize");
                 informationText = "";
 
-                updateOptionsTable();
+                updateOptionsTableAsync();
             }
         }
 
@@ -285,22 +307,51 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
+            }
+        }
         #endregion
 
         #region Private Functions 
+        private async void updateOptionsTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateOptionsTable());
+            loading = false;
+        }
+
         /// <summary>
         /// Updates the options table with the filtered information
         /// </summary>
         private void updateOptionsTable()
         {
-            try
+            if (string.IsNullOrWhiteSpace(selectedOptionCode) && string.IsNullOrWhiteSpace(boxSize))
             {
-                optionsFound = new ObservableCollection<Option>(_serviceProxy.getNumOptionsFound(selectedOptionCode, boxSize, exactBoxSize));
+                optionsFound = new ObservableCollection<Option>();
             }
-            catch (Exception e)
+            else
             {
-                informationText = "There was a problem accessing the database";
-                Console.WriteLine(e);
+                try
+                {
+                    informationText = "Loading options...";
+                    optionsFound = new ObservableCollection<Option>(_serviceProxy.getNumOptionsFound(selectedOptionCode, boxSize, exactBoxSize));
+                    informationText = "";
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                }
             }
         }
 

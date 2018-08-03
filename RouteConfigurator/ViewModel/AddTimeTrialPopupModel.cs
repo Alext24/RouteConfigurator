@@ -43,6 +43,8 @@ namespace RouteConfigurator.ViewModel
         private ObservableCollection<TimeTrialsOptionTime> _TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
 
         private string _informationText;
+
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -60,17 +62,26 @@ namespace RouteConfigurator.ViewModel
             _navigationService = navigationService;
 
             loadedCommand = new RelayCommand(loaded);
-            addTTCommand = new RelayCommand(addTT);
-            submitCommand = new RelayCommand(submit);
+            addTTCommand = new RelayCommand(addTTAsync);
+            submitCommand = new RelayCommand(submitAsync);
         }
         #endregion
 
         #region Commands
-        private void loaded()
+        private async void loaded()
+        {
+            loading = true;
+            await Task.Run(() => getModels());
+            loading = false;
+        }
+
+        private void getModels()
         {
             try
             {
+                informationText = "Loading models...";
                 models = new ObservableCollection<Model.Model>(_serviceProxy.getModels());
+                informationText = "";
             }
             catch (Exception e)
             {
@@ -79,15 +90,23 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        private async void addTTAsync()
+        {
+            loading = true;
+            await Task.Run(() => addTT());
+            loading = false;
+        }
+
         /// <summary>
         /// Adds a time trial to the list to be submitted
-        /// Calls checkValid
+        /// Calls checkValid and getOptionsText
         /// </summary>
         private void addTT()
         {
             informationText = "";
             if (checkValid())
             {
+                informationText = "Adding time trial...";
                 TimeTrial newTT = new TimeTrial()
                 {
                     ProductionNumber = (int)productionNum,
@@ -116,13 +135,14 @@ namespace RouteConfigurator.ViewModel
 
                 newTT.OptionsText = getOptionsText(newTT.TTOptionTimes);
 
-                timeTrials.Add(newTT);
+                // Since the observable collection was created on the UI thread 
+                // we have to add the override to the list using a delegate function.
+                App.Current.Dispatcher.Invoke(delegate
+                {
+                    timeTrials.Add(newTT);
+                });
 
-                // Clear input boxes
-
-                //modelText = "";
-                //date = null;
-                //salesOrder = null;
+                // Clear necessary input boxes
                 productionNum++;
                 driveTime = null;
                 AVTime = null;
@@ -131,6 +151,13 @@ namespace RouteConfigurator.ViewModel
 
                 informationText = "Time Trial added";
             }
+        }
+
+        private async void submitAsync()
+        {
+            loading = true;
+            await Task.Run(() => submit());
+            loading = false;
         }
 
         /// <summary>
@@ -144,6 +171,7 @@ namespace RouteConfigurator.ViewModel
             {
                 try
                 {
+                    informationText = "Submitting time trials...";
                     _serviceProxy.addTimeTrials(timeTrials);
                 }
                 catch (Exception e)
@@ -153,7 +181,6 @@ namespace RouteConfigurator.ViewModel
                     return;
                 }
                 //Clear input boxes
-                timeTrials.Clear();
                 selectedModel = null;
                 date = null;
                 salesOrder = null;
@@ -161,6 +188,8 @@ namespace RouteConfigurator.ViewModel
                 driveTime = null;
                 AVTime = null;
                 numOptions = null;
+
+                timeTrials = new ObservableCollection<TimeTrial>();
 
                 informationText = "Time Trials submitted to database.";
             }
@@ -338,7 +367,7 @@ namespace RouteConfigurator.ViewModel
                 else
                 {
                     hasOptions = false;
-                    TTOptions.Clear();
+                    TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
                 }
             }
         }
@@ -379,6 +408,19 @@ namespace RouteConfigurator.ViewModel
             {
                 _informationText = value;
                 RaisePropertyChanged("informationText");
+            }
+        }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
             }
         }
         #endregion

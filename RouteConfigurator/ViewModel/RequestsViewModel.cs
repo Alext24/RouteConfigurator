@@ -45,6 +45,8 @@ namespace RouteConfigurator.ViewModel
         private string _ORReviewerFilter = "";
 
         private string _informationText;
+
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -66,16 +68,8 @@ namespace RouteConfigurator.ViewModel
         #region Commands
         private void loaded()
         {
-            try
-            {
-                modifications = new ObservableCollection<Modification>(_serviceProxy.getModifications());
-                overrides = new ObservableCollection<OverrideRequest>(_serviceProxy.getOverrideRequests());
-            }
-            catch (Exception e)
-            {
-                informationText = "There was a problem accessing the database";
-                Console.WriteLine(e);
-            }
+            updateModificationsTableAsync();
+            updateOverridesTableAsync();
         }
         #endregion
 
@@ -100,6 +94,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateModificationsTableAsync
+        /// </summary>
         public string MStateFilter
         {
             get { return _MStateFilter; }
@@ -109,10 +106,13 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("MStateFilter");
                 informationText = "";
 
-                updateModificationsTable();
+                updateModificationsTableAsync();
             }
         }
 
+        /// <summary>
+        /// Calls updateModificationsTableAsync
+        /// </summary>
         public string MBaseFilter
         {
             get { return _MBaseFilter; }
@@ -122,10 +122,13 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("MBaseFilter");
                 informationText = "";
 
-                updateModificationsTable();
+                updateModificationsTableAsync();
             }
         }
         
+        /// <summary>
+        /// Calls updateModificationsTableAsync
+        /// </summary>
         public string MBoxSizeFilter
         {
             get { return _MBoxSizeFilter; }
@@ -135,10 +138,13 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("MBoxSizeFilter");
                 informationText = "";
 
-                updateModificationsTable();
+                updateModificationsTableAsync();
             }
         }
 
+        /// <summary>
+        /// Calls updateModificationsTableAsync
+        /// </summary>
         public string MOptionCodeFilter
         {
             get { return _MOptionCodeFilter; }
@@ -148,10 +154,13 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("MOptionCodeFilter");
                 informationText = "";
 
-                updateModificationsTable();
+                updateModificationsTableAsync();
             }
         }
 
+        /// <summary>
+        /// Calls updateModificationsTableAsync
+        /// </summary>
         public string MSenderFilter
         {
             get { return _MSenderFilter; }
@@ -161,10 +170,13 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("MSenderFilter");
                 informationText = "";
 
-                updateModificationsTable();
+                updateModificationsTableAsync();
             }
         }
 
+        /// <summary>
+        /// Calls updateModificationsTableAsync
+        /// </summary>
         public string MReviewerFilter
         {
             get { return _MReviewerFilter; }
@@ -174,7 +186,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("MReviewerFilter");
                 informationText = "";
 
-                updateModificationsTable();
+                updateModificationsTableAsync();
             }
         }
 
@@ -198,6 +210,9 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Calls updateOverridesTableAsync
+        /// </summary>
         public string ORStateFilter
         {
             get { return _ORStateFilter; }
@@ -207,10 +222,13 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("ORStateFilter");
                 informationText = "";
 
-                updateOverridesTable();
+                updateOverridesTableAsync();
             }
         }
 
+        /// <summary>
+        /// Calls updateOverridesTableAsync
+        /// </summary>
         public string ORModelNameFilter
         {
             get { return _ORModelNameFilter; }
@@ -220,10 +238,13 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("ORModelNameFilter");
                 informationText = "";
 
-                updateOverridesTable();
+                updateOverridesTableAsync();
             }
         }
 
+        /// <summary>
+        /// Calls updateOverridesTableAsync
+        /// </summary>
         public string ORSenderFilter
         {
             get { return _ORSenderFilter; }
@@ -233,10 +254,13 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("ORSenderFilter");
                 informationText = "";
 
-                updateOverridesTable();
+                updateOverridesTableAsync();
             }
         }
 
+        /// <summary>
+        /// Calls updateOverridesTableAsync
+        /// </summary>
         public string ORReviewerFilter
         {
             get { return _ORReviewerFilter; }
@@ -246,7 +270,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("ORReviewerFilter");
                 informationText = "";
 
-                updateOverridesTable();
+                updateOverridesTableAsync();
             }
         }
 
@@ -262,9 +286,31 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
+            }
+        }
         #endregion
 
         #region Private Functions
+        private async void updateModificationsTableAsync()
+        {
+            loading = true;
+            informationText = "Loading tables...";
+            await Task.Run(() => updateModificationsTable());
+            loading = false;
+            informationText = "";
+        }
+
         private void updateModificationsTable()
         {
             int stateFilter = getStateFilter(MStateFilter);
@@ -294,6 +340,15 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        private async void updateOverridesTableAsync()
+        {
+            loading = true;
+            informationText = "Loading tables...";
+            await Task.Run(() => updateOverridesTable());
+            loading = false;
+            informationText = "";
+        }
+
         private void updateOverridesTable()
         {
             int stateFilter = getStateFilter(ORStateFilter);
@@ -320,7 +375,7 @@ namespace RouteConfigurator.ViewModel
             {
                 case ('W'): //Waiting
                     {
-                        stateFilter = 0; //Should also include 3 and 4
+                        stateFilter = 0; //Also includes 3 and 4
                         break;
                     }
                 case ('A'): //Approved

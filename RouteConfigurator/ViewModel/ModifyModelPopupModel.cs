@@ -30,8 +30,6 @@ namespace RouteConfigurator.ViewModel
 
         private string _selectedDrive = "";
 
-        private bool _driveNotSelected = true;
-
         private string _AVText = "";
 
         private string _boxSize = "";
@@ -49,6 +47,8 @@ namespace RouteConfigurator.ViewModel
         private string _description;
 
         private string _informationText;
+
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -65,22 +65,38 @@ namespace RouteConfigurator.ViewModel
             _navigationService = navigationService;
 
             loadedCommand = new RelayCommand(loaded);
-            submitCommand = new RelayCommand(submit);
+            submitCommand = new RelayCommand(submitAsync);
         }
         #endregion
 
         #region Commands
-        private void loaded()
+        private async void loaded()
+        {
+            loading = true;
+            await Task.Run(() => getDriveTypes());
+            loading = false;
+        }
+
+        private void getDriveTypes()
         {
             try
             {
+                informationText = "Loading drive types...";
                 driveTypes = new ObservableCollection<string>(_serviceProxy.getDriveTypes());
+                informationText = "";
             }
             catch (Exception e)
             {
                 informationText = "There was a problem accessing the database";
                 Console.WriteLine(e);
             }
+        }
+
+        private async void submitAsync()
+        {
+            loading = true;
+            await Task.Run(() => submit());
+            loading = false;
         }
 
         /// <summary>
@@ -126,14 +142,19 @@ namespace RouteConfigurator.ViewModel
                     }
 
                     //Clear input boxes
-                    selectedDrive = null;
-                    AVText = "";
-                    boxSize = "";
-                    modelsFound.Clear();
+                    _selectedDrive = null;
+                    RaisePropertyChanged("selectedDrive");
+                    _AVText = "";
+                    RaisePropertyChanged("AVText");
+                    _boxSize = "";
+                    RaisePropertyChanged("boxSize");
+
+                    modelsFound = new ObservableCollection<Model.Model>();
                     newDriveTime = null;
                     newAVTime = null;
                     description = "";
-                    informationText = "Model modifications have been submitted.  Waiting for director approval.";
+
+                    informationText = "Model modifications have been submitted.  Waiting for manager approval.";
                 }
                 catch (Exception e)
                 {
@@ -159,8 +180,7 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Updates driveNotSelected
-        /// Calls updateModelsTable
+        /// Calls updateModelsTableAsync
         /// </summary>
         public string selectedDrive
         {
@@ -174,26 +194,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("selectedDrive");
                 informationText = "";
 
-                updateModelsTable();
-                driveNotSelected = value != null ? false : true;
-            }
-        }
-
-        public bool driveNotSelected
-        {
-            get
-            {
-                return _driveNotSelected;
-            }
-            set
-            {
-                _driveNotSelected = value;
-                RaisePropertyChanged("driveNotSelected");
+                updateModelsTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateModelsTable
+        /// Calls updateModelsTableAsync
         /// </summary>
         public string AVText
         {
@@ -207,12 +213,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("AVText");
                 informationText = "";
 
-                updateModelsTable();
+                updateModelsTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateModelsTable
+        /// Calls updateModelsTableAsync
         /// </summary>
         public string boxSize
         {
@@ -226,12 +232,12 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("boxSize");
                 informationText = "";
 
-                updateModelsTable();
+                updateModelsTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateModelsTable
+        /// Calls updateModelsTableAsync
         /// </summary>
         public bool exactBoxSize
         {
@@ -245,7 +251,7 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("exactBoxSize");
                 informationText = "";
 
-                updateModelsTable();
+                updateModelsTableAsync();
             }
         }
 
@@ -286,6 +292,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _newDriveTime = value;
                 RaisePropertyChanged("newDriveTime");
+                informationText = "";
             }
         }
 
@@ -299,6 +306,7 @@ namespace RouteConfigurator.ViewModel
             {
                 _newAVTime = value;
                 RaisePropertyChanged("newAVTime");
+                informationText = "";
             }
         }
 
@@ -328,9 +336,29 @@ namespace RouteConfigurator.ViewModel
                 RaisePropertyChanged("informationText");
             }
         }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
+            }
+        }
         #endregion
 
         #region Private Functions 
+        private async void updateModelsTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateModelsTable());
+            loading = false;
+        }
+
         /// <summary>
         /// Updates the models table with the filtered information
         /// </summary>
@@ -338,13 +366,15 @@ namespace RouteConfigurator.ViewModel
         {
             if(string.IsNullOrWhiteSpace(selectedDrive) && string.IsNullOrWhiteSpace(AVText) && string.IsNullOrWhiteSpace(boxSize))
             {
-                modelsFound.Clear();
+                modelsFound = new ObservableCollection<Model.Model>();
             }
             else
             {
                 try
                 {
+                    informationText = "Loading models...";
                     modelsFound = new ObservableCollection<Model.Model>(_serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize, exactBoxSize));
+                    informationText = "";
                 }
                 catch (Exception e)
                 {

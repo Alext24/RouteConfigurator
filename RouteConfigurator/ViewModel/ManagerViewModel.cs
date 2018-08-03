@@ -108,13 +108,6 @@ namespace RouteConfigurator.ViewModel
             secondWindow.MinWidth = 1400;
         }
 
-        private async void refreshTablesAsync()
-        {
-            loading = true;
-            await Task.Run(() => refreshTables());
-            loading = false;
-        }
-
         private void refreshTables()
         {
             informationText = "";
@@ -159,6 +152,7 @@ namespace RouteConfigurator.ViewModel
             loading = true;
             await Task.Run(() => submitChecked());
             loading = false;
+            refreshTables();
         }
 
         private void submitChecked()
@@ -505,7 +499,6 @@ namespace RouteConfigurator.ViewModel
             }
 
             informationText = "";
-            refreshTables();
         }
 
         private void goBack()
@@ -923,15 +916,16 @@ namespace RouteConfigurator.ViewModel
         private async void updateNewModelTableAsync()
         {
             loading = true;
+            informationText = "Loading tables...";
             await Task.Run(() => updateNewModelTable());
             loading = false;
+            informationText = "";
         }
 
         private void updateNewModelTable()
         {
             try
             {
-                System.Threading.Thread.Sleep(2000);
                 newModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewModels(NMSenderFilter, NMBaseFilter, NMBoxSizeFilter));
             }
             catch (Exception e)
@@ -944,15 +938,16 @@ namespace RouteConfigurator.ViewModel
         private async void updateNewOptionTableAsync()
         {
             loading = true;
+            informationText = "Loading tables...";
             await Task.Run(() => updateNewOptionTable());
             loading = false;
+            informationText = "";
         }
 
         private void updateNewOptionTable()
         {
             try
             {
-                System.Threading.Thread.Sleep(2000);
                 newOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredNewOptions(NOSenderFilter, NOOptionCodeFilter, NOBoxSizeFilter));
             }
             catch (Exception e)
@@ -965,15 +960,16 @@ namespace RouteConfigurator.ViewModel
         private async void updateModelModificationTableAsync()
         {
             loading = true;
+            informationText = "Loading tables...";
             await Task.Run(() => updateModelModificationTable());
             loading = false;
+            informationText = "";
         }
 
         private void updateModelModificationTable()
         {
             try
             {
-                System.Threading.Thread.Sleep(2000);
                 modifiedModels = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedModels(MMSenderFilter, MMModelNameFilter));
             }
             catch (Exception e)
@@ -986,15 +982,16 @@ namespace RouteConfigurator.ViewModel
         private async void updateOptionModificationTableAsync()
         {
             loading = true;
+            informationText = "Loading tables...";
             await Task.Run(() => updateOptionModificationTable());
             loading = false;
+            informationText = "";
         }
 
         private void updateOptionModificationTable()
         {
             try
             {
-                System.Threading.Thread.Sleep(2000);
                 modifiedOptions = new ObservableCollection<Modification>(_serviceProxy.getFilteredModifiedOptions(OMSenderFilter, OMOptionCodeFilter, OMBoxSizeFilter));
             }
             catch (Exception e)
@@ -1007,15 +1004,16 @@ namespace RouteConfigurator.ViewModel
         private async void updateOverrideTableAsync()
         {
             loading = true;
+            informationText = "Loading tables...";
             await Task.Run(() => updateOverrideTable());
             loading = false;
+            informationText = "";
         }
 
         private void updateOverrideTable()
         {
             try
             {
-                System.Threading.Thread.Sleep(2000);
                 overrides = new ObservableCollection<OverrideRequest>(_serviceProxy.getFilteredOverrideRequests(ORSenderFilter, ORModelNameFilter));
             }
             catch (Exception e)

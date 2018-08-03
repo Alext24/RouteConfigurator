@@ -45,6 +45,8 @@ namespace RouteConfigurator.ViewModel
         private ObservableCollection<Option> _options = new ObservableCollection<Option>();
 
         private string _informationText;
+
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -59,11 +61,17 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
-            submitCommand = new RelayCommand(submit);
+            submitCommand = new RelayCommand(submitAsync);
         }
         #endregion
 
         #region Commands
+        private async void submitAsync()
+        {
+            loading = true;
+            await Task.Run(() => submit());
+            loading = false;
+        }
         /// <summary>
         /// Submits the new model modification to the database
         /// </summary>
@@ -71,6 +79,7 @@ namespace RouteConfigurator.ViewModel
         {
             if (checkValid())
             {
+                informationText = "Submitting model...";
                 Modification newModel = new Modification()
                 {
                     RequestDate = DateTime.Now,
@@ -94,7 +103,7 @@ namespace RouteConfigurator.ViewModel
                 try
                 {
                     _serviceProxy.addModificationRequest(newModel);
-                    informationText = "Model has been submitted.  Waiting for director approval.";
+                    informationText = "Model has been submitted.  Waiting for manager approval.";
                 }
                 catch (Exception e)
                 {
@@ -330,6 +339,19 @@ namespace RouteConfigurator.ViewModel
             {
                 _informationText = value;
                 RaisePropertyChanged("informationText");
+            }
+        }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
             }
         }
         #endregion

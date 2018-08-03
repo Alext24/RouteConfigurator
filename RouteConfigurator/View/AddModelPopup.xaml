@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RouteConfigurator.View"
         xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         MinHeight="550"
         MinWidth="850"
@@ -19,6 +20,16 @@
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
+
+            <Grid.Resources>
+                <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
+                <routeconfigurator:BooleanToVisiblityConverter x:Key="VisibilityConverter"/>
+            </Grid.Resources>
+
+            <Grid Panel.ZIndex="1" Height="100" Width="100">
+                <fa:ImageAwesome Icon="Spinner" Spin="True" 
+                                 Visibility="{Binding loading, Converter={StaticResource VisibilityConverter}}"/>
+            </Grid>
 
             <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
                 <Grid>
@@ -40,10 +51,6 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-
-                    <Grid.Resources>
-                        <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
-                    </Grid.Resources>
 
                     <!--Row 0 setup: Title-->
                     <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="ADD NEW MODEL"

@@ -35,6 +35,8 @@ namespace RouteConfigurator.ViewModel
         private ObservableCollection<Modification> _modificationsToSubmit = new ObservableCollection<Modification>();
 
         private string _informationText;
+
+        private bool _loading = false;
         #endregion
 
         #region RelayCommands
@@ -50,12 +52,19 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
-            addOptionCommand = new RelayCommand(addOption);
-            submitCommand = new RelayCommand(submit);
+            addOptionCommand = new RelayCommand(addOptionAsync);
+            submitCommand = new RelayCommand(submitAsync);
         }
         #endregion
 
         #region Commands
+        private async void addOptionAsync()
+        {
+            loading = true;
+            await Task.Run(() => addOption());
+            loading = false;
+        }
+
         /// <summary>
         /// Creates the new option modification and adds it to the options to submit list
         /// Calls checkValid
@@ -66,6 +75,7 @@ namespace RouteConfigurator.ViewModel
 
             if (checkValid())
             {
+                informationText = "Adding option...";
                 Modification mod = new Modification()
                 {
                     RequestDate = DateTime.Now,
@@ -85,12 +95,25 @@ namespace RouteConfigurator.ViewModel
                     OldOptionName = ""
                 };
 
-                modificationsToSubmit.Add(mod);
+                // Since the observable collection was created on the UI thread 
+                // we have to add the override to the list using a delegate function.
+                App.Current.Dispatcher.Invoke(delegate
+                {
+                    modificationsToSubmit.Add(mod);
+                });
 
                 //Clear input boxes
                 boxSize = "";
                 time = null;
+                informationText = "Option added.";
             }
+        }
+
+        private async void submitAsync()
+        {
+            loading = true;
+            await Task.Run(() => submit());
+            loading = false;
         }
 
         /// <summary>
@@ -104,6 +127,7 @@ namespace RouteConfigurator.ViewModel
             {
                 try
                 {
+                    informationText = "Submitting option modifications...";
                     foreach (Modification mod in modificationsToSubmit)
                     {
                         _serviceProxy.addModificationRequest(mod);
@@ -116,14 +140,15 @@ namespace RouteConfigurator.ViewModel
                     return;
                 }
                 //Clear input boxes
-                modificationsToSubmit.Clear();
                 optionCode = "";
                 boxSize = "";
                 time = null;
                 name = "";
                 description = "";
 
-                informationText = "Options have been submitted.  Waiting for director approval.";
+                modificationsToSubmit = new ObservableCollection<Modification>();
+
+                informationText = "Options have been submitted.  Waiting for manager approval.";
             }
             else
             {
@@ -228,6 +253,19 @@ namespace RouteConfigurator.ViewModel
             {
                 _informationText = value;
                 RaisePropertyChanged("informationText");
+            }
+        }
+
+        public bool loading
+        {
+            get
+            {
+                return _loading;
+            }
+            set
+            {
+                _loading = value;
+                RaisePropertyChanged("loading");
             }
         }
         #endregion
