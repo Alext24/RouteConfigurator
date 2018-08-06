@@ -44,8 +44,8 @@ namespace RouteConfigurator
 
                 time = hours + (minutes / 60);
             }
-            // Period format   12.25
-            else if (timeText.Contains("."))
+            // Decimal format   12.25 or 12
+            else
             {
                 try
                 {
