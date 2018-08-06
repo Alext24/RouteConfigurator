@@ -8,9 +8,9 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        MinHeight="550"
+        MinHeight="560"
         MinWidth="1200"
-        Height="550" 
+        Height="560" 
         Width="1200"
         Title="Add Time Trial"
         DataContext="{Binding AddTimeTrial, Source={StaticResource Locator}}">
@@ -44,10 +44,11 @@
                         <RowDefinition Height="auto"/>      <!--Row 0-->
                         <RowDefinition Height="auto"/>      <!--Row 1-->
                         <RowDefinition Height="auto"/>      <!--Row 2-->
-                        <RowDefinition Height="40"/>        <!--Row 3-->
+                        <RowDefinition Height="10"/>        <!--Row 3: spacing-->
                         <RowDefinition Height="auto"/>      <!--Row 4-->
-                        <RowDefinition Height="auto" MinHeight="160"/>      <!--Row 5-->
+                        <RowDefinition Height="10"/>        <!--Row 5-->
                         <RowDefinition Height="auto"/>      <!--Row 6-->
+                        <RowDefinition Height="*"/>      <!--Row 8-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -100,16 +101,13 @@
                     <DatePicker Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" MinWidth="80"
                                 SelectedDate="{Binding date}"/>
 
-                    <!--<TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" MinWidth="80"
-                             Text="{Binding date, StringFormat=d}"/>-->
-
                     <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
                              Text="{Binding salesOrder, TargetNullValue=''}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
                              Text="{Binding productionNum, TargetNullValue=''}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="4" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
+                    <TextBox Grid.Row="2" Grid.Column="4" FontSize="16" Margin="10 0" VerticalContentAlignment="Center" x:Name="DriveTimeInput"
                              Text="{Binding driveTime, TargetNullValue='', Converter={StaticResource TimeConverter}}"/>
 
                     <TextBox Grid.Row="2" Grid.Column="5" FontSize="16" Margin="10 0" VerticalContentAlignment="Center"
@@ -137,12 +135,21 @@
 
                     <!--Row 3 setup: Blank, Spacing-->
 
-                    <!--Row 4 setup: Time Trials to Submit Table Header-->
-                    <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="Time Trials to Add"
+                    <!--Row 4 setup: Total Time-->
+                    <TextBlock Grid.Row="4" Grid.Column="4" Text="Total Time:" HorizontalAlignment="Right" VerticalAlignment="Center"
+                               FontSize="16" Padding="0 0 10 0"/>
+
+                    <TextBox Grid.Row="4" Grid.Column="5" FontSize="16" Margin="10 0" VerticalContentAlignment="Center" Height="{Binding ElementName=DriveTimeInput, Path=ActualHeight}"
+                             Text="{Binding totalTime, TargetNullValue='', Converter={StaticResource TimeConverter}}"/>
+
+                    <!--Row 5 setup: Blank, Spacing-->
+
+                    <!--Row 6 setup: Time Trials to Submit Table Header-->
+                    <TextBlock Grid.Row="6" Grid.ColumnSpan="2" Text="Time Trials to Add"
                                FontSize="16" Padding="20 0"/>
 
-                    <!--Row 5 setup: Time Trials to Submit Table-->
-                    <DataGrid  Grid.Row="5" Grid.RowSpan="2" Grid.ColumnSpan="6" Height="215" Margin="10 0" VerticalAlignment="Top" AutoGenerateColumns="False"
+                    <!--Row 7 setup: Time Trials to Submit Table-->
+                    <DataGrid  Grid.Row="7" Grid.ColumnSpan="6" Margin="10 0" AutoGenerateColumns="False"
                                CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" VerticalScrollBarVisibility="Visible"
                                ItemsSource="{Binding timeTrials, UpdateSourceTrigger=PropertyChanged}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
@@ -182,8 +189,8 @@
                         </DataGrid.RowDetailsTemplate>
                     </DataGrid>
 
-                    <!--Row 6 setup: Submit Button-->
-                    <Button Grid.Row="6" Grid.Column="8" FontSize="16" Command="{Binding submitCommand}">
+                    <!--Row 7 setup: Submit Button-->
+                    <Button Grid.Row="7" Grid.Column="8" FontSize="16" Command="{Binding submitCommand}" VerticalAlignment="Bottom">
                         <Button.Content>
                             <StackPanel>
                                 <TextBlock TextAlignment="Center" Text="Submit"/>

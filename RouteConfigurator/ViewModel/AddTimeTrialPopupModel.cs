@@ -37,6 +37,9 @@ namespace RouteConfigurator.ViewModel
         private int? _productionNum;
         private decimal? _driveTime;
         private decimal? _AVTime;
+        private decimal? _totalTime;
+
+        private bool _haveOptionTimes = false;
 
         private int? _numOptions;
         private bool _hasOptions = false;
@@ -112,8 +115,8 @@ namespace RouteConfigurator.ViewModel
                     ProductionNumber = (int)productionNum,
                     SalesOrder = (int)salesOrder,
                     Date = (DateTime)date,
-                    DriveTime = (decimal)driveTime,
-                    AVTime = (decimal)AVTime,
+                    DriveTime = driveTime == null ? 0 : (decimal)driveTime,
+                    AVTime = AVTime == null ? 0 : (decimal)AVTime,
                     Model = selectedModel,
                     NumOptions = numOptions == null ? 0 : (int)numOptions,
                     TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(),
@@ -146,6 +149,7 @@ namespace RouteConfigurator.ViewModel
                 productionNum++;
                 driveTime = null;
                 AVTime = null;
+                totalTime = null;
                 numOptions = null;
                 TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
 
@@ -325,6 +329,20 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public decimal? totalTime 
+        {
+            get
+            {
+                return _totalTime;
+            }
+            set
+            {
+                _totalTime = value;
+                RaisePropertyChanged("totalTime");
+                informationText = "";
+            }
+        }
+
         /// <summary>
         /// Updates hasOptions if number of options is greater than 0
         /// Adds or removes list entries from TTOptions as necessary to match the quantity of options
@@ -432,15 +450,24 @@ namespace RouteConfigurator.ViewModel
         /// <returns>Total time</returns>
         private decimal calcTotalTime()
         {
-            decimal totalTime = 0;
+            decimal totTime = 0;
 
-            totalTime = (decimal)(driveTime + AVTime);
-            foreach(TimeTrialsOptionTime TTOption in TTOptions)
+            if (_haveOptionTimes && AVTime != null && AVTime > 0 && driveTime != null && driveTime > 0)
             {
-                totalTime += TTOption.Time;
+                totTime = (decimal)(driveTime + AVTime);
+                foreach (TimeTrialsOptionTime TTOption in TTOptions)
+                {
+                    totTime += TTOption.Time;
+                }
+
+                totalTime = totTime;
+            }
+            else
+            {
+                totTime = (decimal)totalTime;
             }
 
-            return totalTime;
+            return totTime;
         }
 
         /// <summary>
@@ -492,6 +519,7 @@ namespace RouteConfigurator.ViewModel
         {
             informationText = "";
             bool complete = true;
+            _haveOptionTimes = true;
 
             if (string.IsNullOrWhiteSpace(modelText) || selectedModel == null)
             {
@@ -499,10 +527,9 @@ namespace RouteConfigurator.ViewModel
                 modelText = "";
                 informationText = "Please select a valid model.";
             }
-            else if (salesOrder == null || salesOrder <= 0 ||
-                     productionNum == null || productionNum <= 0 ||
-                     driveTime == null || driveTime <= 0 ||
-                     AVTime == null || AVTime <= 0)
+            else if (date == null ||
+                     salesOrder == null || salesOrder <= 0 ||
+                     productionNum == null || productionNum <= 0)
             {
                 complete = false;
                 informationText = "Fill out all fields before adding time trial.";
@@ -511,14 +538,18 @@ namespace RouteConfigurator.ViewModel
             {
                 foreach (TimeTrialsOptionTime option in TTOptions)
                 {
-                    if (string.IsNullOrWhiteSpace(option.OptionCode) || option.Time <= 0)
+                    if (!complete)
                     {
-                        complete = false;
-                        informationText = "Fill out all options before adding time trial.";
+                        break;
                     }
                     else
                     {
-                        if (option.OptionCode.Length != 2)
+                        if (string.IsNullOrWhiteSpace(option.OptionCode))
+                        {
+                            complete = false;
+                            informationText = "Fill out all options before adding time trial.";
+                        }
+                        else if (option.OptionCode.Length != 2)
                         {
                             informationText = "Invalid Option Code Format.  Must be 2 letters";
                             complete = false;
@@ -537,6 +568,37 @@ namespace RouteConfigurator.ViewModel
                                 informationText = "Option Code cannot end with a 'P' or 'T'";
                                 complete = false;
                             }
+                        }
+                    }
+
+                    if (option.Time <= 0)
+                    {
+                        _haveOptionTimes = false;
+                    }
+                }
+
+                if (complete && TTOptions.GroupBy(n => n.OptionCode).Any(c => c.Count() > 1))
+                {
+                    complete = false;
+                    informationText = "Invalid Options.  Duplicate option exists in list.";
+                }
+            }
+
+            if (complete)
+            {
+                if(!_haveOptionTimes || driveTime == null || driveTime <= 0 || AVTime == null || AVTime <= 0)
+                {
+                    if(totalTime == null || totalTime <= 0)
+                    {
+                        complete = false;
+                        informationText = "Enter the total time or fill out the drive time, av time, and all option times.";
+                    }
+                    else if(driveTime != null || AVTime != null)
+                    {
+                        if (totalTime < ((driveTime == null ? 0 : driveTime) + (AVTime == null ? 0 : AVTime)))
+                        {
+                            complete = false;
+                            informationText = "Total time cannot be less than drive time plus av time.";
                         }
                     }
                 }
@@ -584,17 +646,25 @@ namespace RouteConfigurator.ViewModel
                 powerOptions.Sort();
                 controlOptions.Sort();
 
+                string optionsText = "";
+
                 //Form the options text
-                string optionsText = "P";
-                foreach (char c in powerOptions)
+                if (powerOptions.Count > 0)
                 {
-                    optionsText = string.Concat(optionsText, c);
+                    optionsText = "P";
+                    foreach (char c in powerOptions)
+                    {
+                        optionsText = string.Concat(optionsText, c);
+                    }
                 }
 
-                optionsText = string.Concat(optionsText, "T");
-                foreach (char c in controlOptions)
+                if (controlOptions.Count > 0)
                 {
-                    optionsText = string.Concat(optionsText, c);
+                    optionsText = string.Concat(optionsText, "T");
+                    foreach (char c in controlOptions)
+                    {
+                        optionsText = string.Concat(optionsText, c);
+                    }
                 }
 
                 return optionsText;
