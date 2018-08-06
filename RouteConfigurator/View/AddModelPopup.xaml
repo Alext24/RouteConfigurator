@@ -31,7 +31,7 @@
                                  Visibility="{Binding loading, Converter={StaticResource VisibilityConverter}}"/>
             </Grid>
 
-            <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
+            <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0" HorizontalAlignment="Center">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>      <!--Row 0-->
@@ -46,7 +46,7 @@
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
@@ -150,7 +150,7 @@
                     <TextBlock Grid.Row="6" Grid.Column="0" Text="Options" FontSize="16" Padding="20 5 0 5"/>
 
                     <!--Row 7 setup: Columns 0-1: Options table-->
-                    <DataGrid  Height="130" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True" AutoGenerateColumns="False"
+                    <DataGrid  Height="130" MaxWidth="290" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True" AutoGenerateColumns="False"
                                Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="10 0"
                                ItemsSource="{Binding options}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 

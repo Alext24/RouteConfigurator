@@ -118,8 +118,7 @@ namespace RouteConfigurator.ViewModel
         #region Public Variables
         /// <summary>
         /// Updates modelEntered boolean if not null
-        /// Calls updateOptions if model and box size has been entered
-        /// Calls checkForInfo
+        /// Calls updateOptions and checkForInfo
         /// </summary>
         public string modelNum
         {
@@ -145,19 +144,14 @@ namespace RouteConfigurator.ViewModel
                     informationText = "Invalid Model format.";
                 }
 
-                if (_modelEntered && _boxSizeEntered)
-                {
-                    updateOptions();
-                }
-
-                checkForInfo();
+                updateOptions();
+                updateInformation();
             }
         }
 
         /// <summary>
         /// Updates boxSizeEntered boolean if not null
-        /// Calls updateOptions if model and box size has been entered
-        /// Calls checkForInfo
+        /// Calls updateOptions and checkForInfo
         /// </summary>
         public string boxSize
         {
@@ -181,12 +175,8 @@ namespace RouteConfigurator.ViewModel
                     _boxSizeEntered = false;
                 }
 
-                if (_modelEntered && _boxSizeEntered)
-                {
-                    updateOptions();
-                }
-
-                checkForInfo();
+                updateOptions();
+                updateInformation();
             }
         }
 
@@ -216,7 +206,7 @@ namespace RouteConfigurator.ViewModel
                     _driveTimeEntered = false;
                 }
 
-                checkForInfo();
+                updateInformation();
             }
         }
 
@@ -246,7 +236,7 @@ namespace RouteConfigurator.ViewModel
                     _AVTimeEntered = false;
                 }
 
-                checkForInfo();
+                updateInformation();
             }
         }
 
@@ -364,17 +354,20 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateOptions()
         {
-            List<String> optionsList = parseOptions(modelNum);
+            if (_modelEntered && _boxSizeEntered)
+            {
+                List<String> optionsList = parseOptions(modelNum);
 
-            try
-            {
-                options = new ObservableCollection<Option>(_serviceProxy.getModelOptions(optionsList, boxSize));
-            }
-            catch (Exception e)
-            {
-                informationText = "There was a problem accessing the database";
-                Console.WriteLine(e);
-                return;
+                try
+                {
+                    options = new ObservableCollection<Option>(_serviceProxy.getModelOptions(optionsList, boxSize));
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                    return;
+                }
             }
         }
 
@@ -428,14 +421,30 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
-        /// Checks if all fields have been entered
-        /// Calls updateInformation if all fields are entered
+        /// Checks if all fields have been entered and then
+        /// Updates the model time, total time, route, and product supervisor code for the model
+        /// Calls setRoute and setProdSupCode
         /// </summary>
-        private void checkForInfo()
+        private void updateInformation()
         {
-            if(_modelEntered && _boxSizeEntered && _driveTimeEntered && _AVTimeEntered)
+            if (_modelEntered && _boxSizeEntered && _driveTimeEntered && _AVTimeEntered)
             {
-                updateInformation();
+                decimal modelTime = (decimal)(driveTime + AVTime);
+
+                TimeSpan time = TimeSpan.FromHours((double)modelTime);
+                modelTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
+
+                decimal totalTime = modelTime;
+                foreach (Option option in options)
+                {
+                    totalTime += option.Time;
+                }
+
+                time = TimeSpan.FromHours((double)totalTime);
+                totalTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
+
+                setRoute(time);
+                setProdSupCode(totalTime);
             }
             else
             {
@@ -444,30 +453,6 @@ namespace RouteConfigurator.ViewModel
                 routeText = "";
                 prodSupCodeText = "";
             }
-        }
-
-        /// <summary>
-        /// Updates the model time, total time, route, and product supervisor code for the model
-        /// Calls setRoute and setProdSupCode
-        /// </summary>
-        private void updateInformation()
-        {
-            decimal modelTime = (decimal)(driveTime + AVTime);
-
-            TimeSpan time = TimeSpan.FromHours((double)modelTime);
-            modelTimeText = string.Format("{0}:{1:00}", ((time.Days*24) + time.Hours), time.Minutes);
-
-            decimal totalTime = modelTime;
-            foreach(Option option in options)
-            {
-                totalTime += option.Time;
-            }
-
-            time = TimeSpan.FromHours((double)totalTime);
-            totalTimeText = string.Format("{0}:{1:00}", ((time.Days*24) + time.Hours), time.Minutes);
-
-            setRoute(time);
-            setProdSupCode(totalTime);
         }
 
         /// <summary>
