@@ -17,8 +17,7 @@
             <ImageBrush ImageSource="/Backgrounds/OceanWaterBackground.jpg"/>
         </Border.Background>
 
-        <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20" 
-                MaxWidth="600" MaxHeight="660">
+        <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -61,7 +60,7 @@
                         <!--Row 0 setup: Part Number-->
                         <TextBlock Grid.Row="0" Grid.Column="0" Padding="5" Text="Enter Model Number: "
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                        <TextBox   Grid.Row="0" Grid.Column="1" Margin="10 0 0 0"
+                        <TextBox   Grid.Row="0" Grid.Column="1" Margin="10 0 0 0" MinWidth="200" MaxWidth="300"
                                    FontSize="20" VerticalAlignment="Center"
                                    Text="{Binding modelNumber}"/>
 
@@ -152,18 +151,25 @@
                         <!--Row 9 setup: Blank, Spacing-->
 
                         <!--Row 10 setup: Navigation Buttons-->
-                        <StackPanel Grid.Row="10" Grid.ColumnSpan="2" Orientation="Horizontal">
-                            <Button Padding="4" FontSize="16"
+                        <Grid Grid.Row="10" Grid.ColumnSpan="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Padding="4" FontSize="16"
                                     Command="{Binding supervisorLoginCommand}">
                                 <Button.Content>
                                     <StackPanel>
-                                        <TextBlock TextAlignment="Center" Text="Supervisor"/>        
+                                        <TextBlock TextAlignment="Center" Text="Supervisor"/>
                                         <TextBlock TextAlignment="Center" Text="Login"/>
                                     </StackPanel>
                                 </Button.Content>
                             </Button>
 
-                            <Button Padding="4" FontSize="16" Margin="10 0 0 0" 
+                            <Button Grid.Column="1" Padding="4" FontSize="16" Margin="10 0 0 0" 
                                     Command="{Binding managerLoginCommand}">
                                 <Button.Content>
                                     <StackPanel>
@@ -172,7 +178,17 @@
                                     </StackPanel>
                                 </Button.Content>
                             </Button>
-                        </StackPanel>
+
+                            <Button Grid.Column="3" Padding="4" FontSize="16" Margin="10 0 0 0" 
+                                    Command="{Binding engineeredOrdersCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Engineered"/>        
+                                        <TextBlock TextAlignment="Center" Text="Orders"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Border>
 

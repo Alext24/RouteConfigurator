@@ -43,6 +43,41 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<OverrideModelPopupModel>();
             SimpleIoc.Default.Register<ModifyOptionPopupModel>();
             SimpleIoc.Default.Register<RequestsViewModel>();
+
+            SimpleIoc.Default.Register<EngineeredHomeViewModel>();
+        }
+
+        public static void setupNavigation()
+        {
+            var navigationService = new FrameNavigationService();
+
+            navigationService.Configure("HomeView", new System.Uri("/View/HomeView.xaml", UriKind.Relative));
+            navigationService.Configure("SupervisorView", new System.Uri("/View/SupervisorView.xaml", UriKind.Relative));
+            navigationService.Configure("ManagerView", new System.Uri("/View/ManagerView.xaml", UriKind.Relative));
+
+            navigationService.Configure("EngineeredHomeView", new System.Uri("/View/EngineeredHomeView.xaml", UriKind.Relative));
+
+            SimpleIoc.Default.Unregister<IFrameNavigationService>();
+            SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
+        }
+
+        /// <summary>
+        /// Cleans up all the resources.
+        /// </summary>
+        public static void Cleanup()
+        {
+            SimpleIoc.Default.Unregister<HomeViewModel>();
+            SimpleIoc.Default.Unregister<SupervisorViewModel>();
+            SimpleIoc.Default.Unregister<ManagerViewModel>();
+            SimpleIoc.Default.Unregister<AddModelPopupModel>();
+            SimpleIoc.Default.Unregister<AddOptionPopupModel>();
+            SimpleIoc.Default.Unregister<AddTimeTrialPopupModel>();
+            SimpleIoc.Default.Unregister<ModifyModelPopupModel>();
+            SimpleIoc.Default.Unregister<OverrideModelPopupModel>();
+            SimpleIoc.Default.Unregister<ModifyOptionPopupModel>();
+            SimpleIoc.Default.Unregister<RequestsViewModel>();
+
+            SimpleIoc.Default.Unregister<EngineeredHomeViewModel>();
         }
 
         public HomeViewModel Home
@@ -145,33 +180,14 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        /// <summary>
-        /// Cleans up all the resources.
-        /// </summary>
-        public static void Cleanup()
+        public EngineeredHomeViewModel EngineeredHome
         {
-            SimpleIoc.Default.Unregister<HomeViewModel>();
-            SimpleIoc.Default.Unregister<SupervisorViewModel>();
-            SimpleIoc.Default.Unregister<ManagerViewModel>();
-            SimpleIoc.Default.Unregister<AddModelPopupModel>();
-            SimpleIoc.Default.Unregister<AddOptionPopupModel>();
-            SimpleIoc.Default.Unregister<AddTimeTrialPopupModel>();
-            SimpleIoc.Default.Unregister<ModifyModelPopupModel>();
-            SimpleIoc.Default.Unregister<OverrideModelPopupModel>();
-            SimpleIoc.Default.Unregister<ModifyOptionPopupModel>();
-            SimpleIoc.Default.Unregister<RequestsViewModel>();
-        }
-
-        public static void setupNavigation()
-        {
-            var navigationService = new FrameNavigationService();
-
-            navigationService.Configure("HomeView", new System.Uri("/View/HomeView.xaml", UriKind.Relative));
-            navigationService.Configure("SupervisorView", new System.Uri("/View/SupervisorView.xaml", UriKind.Relative));
-            navigationService.Configure("ManagerView", new System.Uri("/View/ManagerView.xaml", UriKind.Relative));
-
-            SimpleIoc.Default.Unregister<IFrameNavigationService>();
-            SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
+            get
+            {
+                SimpleIoc.Default.Unregister<EngineeredHomeViewModel>();
+                SimpleIoc.Default.Register<EngineeredHomeViewModel>();
+                return ServiceLocator.Current.GetInstance<EngineeredHomeViewModel>();
+            }
         }
     }
 }

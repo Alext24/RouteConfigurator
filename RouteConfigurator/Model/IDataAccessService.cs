@@ -74,5 +74,11 @@ namespace RouteConfigurator.Model
         void updateOverrideRequest(OverrideRequest overrideRequest);
 
         void deleteTimeTrial(TimeTrial tt);
+
+        #region Engineered Orders
+        IEnumerable<string> getEnclosureTypes();
+        IEnumerable<string> getEnclosureSizes();
+        IEnumerable<WireGauge> getWireGauges();
+        #endregion
     }
 }

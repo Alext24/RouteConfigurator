@@ -21,5 +21,9 @@ namespace RouteConfigurator.Model
         public virtual DbSet<Override> Overrides { get; set; }
         public virtual DbSet<Modification> Modifications { get; set; }
         public virtual DbSet<OverrideRequest> OverrideRequests { get; set; }
+
+        public virtual DbSet<Enclosure> Enclosures { get; set; }
+        public virtual DbSet<Component> Components { get; set; }
+        public virtual DbSet<WireGauge> WireGauges { get; set; }
     }
 }

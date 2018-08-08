@@ -709,5 +709,32 @@ namespace RouteConfigurator.Design
                 context.SaveChanges();
             }
         }
+
+
+        #region Engineered Orders
+        public IEnumerable<string> getEnclosureTypes()
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Enclosures.Select(x => x.EnclosureType).ToList().Distinct();
+            }
+        }
+
+        public IEnumerable<string> getEnclosureSizes()
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Enclosures.Select(x => x.EnclosureSize).ToList().Distinct();
+            }
+        }
+
+        public IEnumerable<WireGauge> getWireGauges()
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.WireGauges.ToList();
+            }
+        }
+        #endregion
     }
 }

@@ -90,6 +90,7 @@
     <Compile Include="Converters\IntStateToTextStateConverter.cs" />
     <Compile Include="Design\DataAccessService.cs" />
     <Compile Include="Design\FrameNavigationService.cs" />
+    <Compile Include="DTOs\EngineeredModelDTO.cs" />
     <Compile Include="Migrations\201807161826584_initialDatabase3.cs" />
     <Compile Include="Migrations\201807161826584_initialDatabase3.Designer.cs">
       <DependentUpon>201807161826584_initialDatabase3.cs</DependentUpon>
@@ -126,7 +127,13 @@
     <Compile Include="Migrations\201808011415038_ChangedModificationDescription.Designer.cs">
       <DependentUpon>201808011415038_ChangedModificationDescription.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808081532436_StartedEngineeredOrders.cs" />
+    <Compile Include="Migrations\201808081532436_StartedEngineeredOrders.Designer.cs">
+      <DependentUpon>201808081532436_StartedEngineeredOrders.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Component.cs" />
+    <Compile Include="Model\Enclosure.cs" />
     <Compile Include="Model\IDataAccessService.cs" />
     <Compile Include="Model\IFrameNavigationService.cs" />
     <Compile Include="Model\Model.cs" />
@@ -137,9 +144,11 @@
     <Compile Include="Model\RouteConfiguratorDB.cs" />
     <Compile Include="Model\TimeTrial.cs" />
     <Compile Include="Model\TimeTrialsOptionTime.cs" />
+    <Compile Include="Model\WireGauge.cs" />
     <Compile Include="ViewModel\AddModelPopupModel.cs" />
     <Compile Include="ViewModel\AddOptionPopupModel.cs" />
     <Compile Include="ViewModel\AddTimeTrialPopupModel.cs" />
+    <Compile Include="ViewModel\EngineeredHomeViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\ManagerViewModel.cs" />
     <Compile Include="ViewModel\ModifyOptionPopupModel.cs" />
@@ -156,6 +165,9 @@
     </Compile>
     <Compile Include="View\AddTimeTrialPopup.xaml.cs">
       <DependentUpon>AddTimeTrialPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EngineeredHomeView.xaml.cs">
+      <DependentUpon>EngineeredHomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
@@ -221,6 +233,10 @@
     <Page Include="View\AddTimeTrialPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\EngineeredHomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\HomeView.xaml">
       <SubType>Designer</SubType>
@@ -291,6 +307,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808011415038_ChangedModificationDescription.resx">
       <DependentUpon>201808011415038_ChangedModificationDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808081532436_StartedEngineeredOrders.resx">
+      <DependentUpon>201808081532436_StartedEngineeredOrders.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
