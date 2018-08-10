@@ -736,6 +736,14 @@ namespace RouteConfigurator.Design
             }
         }
 
+        public IEnumerable<string> getComponents()
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Components.Select(x => x.ComponentName).ToList().Distinct();
+            }
+        }
+
         public IEnumerable<Component> getFilteredComponents(string name, string enclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())

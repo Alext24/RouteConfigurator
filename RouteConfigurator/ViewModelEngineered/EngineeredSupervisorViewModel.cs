@@ -102,7 +102,8 @@ namespace RouteConfigurator.ViewModelEngineered
 
         private void modifyEnclosures()
         {
-
+            ModifyEnclosuresPopup modifyEnclosures = new ModifyEnclosuresPopup();
+            modifyEnclosures.Show();
         }
 
         private void addWireGauge()

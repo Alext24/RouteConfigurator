@@ -156,8 +156,12 @@
     <Compile Include="ViewEngineered\ModifyComponentsPopup.xaml.cs">
       <DependentUpon>ModifyComponentsPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewEngineered\ModifyEnclosuresPopup.xaml.cs">
+      <DependentUpon>ModifyEnclosuresPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModelEngineered\AddComponentPopupModel.cs" />
     <Compile Include="ViewModelEngineered\ModifyComponentsPopupModel.cs" />
+    <Compile Include="ViewModelEngineered\ModifyEnclosuresPopupModel.cs" />
     <Compile Include="ViewModel\AddModelPopupModel.cs" />
     <Compile Include="ViewModel\AddOptionPopupModel.cs" />
     <Compile Include="ViewModel\AddTimeTrialPopupModel.cs" />
@@ -244,6 +248,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewEngineered\ModifyComponentsPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewEngineered\ModifyEnclosuresPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

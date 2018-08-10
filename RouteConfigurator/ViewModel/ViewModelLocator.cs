@@ -49,6 +49,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<EngineeredSupervisorViewModel>();
             SimpleIoc.Default.Register<AddComponentPopupModel>();
             SimpleIoc.Default.Register<ModifyComponentsPopupModel>();
+            SimpleIoc.Default.Register<ModifyEnclosuresPopupModel>();
         }
 
         public static void setupNavigation()
@@ -86,6 +87,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<EngineeredSupervisorViewModel>();
             SimpleIoc.Default.Unregister<AddComponentPopupModel>();
             SimpleIoc.Default.Unregister<ModifyComponentsPopupModel>();
+            SimpleIoc.Default.Unregister<ModifyEnclosuresPopupModel>();
         }
 
         public HomeViewModel Home
@@ -225,6 +227,16 @@ namespace RouteConfigurator.ViewModel
                 SimpleIoc.Default.Unregister<ModifyComponentsPopupModel>();
                 SimpleIoc.Default.Register<ModifyComponentsPopupModel>();
                 return ServiceLocator.Current.GetInstance<ModifyComponentsPopupModel>();
+            }
+        }
+
+        public ModifyEnclosuresPopupModel ModifyEnclosures
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<ModifyEnclosuresPopupModel>();
+                SimpleIoc.Default.Register<ModifyEnclosuresPopupModel>();
+                return ServiceLocator.Current.GetInstance<ModifyEnclosuresPopupModel>();
             }
         }
     }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RouteConfigurator.ViewModelEngineered
 {
-    public class ModifyComponentsPopupModel : ViewModelBase
+    public class ModifyEnclosuresPopupModel : ViewModelBase
     {
         #region PrivateVariables
         /// <summary>
@@ -25,14 +25,14 @@ namespace RouteConfigurator.ViewModelEngineered
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
-        public ObservableCollection<string> _components = new ObservableCollection<string>();
-        private string _component = "";
+        public ObservableCollection<string> _enclosureTypes = new ObservableCollection<string>();
+        private string _enclosureType = "";
         public ObservableCollection<string> _enclosureSizes = new ObservableCollection<string>();
         private string _enclosureSize = "";
         private decimal? _newTime;
         private string _description;
 
-        private ObservableCollection<Component> _componentsFound = new ObservableCollection<Component>();
+        private ObservableCollection<Enclosure> _enclosuresFound = new ObservableCollection<Enclosure>();
 
         private string _informationText;
 
@@ -48,7 +48,7 @@ namespace RouteConfigurator.ViewModelEngineered
         /// <summary>
         /// initializes view components
         /// </summary>
-        public ModifyComponentsPopupModel(IFrameNavigationService navigationService)
+        public ModifyEnclosuresPopupModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
 
@@ -60,7 +60,7 @@ namespace RouteConfigurator.ViewModelEngineered
         #region Commands
         private void loaded()
         {
-            components = new ObservableCollection<string>(_serviceProxy.getComponents());
+            enclosureTypes = new ObservableCollection<string>(_serviceProxy.getEnclosureTypes());
             enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
         }
 
@@ -72,23 +72,23 @@ namespace RouteConfigurator.ViewModelEngineered
         }
 
         /// <summary>
-        /// Submits each of the component modifications to the database
+        /// Submits each of the enclosure modifications to the database
         /// </summary>
         private void submit()
         {
             informationText = "";
 
-            if (componentsFound.Count <= 0)
+            if (enclosuresFound.Count <= 0)
             {
-                informationText = "No components selected to update.";
+                informationText = "No enclosures selected to update.";
             }
             else if (checkComplete())
             {
                 try
                 {
-                    foreach (Component component in componentsFound)
+                    foreach (Enclosure enclosure in enclosuresFound)
                     {
-                        EngineeredModification modifiedComponent = new EngineeredModification()
+                        EngineeredModification modifiedEnclosure = new EngineeredModification()
                         {
                             RequestDate = DateTime.Now,
                             ReviewedDate = new DateTime(1900, 1, 1),
@@ -97,29 +97,29 @@ namespace RouteConfigurator.ViewModelEngineered
                             Sender = "TEMPORARY SENDER",
                             Reviewer = "",
                             IsNew = false,
-                            ComponentName = component.ComponentName,
-                            EnclosureSize = component.EnclosureSize,
-                            EnclosureType = "",
+                            ComponentName = "",
+                            EnclosureSize = enclosure.EnclosureSize,
+                            EnclosureType = enclosure.EnclosureType,
                             NewTime = (decimal)newTime,
-                            OldTime = component.Time,
+                            OldTime = enclosure.Time,
                             Gauge = "",
                             NewTimePercentage = 0,
                             OldTimePercentage = 0
                         };
-                        _serviceProxy.addEngineeredModificationRequest(modifiedComponent);
+                        _serviceProxy.addEngineeredModificationRequest(modifiedEnclosure);
                     }
 
                     //Clear input boxes
-                    _component = "";
-                    RaisePropertyChanged("component");
+                    _enclosureType = "";
+                    RaisePropertyChanged("enclosureType");
                     _enclosureSize = ""; 
                     RaisePropertyChanged("enclosureSize");
 
-                    componentsFound = new ObservableCollection<Component>();
+                    enclosuresFound = new ObservableCollection<Enclosure>();
                     newTime = null;
                     description = "";
 
-                    informationText = "Component modifications have been submitted.  Waiting for manager approval.";
+                    informationText = "Enclosure modifications have been submitted.  Waiting for manager approval.";
                 }
                 catch (Exception e)
                 {
@@ -131,35 +131,35 @@ namespace RouteConfigurator.ViewModelEngineered
         #endregion
 
         #region Public Variables
-        public ObservableCollection<string> components
+        public ObservableCollection<string> enclosureTypes 
         {
             get
             {
-                return _components;
+                return _enclosureTypes;
             }
             set
             {
-                _components = value;
-                RaisePropertyChanged("components");
+                _enclosureTypes = value;
+                RaisePropertyChanged("enclosureTypes");
             }
         }
 
         /// <summary>
-        /// Calls updateComponentsTableAsync
+        /// Calls updateEnclosureTableAsync
         /// </summary>
-        public string component
+        public string enclosureType 
         {
             get
             {
-                return _component;
+                return _enclosureType;
             }
             set
             {
-                _component= value.ToUpper();
-                RaisePropertyChanged("component");
+                _enclosureType = value.ToUpper();
+                RaisePropertyChanged("enclosureType");
                 informationText = "";
 
-                updateComponentsTableAsync();
+                updateEnclosureTableAsync();
             }
         }
 
@@ -177,7 +177,7 @@ namespace RouteConfigurator.ViewModelEngineered
         }
 
         /// <summary>
-        /// Calls updateComponentsTableAsync
+        /// Calls updateEnclosureTableAsync
         /// </summary>
         public string enclosureSize
         {
@@ -191,7 +191,7 @@ namespace RouteConfigurator.ViewModelEngineered
                 RaisePropertyChanged("enclosureSize");
                 informationText = "";
 
-                updateComponentsTableAsync();
+                updateEnclosureTableAsync();
             }
         }
 
@@ -223,19 +223,18 @@ namespace RouteConfigurator.ViewModelEngineered
             }
         }
 
-        public ObservableCollection<Component> componentsFound 
+        public ObservableCollection<Enclosure> enclosuresFound 
         {
             get
             {
-                return _componentsFound;
+                return _enclosuresFound;
             }
             set
             {
-                _componentsFound = value;
-                RaisePropertyChanged("componentsFound");
+                _enclosuresFound = value;
+                RaisePropertyChanged("enclosuresFound");
                 informationText = "";
             }
-
         }
 
         public string informationText 
@@ -266,28 +265,28 @@ namespace RouteConfigurator.ViewModelEngineered
         #endregion
 
         #region Private Functions
-        private async void updateComponentsTableAsync()
+        private async void updateEnclosureTableAsync()
         {
             loading = true;
-            await Task.Run(() => updateComponentsTable());
+            await Task.Run(() => updateEnclosureTable());
             loading = false;
         }
 
         /// <summary>
-        /// Updates the components table with the filtered information
+        /// Updates the enclosure table with the filtered information
         /// </summary>
-        private void updateComponentsTable()
+        private void updateEnclosureTable()
         {
-            if(string.IsNullOrWhiteSpace(component) && string.IsNullOrWhiteSpace(enclosureSize))
+            if(string.IsNullOrWhiteSpace(enclosureType) && string.IsNullOrWhiteSpace(enclosureSize))
             {
-                componentsFound = new ObservableCollection<Component>();
+                enclosuresFound = new ObservableCollection<Enclosure>();
             }
             else
             {
                 try
                 {
                     informationText = "Loading components...";
-                    componentsFound = new ObservableCollection<Component>(_serviceProxy.getFilteredComponents(component, enclosureSize));
+                    enclosuresFound = new ObservableCollection<Enclosure>(_serviceProxy.getFilteredEnclosures(enclosureType, enclosureSize));
                     informationText = "";
                 }
                 catch (Exception e)

@@ -1,4 +1,4 @@
-﻿<Window x:Class="RouteConfigurator.ViewEngineered.ModifyComponentsPopup"
+﻿<Window x:Class="RouteConfigurator.ViewEngineered.ModifyEnclosuresPopup"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,8 +12,8 @@
         MinWidth="850"
         Height="550"
         Width="850"
-        Title="ModifyComponents"
-        DataContext="{Binding ModifyComponents, Source={StaticResource Locator}}">
+        Title="ModifyEnclosures"
+        DataContext="{Binding ModifyEnclosures, Source={StaticResource Locator}}">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -60,22 +60,22 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Row 0 setup: Title-->
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="MODIFY COMPONENTS"
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="MODIFY ENCLOSURES"
                                Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center" />
 
                     <!--Row 1 setup: Search Criteria-->
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Criteria" FontSize="16"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Component" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Enclosure Type" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
                     <ComboBox Grid.Row="2" Grid.Column="1" MaxDropDownHeight="150" Margin="5" FontSize="16" MinWidth="160"
-                              ItemsSource="{Binding components}" SelectedValue="{Binding component}"/>
+                              ItemsSource="{Binding enclosureTypes}" SelectedValue="{Binding enclosureType}"/>
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Enclosure Size" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
                     <ComboBox Grid.Row="3" Grid.Column="1" MaxDropDownHeight="150" Margin="5" FontSize="16"
                               ItemsSource="{Binding enclosureSizes}" SelectedValue="{Binding enclosureSize}"/>
 
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Components found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBlock Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding componentsFound.Count}" FontSize="16"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Enclosures found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding enclosuresFound.Count}" FontSize="16"/>
 
                     <!--Row 5 setup: Blank, Spacing-->
 
@@ -95,11 +95,11 @@
                     <!--Row 2 setup: Component Table-->
                     <DataGrid  Grid.Row="2" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" Height="100" x:Name="ComponentTable" IsReadOnly="True" AutoGenerateColumns="False"
                                CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" SelectionMode="Single"
-                               ItemsSource="{Binding componentsFound}">
+                               ItemsSource="{Binding enclosuresFound}">
 
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="Header1" Width="auto" FontSize="16" Header="Component" IsReadOnly="True"
-                                                Binding="{Binding ComponentName}"/>
+                                                Binding="{Binding EnclosureType}"/>
                             <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Enclosure Size" IsReadOnly="True"
                                                 Binding="{Binding EnclosureSize}"/>
                             <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Time"
