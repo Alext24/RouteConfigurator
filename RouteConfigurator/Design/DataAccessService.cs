@@ -735,6 +735,43 @@ namespace RouteConfigurator.Design
                 return context.WireGauges.ToList();
             }
         }
+
+        public IEnumerable<Component> getFilteredComponents(string name, string enclosureSize)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Components.Where(x => x.ComponentName.Contains(name) &&
+                                                     x.EnclosureSize.Contains(enclosureSize)).ToList();
+            }
+        }
+
+        public IEnumerable<Enclosure> getFilteredEnclosures(string enclosureType, string enclosureSize)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Enclosures.Where(x => x.EnclosureType.Contains(enclosureType) &&
+                                                     x.EnclosureSize.Contains(enclosureSize)).ToList();
+            }
+        }
+
+        public IEnumerable<WireGauge> getFilteredWireGauges(string wireGauge)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.WireGauges.Where(x => x.Gauge.Contains(wireGauge)).ToList();
+            }
+        }
+
+
+
+        public void addEngineeredModificationRequest(EngineeredModification mod)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                context.EngineeredModifications.Add(mod);
+                context.SaveChanges();
+            }
+        }
         #endregion
     }
 }

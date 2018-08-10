@@ -1,0 +1,368 @@
+﻿<Page x:Class="RouteConfigurator.View.EngineeredSupervisorView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RouteConfigurator.ViewEngineered"
+      xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      mc:Ignorable="d" 
+      MinHeight="700"
+      MinWidth="1400"
+      Title="EngineeredSupervisorView"
+      DataContext="{Binding EngineeredSupervisor, Source={StaticResource Locator}}">
+      
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding loadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Border Padding="50">
+        <Border.Background>
+            <ImageBrush ImageSource="/Backgrounds/MountainLakeBackground.jpg"/>
+        </Border.Background>
+
+        <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20" HorizontalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.Resources>
+                    <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
+                    <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
+                </Grid.Resources>
+
+                <Grid Panel.ZIndex="1" Height="100" Width="100">
+                    <fa:ImageAwesome Icon="Spinner" Spin="True" 
+                                     Visibility="{Binding loading, Converter={StaticResource VisibilityConverter}}"/>
+                </Grid>
+
+                <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>      <!--Row 0-->
+                            <RowDefinition Height="*"/>         <!--Row 1-->
+                            <RowDefinition Height="10"/>        <!--Row 2: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 3-->
+                            <RowDefinition Height="10"/>        <!--Row 4: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 5-->
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>       <!--Col 0-->
+                            <ColumnDefinition Width="10"/>      <!--Col 1: Spacing-->
+                            <ColumnDefinition Width="*"/>       <!--Col 2-->
+                            <ColumnDefinition Width="10"/>      <!--Col 3: Spacing-->
+                            <ColumnDefinition Width="*"/>       <!--Col 4-->
+                        </Grid.ColumnDefinitions>
+
+                        <!--Col 0 setup: Component Table Name-->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="All Components" FontSize="16"/>
+
+                        <DataGrid  Grid.Row="1" Grid.Column="0" x:Name="ComponentTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                                   ItemsSource="{Binding components}" SelectedItem="{Binding selectedComponent}" AutoGenerateColumns="False"
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+
+                            <DataGrid.Columns>
+                                <!--Column 1: Component Name-->
+                                <DataGridTextColumn x:Name="ComponentName" Width="auto" MinWidth="100" FontSize="16" Binding="{Binding ComponentName}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=ComponentTable, Path=DataContext.componentNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Component" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 2: Enclosure Size-->
+                                <DataGridTextColumn x:Name="ComponentEnclosureSize" Width="auto" FontSize="16" Binding="{Binding EnclosureSize}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="40" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=ComponentTable, Path=DataContext.componentEnclosureSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Enclosure" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Size" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 3: Time-->
+                                <DataGridTextColumn x:Name="ComponentTimeHeader" Width="auto" FontSize="16" Binding="{Binding Time, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!--Col 2 setup: Component Table Name-->
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="All Enclosures" FontSize="16"/>
+
+                        <DataGrid  Grid.Row="1" Grid.Column="2" x:Name="EnclosureTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                                   ItemsSource="{Binding enclosures}" SelectedItem="{Binding selectedEnclosures}" AutoGenerateColumns="False"
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+
+                            <DataGrid.Columns>
+                                <!--Column 1: Enclosure Type-->
+                                <DataGridTextColumn x:Name="EnclosureType" Width="auto" MinWidth="100" FontSize="16" Binding="{Binding EnclosureType}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=EnclosureTable, Path=DataContext.enclosureTypeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Enclosure" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Type" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 2: Box Size-->
+                                <DataGridTextColumn x:Name="EnclosureSize" Width="auto" FontSize="16" Binding="{Binding EnclosureSize}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="40" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=EnclosureTable, Path=DataContext.enclosureSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Enclosure" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Size" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 3: Time-->
+                                <DataGridTextColumn x:Name="EnclosureTime" Width="auto" FontSize="16" Binding="{Binding Time, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!--Col 4 setup: Wire Gauge Table Name-->
+                        <TextBlock Grid.Row="0" Grid.Column="4" Text="All Wire Guages" FontSize="16"/>
+
+                        <DataGrid  Grid.Row="1" Grid.Column="4" x:Name="WireGaugesTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                                   ItemsSource="{Binding wireGauges}" SelectedItem="{Binding selectedWireGauge}" AutoGenerateColumns="False"
+                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+
+                            <DataGrid.Columns>
+                                <!--Column 1: Wire Gauge-->
+                                <DataGridTextColumn x:Name="WireGauge" Width="auto" MinWidth="100" FontSize="16" Binding="{Binding Gauge}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
+                                                             Text="{Binding ElementName=WireGaugesTable, Path=DataContext.wireGaugeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Wire" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Gauge" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 2: Box Size-->
+                                <DataGridTextColumn x:Name="TimePercentage" Width="auto" FontSize="16" Binding="{Binding TimePercentage}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Percentage" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        
+                        <!--Buttons-->
+                        <Grid Grid.Row="3" Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--Add Component Button-->
+                            <Button Grid.Column="0" Margin="0 0 5 0" FontSize="16" Command="{Binding addComponentCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Add"/>        
+                                        <TextBlock TextAlignment="Center" Text="Component"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Modify Components Button-->
+                            <Button Grid.Column="1" Margin="5 0 0 0" FontSize="16" Command="{Binding modifyComponentsCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Modify"/>        
+                                        <TextBlock TextAlignment="Center" Text="Components"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                        
+                        <Grid Grid.Row="3" Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--Modify Enclosures Button-->
+                            <Button Grid.Column="1" Margin="0 0 0 0" FontSize="16" Command="{Binding modifyEnclosuresCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Modify"/>        
+                                        <TextBlock TextAlignment="Center" Text="Enclosures"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                        
+                        <Grid Grid.Row="3" Grid.Column="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--Add Wire Gauge Button-->
+                            <Button Grid.Column="0" Margin="0 0 5 0" FontSize="16" Command="{Binding addWireGaugeCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Add"/>        
+                                        <TextBlock TextAlignment="Center" Text="Wire Gauge"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Modify Wire Gauge Button-->
+                            <Button Grid.Column="1" Margin="5 0 0 0" FontSize="16" Command="{Binding modifyWireGaugeCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Modify"/>        
+                                        <TextBlock TextAlignment="Center" Text="Wire Gauges"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                        
+                        
+                        
+                        <!--Navigation Buttons-->
+                        <Grid Grid.Row="7" Grid.ColumnSpan="7">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--View Requests Button-->
+                            <Button Grid.Column="0" Margin="0 5 5 0" FontSize="16" Command="{Binding viewRequestsCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="View"/>        
+                                        <TextBlock TextAlignment="Center" Text="Requests"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Standard Models Button-->
+                            <Button Grid.Column="1" Margin="5 5 5 0" FontSize="16" Command="{Binding standardModelsCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Standard"/>        
+                                        <TextBlock TextAlignment="Center" Text="Models"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Go Home Button-->
+                            <Button Grid.Column="3" Content="Home View" FontSize="16" Margin="0 5 0 0" Command="{Binding goHomeCommand}"
+                                    Visibility="{Binding goHomeAllowed, Converter={StaticResource VisibilityConverter}}"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!--Information text-->
+                <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 10" TextWrapping="WrapWithOverflow"
+                           FontSize="12" Text="{Binding informationText}" />
+            </Grid>
+        </Border>
+    </Border>
+</Page>

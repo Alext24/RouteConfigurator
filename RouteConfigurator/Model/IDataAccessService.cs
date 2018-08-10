@@ -79,6 +79,12 @@ namespace RouteConfigurator.Model
         IEnumerable<string> getEnclosureTypes();
         IEnumerable<string> getEnclosureSizes();
         IEnumerable<WireGauge> getWireGauges();
+
+        IEnumerable<Component> getFilteredComponents(string name, string enclosureSize);
+        IEnumerable<Enclosure> getFilteredEnclosures(string enclosureType, string enclosureSize);
+        IEnumerable<WireGauge> getFilteredWireGauges(string wireGuage);
+
+        void addEngineeredModificationRequest(EngineeredModification mod);
         #endregion
     }
 }

@@ -131,9 +131,14 @@
     <Compile Include="Migrations\201808081532436_StartedEngineeredOrders.Designer.cs">
       <DependentUpon>201808081532436_StartedEngineeredOrders.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808101336261_addedEngineeredModifications.cs" />
+    <Compile Include="Migrations\201808101336261_addedEngineeredModifications.Designer.cs">
+      <DependentUpon>201808101336261_addedEngineeredModifications.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Component.cs" />
     <Compile Include="Model\Enclosure.cs" />
+    <Compile Include="Model\EngineeredModification.cs" />
     <Compile Include="Model\IDataAccessService.cs" />
     <Compile Include="Model\IFrameNavigationService.cs" />
     <Compile Include="Model\Model.cs" />
@@ -145,10 +150,19 @@
     <Compile Include="Model\TimeTrial.cs" />
     <Compile Include="Model\TimeTrialsOptionTime.cs" />
     <Compile Include="Model\WireGauge.cs" />
+    <Compile Include="ViewEngineered\AddComponentPopup.xaml.cs">
+      <DependentUpon>AddComponentPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewEngineered\ModifyComponentsPopup.xaml.cs">
+      <DependentUpon>ModifyComponentsPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModelEngineered\AddComponentPopupModel.cs" />
+    <Compile Include="ViewModelEngineered\ModifyComponentsPopupModel.cs" />
     <Compile Include="ViewModel\AddModelPopupModel.cs" />
     <Compile Include="ViewModel\AddOptionPopupModel.cs" />
     <Compile Include="ViewModel\AddTimeTrialPopupModel.cs" />
-    <Compile Include="ViewModel\EngineeredHomeViewModel.cs" />
+    <Compile Include="ViewModelEngineered\EngineeredHomeViewModel.cs" />
+    <Compile Include="ViewModelEngineered\EngineeredSupervisorViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\ManagerViewModel.cs" />
     <Compile Include="ViewModel\ModifyOptionPopupModel.cs" />
@@ -166,7 +180,7 @@
     <Compile Include="View\AddTimeTrialPopup.xaml.cs">
       <DependentUpon>AddTimeTrialPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\EngineeredHomeView.xaml.cs">
+    <Compile Include="ViewEngineered\EngineeredHomeView.xaml.cs">
       <DependentUpon>EngineeredHomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\HomeView.xaml.cs">
@@ -186,6 +200,9 @@
     </Compile>
     <Compile Include="View\RequestsView.xaml.cs">
       <DependentUpon>RequestsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewEngineered\EngineeredSupervisorView.xaml.cs">
+      <DependentUpon>EngineeredSupervisorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SupervisorView.xaml.cs">
       <DependentUpon>SupervisorView.xaml</DependentUpon>
@@ -222,6 +239,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="ViewEngineered\AddComponentPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewEngineered\ModifyComponentsPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AddModelPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -234,7 +259,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\EngineeredHomeView.xaml">
+    <Page Include="ViewEngineered\EngineeredHomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -261,6 +286,10 @@
     <Page Include="View\RequestsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewEngineered\EngineeredSupervisorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\SupervisorView.xaml">
       <SubType>Designer</SubType>
@@ -310,6 +339,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808081532436_StartedEngineeredOrders.resx">
       <DependentUpon>201808081532436_StartedEngineeredOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808101336261_addedEngineeredModifications.resx">
+      <DependentUpon>201808101336261_addedEngineeredModifications.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

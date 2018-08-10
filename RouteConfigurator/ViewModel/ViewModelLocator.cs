@@ -14,6 +14,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using RouteConfigurator.Design;
 using RouteConfigurator.Model;
+using RouteConfigurator.ViewModelEngineered;
 using System;
 
 namespace RouteConfigurator.ViewModel
@@ -45,6 +46,9 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<RequestsViewModel>();
 
             SimpleIoc.Default.Register<EngineeredHomeViewModel>();
+            SimpleIoc.Default.Register<EngineeredSupervisorViewModel>();
+            SimpleIoc.Default.Register<AddComponentPopupModel>();
+            SimpleIoc.Default.Register<ModifyComponentsPopupModel>();
         }
 
         public static void setupNavigation()
@@ -55,7 +59,8 @@ namespace RouteConfigurator.ViewModel
             navigationService.Configure("SupervisorView", new System.Uri("/View/SupervisorView.xaml", UriKind.Relative));
             navigationService.Configure("ManagerView", new System.Uri("/View/ManagerView.xaml", UriKind.Relative));
 
-            navigationService.Configure("EngineeredHomeView", new System.Uri("/View/EngineeredHomeView.xaml", UriKind.Relative));
+            navigationService.Configure("EngineeredHomeView", new System.Uri("/ViewEngineered/EngineeredHomeView.xaml", UriKind.Relative));
+            navigationService.Configure("EngineeredSupervisorView", new System.Uri("/ViewEngineered/EngineeredSupervisorView.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
@@ -78,6 +83,9 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<RequestsViewModel>();
 
             SimpleIoc.Default.Unregister<EngineeredHomeViewModel>();
+            SimpleIoc.Default.Unregister<EngineeredSupervisorViewModel>();
+            SimpleIoc.Default.Unregister<AddComponentPopupModel>();
+            SimpleIoc.Default.Unregister<ModifyComponentsPopupModel>();
         }
 
         public HomeViewModel Home
@@ -187,6 +195,36 @@ namespace RouteConfigurator.ViewModel
                 SimpleIoc.Default.Unregister<EngineeredHomeViewModel>();
                 SimpleIoc.Default.Register<EngineeredHomeViewModel>();
                 return ServiceLocator.Current.GetInstance<EngineeredHomeViewModel>();
+            }
+        }
+
+        public EngineeredSupervisorViewModel EngineeredSupervisor
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<EngineeredSupervisorViewModel>();
+                SimpleIoc.Default.Register<EngineeredSupervisorViewModel>();
+                return ServiceLocator.Current.GetInstance<EngineeredSupervisorViewModel>();
+            }
+        }
+
+        public AddComponentPopupModel AddComponent 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<AddComponentPopupModel>();
+                SimpleIoc.Default.Register<AddComponentPopupModel>();
+                return ServiceLocator.Current.GetInstance<AddComponentPopupModel>();
+            }
+        }
+
+        public ModifyComponentsPopupModel ModifyComponents
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<ModifyComponentsPopupModel>();
+                SimpleIoc.Default.Register<ModifyComponentsPopupModel>();
+                return ServiceLocator.Current.GetInstance<ModifyComponentsPopupModel>();
             }
         }
     }

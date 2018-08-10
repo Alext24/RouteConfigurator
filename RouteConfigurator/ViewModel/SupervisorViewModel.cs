@@ -80,6 +80,7 @@ namespace RouteConfigurator.ViewModel
         public RelayCommand deleteOverrideCommand { get; set; }
 
         public RelayCommand viewRequestsCommand { get; set; }
+        public RelayCommand engineeredModelsCommand { get; set; }
         public RelayCommand goHomeCommand { get; set; }
         #endregion
 
@@ -112,6 +113,7 @@ namespace RouteConfigurator.ViewModel
             deleteOverrideCommand = new RelayCommand(deleteOverride);
 
             viewRequestsCommand = new RelayCommand(viewRequests);
+            engineeredModelsCommand = new RelayCommand(engineeredModels);
             goHomeCommand = new RelayCommand(goHome);
         }
         #endregion
@@ -271,6 +273,11 @@ namespace RouteConfigurator.ViewModel
         {
             RequestsView requests = new RequestsView();
             requests.Show();
+        }
+
+        private void engineeredModels()
+        {
+            _navigationService.NavigateTo("EngineeredSupervisorView");
         }
 
         private void goHome()

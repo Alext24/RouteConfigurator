@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace RouteConfigurator.ViewModel
+namespace RouteConfigurator.ViewModelEngineered
 {
     public class EngineeredHomeViewModel : ViewModelBase
     {

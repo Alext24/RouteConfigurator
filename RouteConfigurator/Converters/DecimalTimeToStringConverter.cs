@@ -36,13 +36,31 @@ namespace RouteConfigurator
                 int a = colonIndex + 1;
                 int b = timeText.Length - 1 - colonIndex;
 
-                string hoursText = timeText.Substring(0, colonIndex);
-                string minutesText = timeText.Substring(a, b);
+                string hoursText;
+                string minutesText;
 
-                decimal hours = decimal.Parse(hoursText);
-                decimal minutes = decimal.Parse(minutesText);
+                decimal hours;
+                decimal minutes;
 
-                time = hours + (minutes / 60);
+                try
+                {
+                    if (colonIndex != 0)
+                    {
+                        hoursText = timeText.Substring(0, colonIndex);
+                        hours = decimal.Parse(hoursText);
+                    }
+                    else
+                    {
+                        hours = 0;
+                    }
+                    minutesText = timeText.Substring(a, b);
+                    minutes = decimal.Parse(minutesText);
+
+                    time = hours + (minutes / 60);
+                }catch (Exception)
+                {
+                    time = 0;
+                }
             }
             // Decimal format   12.25 or 12
             else

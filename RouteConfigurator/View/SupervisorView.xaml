@@ -43,6 +43,7 @@
                             <RowDefinition Height="10"/>        <!--Row 3: Spacing-->
                             <RowDefinition Height="auto"/>      <!--Row 4-->
                             <RowDefinition Height="*"/>         <!--Row 5-->
+                            <RowDefinition Height="auto"/>      <!--Row 6-->
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
@@ -677,8 +678,18 @@
                                 </Button.Content>
                             </Button>
 
+                        </Grid>
+
+                        <Grid Grid.Row="7" Grid.ColumnSpan="7">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
                             <!--View Requests Button-->
-                            <Button Grid.Row="2" Margin="0 5 0 0" FontSize="16" Command="{Binding viewRequestsCommand}" VerticalAlignment="Bottom">
+                            <Button Grid.Column="0" Margin="0 5 5 0" FontSize="16" Command="{Binding viewRequestsCommand}">
                                 <Button.Content>
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Text="View"/>        
@@ -687,8 +698,18 @@
                                 </Button.Content>
                             </Button>
 
+                            <!--Engineered Models Button-->
+                            <Button Grid.Column="1" Margin="5 5 5 0" FontSize="16" Command="{Binding engineeredModelsCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Engineered"/>        
+                                        <TextBlock TextAlignment="Center" Text="Models"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
                             <!--Go Home Button-->
-                            <Button Grid.Row="3" Content="Home View" FontSize="16" Margin="0 10 0 0" VerticalAlignment="Bottom" Command="{Binding goHomeCommand}"
+                            <Button Grid.Column="3" Content="Home View" FontSize="16" Margin="0 5 0 0" Command="{Binding goHomeCommand}"
                                     Visibility="{Binding goHomeAllowed, Converter={StaticResource VisibilityConverter}}"/>
                         </Grid>
                     </Grid>
