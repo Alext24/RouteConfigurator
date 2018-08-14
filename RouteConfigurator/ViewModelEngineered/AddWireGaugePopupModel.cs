@@ -261,14 +261,12 @@ namespace RouteConfigurator.ViewModelEngineered
                         informationText = "This wire gauge already exists";
                         valid = false;
                     }
-                    /*
                     //Check if the wire gauge already exists in the database as a new wire gauge request
-                    else if (_serviceProxy.getFilteredNewWireGauges("", wireGauge).ToList().Count > 0)
+                    else if (_serviceProxy.getNewWireGaugeMods(wireGauge).ToList().Count > 0)
                     {
                         informationText = "wire gauge is already waiting for approval.";
                         valid = false;
                     }
-                    */
                     else
                     {
                         //Check if the wire gauge is a duplicate in the ready to submit list

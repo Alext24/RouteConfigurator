@@ -292,14 +292,12 @@ namespace RouteConfigurator.ViewModelEngineered
                         informationText = "This component already exists";
                         valid = false;
                     }
-                    /*
                     //Check if the component already exists in the database as a new component request
                     else if (_serviceProxy.getFilteredNewComponents("", componentName, enclosureSize).ToList().Count > 0)
                     {
                         informationText = "Component is already waiting for approval.";
                         valid = false;
                     }
-                    */
                     else
                     {
                         //Check if the component is a duplicate in the ready to submit list
