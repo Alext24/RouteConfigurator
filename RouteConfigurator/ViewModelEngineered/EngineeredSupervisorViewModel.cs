@@ -26,6 +26,8 @@ namespace RouteConfigurator.ViewModelEngineered
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        private bool _goHomeAllowed = false;
+
         private ObservableCollection<Component> _components = new ObservableCollection<Component>();
         private Component _selectedComponent;
 
@@ -68,6 +70,11 @@ namespace RouteConfigurator.ViewModelEngineered
         {
             _navigationService = navigationService;
 
+            if(navigationService.Parameter != null)
+            {
+                _goHomeAllowed = true;
+            }
+
             loadedCommand = new RelayCommand(loaded);
             addComponentCommand = new RelayCommand(addComponent);
             modifyComponentsCommand = new RelayCommand(modifyComponents);
@@ -108,12 +115,14 @@ namespace RouteConfigurator.ViewModelEngineered
 
         private void addWireGauge()
         {
-
+            AddWireGaugePopup addWireGauge = new AddWireGaugePopup();
+            addWireGauge.Show();
         }
 
         private void modifyWireGauges()
         {
-            
+            ModifyWireGaugesPopup modifyWireGauges = new ModifyWireGaugesPopup();
+            modifyWireGauges.Show();
         }
         
         private void viewRequests()
@@ -124,16 +133,29 @@ namespace RouteConfigurator.ViewModelEngineered
 
         private void standardModels()
         {
-            _navigationService.NavigateTo("SupervisorView");
+            _navigationService.NavigateTo("SupervisorView", goHomeAllowed);
         }
 
         private void goHome()
         {
-            _navigationService.NavigateTo("HomeView");
+            _navigationService.NavigateTo("EngineeredHomeView");
         }
         #endregion
 
         #region Public Variables
+        public bool goHomeAllowed
+        {
+            get
+            {
+                return _goHomeAllowed;
+            }
+            set
+            {
+                _goHomeAllowed = value;
+                RaisePropertyChanged("goHomeAllowed");
+            }
+        }
+
         public ObservableCollection<Component> components
         {
             get

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RouteConfigurator.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -60,6 +61,7 @@ namespace RouteConfigurator.Model
         IEnumerable<OverrideRequest> getFilteredOverrideRequests(int State, string ModelNum, string Sender, string Reviewer);
         #endregion
 
+        #region Modify Standard
         void addTimeTrials(ObservableCollection<TimeTrial> timeTrials);
         void addModificationRequest(Modification mod);
         void addOverrideRequest(OverrideRequest ov);
@@ -74,18 +76,48 @@ namespace RouteConfigurator.Model
         void updateOverrideRequest(OverrideRequest overrideRequest);
 
         void deleteTimeTrial(TimeTrial tt);
+        #endregion
 
-        #region Engineered Orders
-        IEnumerable<string> getEnclosureTypes();
-        IEnumerable<string> getEnclosureSizes();
-        IEnumerable<WireGauge> getWireGauges();
+        IEnumerable<EngineeredModelDTO> getModelComponents(string enclosureSize);
 
+        #region Components Read
+        Component getComponent(string name, string enclosureSize);
         IEnumerable<string> getComponents();
         IEnumerable<Component> getFilteredComponents(string name, string enclosureSize);
-        IEnumerable<Enclosure> getFilteredEnclosures(string enclosureType, string enclosureSize);
-        IEnumerable<WireGauge> getFilteredWireGauges(string wireGuage);
+        #endregion
 
+        #region Enclosure Read
+        Enclosure getEnclosure(string enclosureType, string enclosureSize);
+        IEnumerable<string> getEnclosureTypes();
+        IEnumerable<string> getEnclosureSizes();
+        IEnumerable<Enclosure> getFilteredEnclosures(string enclosureType, string enclosureSize);
+        #endregion
+
+        #region Wire Gauge Read
+        WireGauge getWireGauge(string gauge);
+        IEnumerable<WireGauge> getWireGauges();
+        IEnumerable<WireGauge> getFilteredWireGauges(string wireGuage);
+        #endregion
+
+        #region Engineered Modifications Read
+        
+        IEnumerable<EngineeredModification> getFilteredNewComponents(string Sender, string ComponentName, string EnclosureSize);
+        IEnumerable<EngineeredModification> getFilteredModifiedComponents(string Sender, string ComponentName, string EnclosureSize);
+        IEnumerable<EngineeredModification> getFilteredModifiedEnclosures(string Sender, string EnclosureSize, string EnclosureType);
+        IEnumerable<EngineeredModification> getFilteredWireGaugeMods(string Sender, string WireGauge, bool IsNew);
+        #endregion
+
+        #region Modify Engineered
         void addEngineeredModificationRequest(EngineeredModification mod);
+
+        void addComponent(Component component);
+        void addWireGauge(WireGauge wireGauge);
+
+        void updateComponent(string name, string enclosureSize, decimal newTime);
+        void updateEnclosure(string enclosureType, string enclosureSize, decimal newTime);
+        void updateWireGauge(string gauge, decimal newTimePercentage);
+
+        void updateEngineeredModification(EngineeredModification modification);
         #endregion
     }
 }

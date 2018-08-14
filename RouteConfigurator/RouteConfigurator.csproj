@@ -153,15 +153,27 @@
     <Compile Include="ViewEngineered\AddComponentPopup.xaml.cs">
       <DependentUpon>AddComponentPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewEngineered\AddWireGaugePopup.xaml.cs">
+      <DependentUpon>AddWireGaugePopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewEngineered\EngineeredManagerView.xaml.cs">
+      <DependentUpon>EngineeredManagerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewEngineered\ModifyComponentsPopup.xaml.cs">
       <DependentUpon>ModifyComponentsPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewEngineered\ModifyEnclosuresPopup.xaml.cs">
       <DependentUpon>ModifyEnclosuresPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewEngineered\ModifyWireGaugesPopup.xaml.cs">
+      <DependentUpon>ModifyWireGaugesPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModelEngineered\AddComponentPopupModel.cs" />
+    <Compile Include="ViewModelEngineered\AddWireGaugePopupModel.cs" />
+    <Compile Include="ViewModelEngineered\EngineeredManagerViewModel.cs" />
     <Compile Include="ViewModelEngineered\ModifyComponentsPopupModel.cs" />
     <Compile Include="ViewModelEngineered\ModifyEnclosuresPopupModel.cs" />
+    <Compile Include="ViewModelEngineered\ModifyWireGaugesPopupModel.cs" />
     <Compile Include="ViewModel\AddModelPopupModel.cs" />
     <Compile Include="ViewModel\AddOptionPopupModel.cs" />
     <Compile Include="ViewModel\AddTimeTrialPopupModel.cs" />
@@ -247,11 +259,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ViewEngineered\AddWireGaugePopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewEngineered\EngineeredManagerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ViewEngineered\ModifyComponentsPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewEngineered\ModifyEnclosuresPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewEngineered\ModifyWireGaugesPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

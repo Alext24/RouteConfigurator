@@ -73,20 +73,6 @@ namespace RouteConfigurator.ViewModelEngineered
             managerLoginCommand = new RelayCommand(managerLogin);
             standardOrdersCommand = new RelayCommand(standardOrders);
             cellEditEndingCommand = new RelayCommand (cellChanged);
-
-            engineeredModelComponents.Add(new EngineeredModelDTO
-            {
-                ComponentName = "Drives",
-                Quantity = 0,
-                Time = 1.25M
-            });
-
-            engineeredModelComponents.Add(new EngineeredModelDTO
-            {
-                ComponentName = "Disconnect",
-                Quantity = 0,
-                Time = .75M
-            });
         }
         #endregion
 
@@ -101,16 +87,18 @@ namespace RouteConfigurator.ViewModelEngineered
 
             wireGauges = new ObservableCollection<WireGauge>(_serviceProxy.getWireGauges());
             selectedWireGauge = wireGauges.Count > 0 ? wireGauges.ElementAt(0) : null;
+
+            engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>(_serviceProxy.getModelComponents(selectedEnclosureSize));
         }
 
         private void supervisorLogin()
         {
-            _navigationService.NavigateTo("SupervisorView", true);
+            _navigationService.NavigateTo("EngineeredSupervisorView", true);
         }
 
         private void managerLogin()
         {
-            _navigationService.NavigateTo("ManagerView");
+            _navigationService.NavigateTo("EngineeredManagerView");
         }
 
         private void standardOrders()
@@ -151,6 +139,9 @@ namespace RouteConfigurator.ViewModelEngineered
             {
                 _selectedEnclosureType = value;
                 RaisePropertyChanged("selectedEnclosureType");
+                informationText = "";
+
+                calcTotalTime();
             }
         }
 
@@ -177,6 +168,9 @@ namespace RouteConfigurator.ViewModelEngineered
             {
                 _selectedEnclosureSize = value;
                 RaisePropertyChanged("selectedEnclosureSize");
+                informationText = "";
+
+                updateComponentsTable();
             }
         }
 
@@ -203,6 +197,9 @@ namespace RouteConfigurator.ViewModelEngineered
             {
                 _selectedWireGauge = value;
                 RaisePropertyChanged("selectedWireGauge");
+                informationText = "";
+
+                calcTotalTime();
             }
         }
 
@@ -286,6 +283,12 @@ namespace RouteConfigurator.ViewModelEngineered
         #endregion
 
         #region Private Functions
+        private void updateComponentsTable()
+        {
+            engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>(_serviceProxy.getModelComponents(selectedEnclosureSize));
+            calcTotalTime();
+        }
+
         /// <summary>
         /// Sums the component times
         /// Calls setProdSupCode and setRoute
@@ -295,9 +298,19 @@ namespace RouteConfigurator.ViewModelEngineered
         {
             totalTime = 0;
 
+            if(selectedEnclosureType != null && selectedEnclosureSize != null)
+            {
+                totalTime += _serviceProxy.getEnclosure(selectedEnclosureType, selectedEnclosureSize).Time;
+            }
+
             foreach (EngineeredModelDTO component in engineeredModelComponents)
             {
                 totalTime += component.TotalTime;
+            }
+
+            if(selectedWireGauge != null)
+            {
+                totalTime += (totalTime * selectedWireGauge.TimePercentage);
             }
 
             setProdSupCode((decimal)totalTime);

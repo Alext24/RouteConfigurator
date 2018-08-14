@@ -94,7 +94,7 @@ namespace RouteConfigurator.ViewModel
 
             if(navigationService.Parameter != null)
             {
-                goHomeAllowed = true;
+                _goHomeAllowed = true;
             }
 
             loadModelsCommand = new RelayCommand(loadModels);
@@ -277,7 +277,7 @@ namespace RouteConfigurator.ViewModel
 
         private void engineeredModels()
         {
-            _navigationService.NavigateTo("EngineeredSupervisorView");
+            _navigationService.NavigateTo("EngineeredSupervisorView", goHomeAllowed);
         }
 
         private void goHome()

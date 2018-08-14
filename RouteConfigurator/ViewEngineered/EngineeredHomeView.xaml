@@ -85,22 +85,6 @@
                             </ListBox.ItemContainerStyle>
                         </ListBox>
                         
-                        <!--
-                        <Grid Grid.Row="1" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <RadioButton Grid.Column="0" Content="N1" FontSize="16" VerticalContentAlignment="Center"/>
-
-                            <RadioButton Grid.Column="1" Content="N12" FontSize="16" VerticalContentAlignment="Center"/>
-
-                            <RadioButton Grid.Column="2" Content="N3R" FontSize="16" VerticalContentAlignment="Center"/>
-                        </Grid>
-                        -->
-
                         <!--Enclosure Size setup-->
                         <TextBlock Grid.Row="0" Grid.Column="2" Text="Enclosure Size" FontSize="16"/>
 
@@ -119,35 +103,6 @@
                             </ListBox.ItemContainerStyle>
                         </ListBox>
                         
-                        <!--
-                        <Grid Grid.Row="4" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="10"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-                            <RadioButton Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Content="Wall Narrow" FontSize="16" VerticalContentAlignment="Center"/>
-
-                            <RadioButton Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" Content="Wall Side-by-Side" FontSize="16" VerticalContentAlignment="Center"/>
-
-                            <RadioButton Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Content="Floor 1 Door" FontSize="16" VerticalContentAlignment="Center"/>
-
-                            <RadioButton Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Content="Floor 2 Door" FontSize="16" VerticalContentAlignment="Center"/>
-
-                            <RadioButton Grid.Row="4" Grid.RowSpan="2" Grid.Column="2" Content="Floor 3 Door" FontSize="16" VerticalContentAlignment="Center"/>
-                        </Grid>
-                        -->
-
                         <!--Wire Gauge setup-->
                         <TextBlock Grid.Row="0" Grid.Column="4" Text="Customer Input AWG" FontSize="16"/>
                         <ComboBox Grid.Row="1" Grid.Column="4" ItemsSource="{Binding wireGauges}" DisplayMemberPath="Gauge" SelectedItem="{Binding selectedWireGauge}"

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Data.Entity;
+using RouteConfigurator.DTOs;
 
 namespace RouteConfigurator.Design
 {
@@ -433,9 +434,10 @@ namespace RouteConfigurator.Design
             }
         }
 
-            
-        #endregion 
 
+        #endregion
+
+        #region Modify Standard
         /// <summary>
         /// Adds a list of time trials to the database
         /// </summary>
@@ -709,30 +711,30 @@ namespace RouteConfigurator.Design
                 context.SaveChanges();
             }
         }
+        #endregion
 
-
-        #region Engineered Orders
-        public IEnumerable<string> getEnclosureTypes()
+        public IEnumerable<EngineeredModelDTO> getModelComponents(string enclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
-                return context.Enclosures.Select(x => x.EnclosureType).ToList().Distinct();
+                return context.Components.Where(item => item.EnclosureSize.Equals(enclosureSize))
+                                         .Select(x => new EngineeredModelDTO
+                                         {
+                                             ComponentName = x.ComponentName,
+                                             EnclosureSize = x.EnclosureSize,
+                                             Time = x.Time,
+                                             TotalTime = 0,
+                                             Quantity = 0
+                                         }).ToList();
             }
         }
 
-        public IEnumerable<string> getEnclosureSizes()
+        #region Components Read
+        public Component getComponent(string name, string enclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
-                return context.Enclosures.Select(x => x.EnclosureSize).ToList().Distinct();
-            }
-        }
-
-        public IEnumerable<WireGauge> getWireGauges()
-        {
-            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
-            {
-                return context.WireGauges.ToList();
+                return context.Components.Find(name, enclosureSize);
             }
         }
 
@@ -752,6 +754,32 @@ namespace RouteConfigurator.Design
                                                      x.EnclosureSize.Contains(enclosureSize)).ToList();
             }
         }
+        #endregion
+
+        #region Enclosure Read
+        public Enclosure getEnclosure(string enclosureType, string enclosureSize)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Enclosures.Find(enclosureType, enclosureSize);
+            }
+        }
+
+        public IEnumerable<string> getEnclosureTypes()
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Enclosures.Select(x => x.EnclosureType).ToList().Distinct();
+            }
+        }
+
+        public IEnumerable<string> getEnclosureSizes()
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Enclosures.Select(x => x.EnclosureSize).ToList().Distinct();
+            }
+        }
 
         public IEnumerable<Enclosure> getFilteredEnclosures(string enclosureType, string enclosureSize)
         {
@@ -759,6 +787,24 @@ namespace RouteConfigurator.Design
             {
                 return context.Enclosures.Where(x => x.EnclosureType.Contains(enclosureType) &&
                                                      x.EnclosureSize.Contains(enclosureSize)).ToList();
+            }
+        }
+        #endregion
+
+        #region Wire Gauge Read
+        public WireGauge getWireGauge(string gauge)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.WireGauges.Find(gauge);
+            }
+        }
+
+        public IEnumerable<WireGauge> getWireGauges()
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.WireGauges.ToList();
             }
         }
 
@@ -769,14 +815,196 @@ namespace RouteConfigurator.Design
                 return context.WireGauges.Where(x => x.Gauge.Contains(wireGauge)).ToList();
             }
         }
+        #endregion
 
+        #region Engineered Modifications Read
+        public IEnumerable<EngineeredModification> getFilteredNewComponents(string Sender, string ComponentName, string EnclosureSize)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.EngineeredModifications.Where(item => item.IsNew == true &&
+                                                                     item.State == 0 &&
+                                                                     item.Sender.Contains(Sender) &&
+                                                                     item.ComponentName.Contains(ComponentName) &&
+                                                                     item.EnclosureSize.Contains(EnclosureSize) &&
+                                                                     item.EnclosureType.Equals("") &&
+                                                                     item.Gauge.Equals("")).ToList();
+            }
+        }
 
+        public IEnumerable<EngineeredModification> getFilteredModifiedComponents(string Sender, string ComponentName, string EnclosureSize)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.EngineeredModifications.Where(item => item.IsNew == false &&
+                                                                     item.State == 0 &&
+                                                                     item.Sender.Contains(Sender) &&
+                                                                     item.ComponentName.Contains(ComponentName) &&
+                                                                     item.EnclosureSize.Contains(EnclosureSize) &&
+                                                                     item.EnclosureType.Equals("") &&
+                                                                     item.Gauge.Equals("")).ToList();
+            }
+        }
 
+        public IEnumerable<EngineeredModification> getFilteredModifiedEnclosures(string Sender, string EnclosureSize, string EnclosureType)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.EngineeredModifications.Where(item => item.IsNew == false &&
+                                                                     item.State == 0 &&
+                                                                     item.Sender.Contains(Sender) &&
+                                                                     item.EnclosureSize.Contains(EnclosureSize) &&
+                                                                     item.EnclosureType.Contains(EnclosureType) &&
+                                                                     item.ComponentName.Equals("") &&
+                                                                     item.Gauge.Equals("")).ToList();
+            }
+        }
+
+        public IEnumerable<EngineeredModification> getFilteredWireGaugeMods(string Sender, string WireGauge, bool IsNew)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                if (IsNew)
+                {
+                    return context.EngineeredModifications.Where(item => item.IsNew == IsNew &&
+                                                                         item.State == 0 &&
+                                                                         item.Sender.Contains(Sender) &&
+                                                                         item.Gauge.Contains(WireGauge) &&
+                                                                         item.EnclosureSize.Equals("") &&
+                                                                         item.EnclosureType.Equals("") &&
+                                                                         item.ComponentName.Equals("")).ToList();
+                }
+                else
+                {
+                    return context.EngineeredModifications.Where(item => item.State == 0 &&
+                                                                         item.Sender.Contains(Sender) &&
+                                                                         item.Gauge.Contains(WireGauge) &&
+                                                                         item.EnclosureSize.Equals("") &&
+                                                                         item.EnclosureType.Equals("") &&
+                                                                         item.ComponentName.Equals("")).ToList();
+                }
+            }
+        }
+        #endregion
+
+        #region Modify Engineered
         public void addEngineeredModificationRequest(EngineeredModification mod)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 context.EngineeredModifications.Add(mod);
+                context.SaveChanges();
+            }
+        }
+
+        public void addComponent(Component component)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                context.Components.Add(component);
+                context.SaveChanges();
+            }
+        }
+
+        public void addWireGauge(WireGauge wireGauge)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                context.WireGauges.Add(wireGauge);
+                context.SaveChanges();
+            }
+        }
+
+        public void updateComponent(string name, string enclosureSize, decimal newTime)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                Component component = context.Components.Find(name, enclosureSize);
+                component.Time = newTime;
+                context.SaveChanges();
+            }
+        }
+
+        public void updateEnclosure(string enclosureType, string enclosureSize, decimal newTime)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                Enclosure enclosure = context.Enclosures.Find(enclosureType, enclosureSize);
+                enclosure.Time = newTime;
+                context.SaveChanges();
+            }
+        }
+
+        public void updateWireGauge(string gauge, decimal newTimePercentage)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                WireGauge wireGauge = context.WireGauges.Find(gauge);
+                wireGauge.TimePercentage = newTimePercentage;
+                context.SaveChanges();
+            }
+        }
+
+        public void updateEngineeredModification(EngineeredModification modification)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                EngineeredModification mod = context.EngineeredModifications.Find(modification.ModificationID);
+
+                //Update modification info for approval or denial
+                mod.ReviewedDate = modification.ReviewedDate;
+                mod.Reviewer = modification.Reviewer;
+
+                if (modification.State == 3)
+                {
+                    bool changed = false;
+
+                    if ((!modification.ComponentName.Equals(mod.ComponentName)) ||
+                        (!modification.EnclosureSize.Equals(mod.EnclosureSize)) ||
+                        (!modification.EnclosureType.Equals(mod.EnclosureType)) ||
+                        (!modification.Gauge.Equals(mod.Gauge)) ||
+                        (modification.NewTime != mod.NewTime) ||
+                        (modification.NewTimePercentage != mod.NewTimePercentage))
+                    {
+                        changed = true;
+                    }
+
+                    if (changed)
+                    {
+                        //Deny the old request.  Create a new request for the manager.  Add it.
+                        mod.State = 2;   //Database Override Request Denied
+
+                        EngineeredModification newMod = new EngineeredModification()
+                        {
+                            RequestDate = DateTime.Now,
+                            ReviewedDate = DateTime.Now,
+                            Description = "Manager updated supervisor request",
+                            State = 1,
+                            Sender = modification.Reviewer,
+                            Reviewer = modification.Reviewer,
+                            IsNew = modification.IsNew,
+                            ComponentName = modification.ComponentName,
+                            EnclosureSize = modification.EnclosureSize,
+                            EnclosureType = modification.EnclosureType,
+                            NewTime = modification.NewTime,
+                            OldTime = modification.OldTime,
+                            Gauge = modification.Gauge,
+                            NewTimePercentage = modification.NewTimePercentage,
+                            OldTimePercentage = modification.OldTimePercentage
+                        };
+
+                        context.EngineeredModifications.Add(newMod);
+                    }
+                    else
+                    {
+                        mod.State = 1;
+                    }
+                }
+                else if (modification.State == 4) 
+                {
+                    mod.State = 2;
+                }
+
                 context.SaveChanges();
             }
         }

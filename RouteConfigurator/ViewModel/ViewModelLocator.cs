@@ -47,9 +47,12 @@ namespace RouteConfigurator.ViewModel
 
             SimpleIoc.Default.Register<EngineeredHomeViewModel>();
             SimpleIoc.Default.Register<EngineeredSupervisorViewModel>();
+            SimpleIoc.Default.Register<EngineeredManagerViewModel>();
             SimpleIoc.Default.Register<AddComponentPopupModel>();
             SimpleIoc.Default.Register<ModifyComponentsPopupModel>();
             SimpleIoc.Default.Register<ModifyEnclosuresPopupModel>();
+            SimpleIoc.Default.Register<AddWireGaugePopupModel>();
+            SimpleIoc.Default.Register<ModifyWireGaugesPopupModel>();
         }
 
         public static void setupNavigation()
@@ -62,6 +65,7 @@ namespace RouteConfigurator.ViewModel
 
             navigationService.Configure("EngineeredHomeView", new System.Uri("/ViewEngineered/EngineeredHomeView.xaml", UriKind.Relative));
             navigationService.Configure("EngineeredSupervisorView", new System.Uri("/ViewEngineered/EngineeredSupervisorView.xaml", UriKind.Relative));
+            navigationService.Configure("EngineeredManagerView", new System.Uri("/ViewEngineered/EngineeredManagerView.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
@@ -85,9 +89,12 @@ namespace RouteConfigurator.ViewModel
 
             SimpleIoc.Default.Unregister<EngineeredHomeViewModel>();
             SimpleIoc.Default.Unregister<EngineeredSupervisorViewModel>();
+            SimpleIoc.Default.Unregister<EngineeredManagerViewModel>();
             SimpleIoc.Default.Unregister<AddComponentPopupModel>();
             SimpleIoc.Default.Unregister<ModifyComponentsPopupModel>();
             SimpleIoc.Default.Unregister<ModifyEnclosuresPopupModel>();
+            SimpleIoc.Default.Unregister<AddWireGaugePopupModel>();
+            SimpleIoc.Default.Unregister<ModifyWireGaugesPopupModel>();
         }
 
         public HomeViewModel Home
@@ -210,6 +217,16 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
+        public EngineeredManagerViewModel EngineeredManager
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<EngineeredManagerViewModel>();
+                SimpleIoc.Default.Register<EngineeredManagerViewModel>();
+                return ServiceLocator.Current.GetInstance<EngineeredManagerViewModel>();
+            }
+        }
+
         public AddComponentPopupModel AddComponent 
         {
             get
@@ -237,6 +254,26 @@ namespace RouteConfigurator.ViewModel
                 SimpleIoc.Default.Unregister<ModifyEnclosuresPopupModel>();
                 SimpleIoc.Default.Register<ModifyEnclosuresPopupModel>();
                 return ServiceLocator.Current.GetInstance<ModifyEnclosuresPopupModel>();
+            }
+        }
+
+        public AddWireGaugePopupModel AddWireGauge
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<AddWireGaugePopupModel>();
+                SimpleIoc.Default.Register<AddWireGaugePopupModel>();
+                return ServiceLocator.Current.GetInstance<AddWireGaugePopupModel>();
+            }
+        }
+
+        public ModifyWireGaugesPopupModel ModifyWireGauges
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<ModifyWireGaugesPopupModel>();
+                SimpleIoc.Default.Register<ModifyWireGaugesPopupModel>();
+                return ServiceLocator.Current.GetInstance<ModifyWireGaugesPopupModel>();
             }
         }
     }

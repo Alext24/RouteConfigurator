@@ -68,7 +68,8 @@ namespace RouteConfigurator.ViewModel
         public RelayCommand openSupervisorCommand { get; set; }
         public RelayCommand refreshTablesCommand { get; set; }
         public RelayCommand submitCheckedCommand { get; set; }
-        public RelayCommand goBackCommand { get; set; }
+        public RelayCommand engineeredOrdersCommand { get; set; }
+        public RelayCommand goHomeCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -83,7 +84,8 @@ namespace RouteConfigurator.ViewModel
             openSupervisorCommand = new RelayCommand(openSupervisorView);
             refreshTablesCommand = new RelayCommand(refreshTables);
             submitCheckedCommand = new RelayCommand(submitCheckedAsync);
-            goBackCommand = new RelayCommand(goBack);
+            engineeredOrdersCommand = new RelayCommand(engineeredOrders);
+            goHomeCommand = new RelayCommand(goHome);
         }
         #endregion
 
@@ -321,19 +323,19 @@ namespace RouteConfigurator.ViewModel
             {
                 if (mod.State == 3)
                 {
-                    if (mod.NewDriveTime <= 0)
+                    try
                     {
-                        errorText += string.Format("Error modifying model {0}.  Invalid Drive Time: {1}", mod.ModelBase, mod.NewDriveTime);
-                        numError++;
-                    }
-                    else if (mod.NewAVTime <= 0)
-                    {
-                        errorText += string.Format("Error modifying model {0}.  Invalid AV Time: {1}", mod.ModelBase, mod.NewAVTime);
-                        numError++;
-                    }
-                    else
-                    {
-                        try
+                        if (mod.NewDriveTime <= 0)
+                        {
+                            errorText += string.Format("Error modifying model {0}.  Invalid Drive Time: {1}", mod.ModelBase, mod.NewDriveTime);
+                            numError++;
+                        }
+                        else if (mod.NewAVTime <= 0)
+                        {
+                            errorText += string.Format("Error modifying model {0}.  Invalid AV Time: {1}", mod.ModelBase, mod.NewAVTime);
+                            numError++;
+                        }
+                        else
                         {
                             string descriptionStart = "Deleting override for ";
                             if (mod.Description.StartsWith(descriptionStart))
@@ -351,14 +353,14 @@ namespace RouteConfigurator.ViewModel
 
                             updateModification(mod);
                         }
-                        catch (Exception e)
-                        {
-                            errorText += string.Format("Error modifying model {0}\n", mod.ModelBase);
-                            numError++;
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error modifying model {0}\n", mod.ModelBase);
+                        numError++;
 
-                            informationText = "There was a problem accessing the database.";
-                            Console.WriteLine(e.Message);
-                        }
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
                     }
                 }
                 else if (mod.State == 4)
@@ -380,28 +382,28 @@ namespace RouteConfigurator.ViewModel
             {
                 if (mod.State == 3)
                 {
-                    if (mod.NewTime <= 0)
+                    try
                     {
-                        errorText += string.Format("Error modifying option {0}.  Invalid time: {1}", mod.OptionCode, mod.NewTime);
-                        numError++;
-                    }
-                    else
-                    {
-                        try
+                        if (mod.NewTime <= 0)
+                        {
+                            errorText += string.Format("Error modifying option {0}.  Invalid time: {1}", mod.OptionCode, mod.NewTime);
+                            numError++;
+                        }
+                        else
                         {
                             _serviceProxy.updateOption(mod.OptionCode, mod.BoxSize, mod.NewTime, mod.NewName);
                             numApproved++;
 
                             updateModification(mod);
                         }
-                        catch (Exception e)
-                        {
-                            errorText += string.Format("Error modifying option {0}-{1}\n", mod.OptionCode, mod.BoxSize);
-                            numError++;
+                    }
+                    catch (Exception e)
+                    {
+                        errorText += string.Format("Error modifying option {0}-{1}\n", mod.OptionCode, mod.BoxSize);
+                        numError++;
 
-                            informationText = "There was a problem accessing the database.";
-                            Console.WriteLine(e.Message);
-                        }
+                        informationText = "There was a problem accessing the database.";
+                        Console.WriteLine(e.Message);
                     }
                 }
                 else if (mod.State == 4)
@@ -501,9 +503,14 @@ namespace RouteConfigurator.ViewModel
             informationText = "";
         }
 
-        private void goBack()
+        private void engineeredOrders()
         {
-            _navigationService.GoBack();
+            _navigationService.NavigateTo("EngineeredManagerView");
+        }
+
+        private void goHome()
+        {
+            _navigationService.NavigateTo("HomeView");
         }
         #endregion
 

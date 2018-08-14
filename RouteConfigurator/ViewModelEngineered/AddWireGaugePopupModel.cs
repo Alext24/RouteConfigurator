@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RouteConfigurator.ViewModelEngineered
 {
-    public class AddComponentPopupModel : ViewModelBase
+    public class AddWireGaugePopupModel : ViewModelBase
     {
         #region PrivateVariables
         /// <summary>
@@ -25,10 +25,8 @@ namespace RouteConfigurator.ViewModelEngineered
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
-        private string _componentName;
-        public ObservableCollection<string> _enclosureSizes = new ObservableCollection<string>();
-        private string _enclosureSize;
-        private decimal? _newTime;
+        private string _wireGauge;
+        private decimal? _newTimePercentage;
         private string _description;
 
         private ObservableCollection<EngineeredModification> _modificationsToSubmit = new ObservableCollection<EngineeredModification>();
@@ -40,7 +38,7 @@ namespace RouteConfigurator.ViewModelEngineered
 
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
-        public RelayCommand addComponentCommand { get; set; }
+        public RelayCommand addWireGaugeCommand { get; set; }
         public RelayCommand submitCommand { get; set; }
         #endregion
 
@@ -48,12 +46,12 @@ namespace RouteConfigurator.ViewModelEngineered
         /// <summary>
         /// initializes view components
         /// </summary>
-        public AddComponentPopupModel(IFrameNavigationService navigationService)
+        public AddWireGaugePopupModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
 
             loadedCommand = new RelayCommand(loaded);
-            addComponentCommand = new RelayCommand(addComponentAsync);
+            addWireGaugeCommand = new RelayCommand(addWireGaugeAsync);
             submitCommand = new RelayCommand(submitAsync);
         }
         #endregion
@@ -61,13 +59,12 @@ namespace RouteConfigurator.ViewModelEngineered
         #region Commands
         private void loaded()
         {
-            enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
         }
 
-        private async void addComponentAsync()
+        private async void addWireGaugeAsync()
         {
             loading = true;
-            await Task.Run(() => addComponent());
+            await Task.Run(() => addWireGauge());
             loading = false;
         }
 
@@ -75,14 +72,14 @@ namespace RouteConfigurator.ViewModelEngineered
         /// Creates the new component modification and adds it to the modifications to submit list
         /// Calls checkValid
         /// </summary>
-        private void addComponent()
+        private void addWireGauge()
         {
             informationText = "";
 
             if (checkValid())
             {
-                informationText = "Adding component...";
-                EngineeredModification mod = new EngineeredModification()
+                informationText = "Adding wire gauge...";
+                EngineeredModification newWireGauge = new EngineeredModification()
                 {
                     RequestDate = DateTime.Now,
                     ReviewedDate = new DateTime(1900, 1, 1),
@@ -91,13 +88,13 @@ namespace RouteConfigurator.ViewModelEngineered
                     Sender = "TEMPORARY SENDER",
                     Reviewer = "",
                     IsNew = true,
-                    ComponentName = componentName,
-                    EnclosureSize = enclosureSize,
+                    ComponentName = "",
+                    EnclosureSize = "",
                     EnclosureType = "",
-                    NewTime = (decimal)newTime,
+                    NewTime = 0,
                     OldTime = 0,
-                    Gauge = "",
-                    NewTimePercentage = 0,
+                    Gauge = wireGauge,
+                    NewTimePercentage = (decimal)newTimePercentage,
                     OldTimePercentage = 0
                 };
 
@@ -105,13 +102,13 @@ namespace RouteConfigurator.ViewModelEngineered
                 // we have to add the override to the list using a delegate function.
                 App.Current.Dispatcher.Invoke(delegate
                 {
-                    modificationsToSubmit.Add(mod);
+                    modificationsToSubmit.Add(newWireGauge);
                 });
 
                 //Clear input boxes
-                enclosureSize = null;
-                newTime = null;
-                informationText = "Component has been submitted.  Waiting for manager approval.";
+                wireGauge = "";
+                newTimePercentage = null;
+                informationText = "Wire Gauge has been submitted.  Waiting for manager approval.";
             }
         }
 
@@ -133,7 +130,7 @@ namespace RouteConfigurator.ViewModelEngineered
             {
                 try
                 {
-                    informationText = "Submitting component modifications...";
+                    informationText = "Submitting wire gauge modifications...";
                     foreach (EngineeredModification mod in modificationsToSubmit)
                     {
                         _serviceProxy.addEngineeredModificationRequest(mod);
@@ -146,74 +143,46 @@ namespace RouteConfigurator.ViewModelEngineered
                     return;
                 }
                 //Clear input boxes
-                componentName = "";
-                enclosureSize = null; 
-                newTime = null;
+                wireGauge = "";
+                newTimePercentage = null;
                 description = "";
 
                 modificationsToSubmit = new ObservableCollection<EngineeredModification>();
 
-                informationText = "Components have been submitted.  Waiting for manager approval.";
+                informationText = "Wire Gauges have been submitted.  Waiting for manager approval.";
             }
             else
             {
-                informationText = "No components to submit.";
+                informationText = "No wire gauges to submit.";
             }
         }
         #endregion
 
         #region Public Variables
-        public string componentName 
+        public string wireGauge 
         {
             get
             {
-                return _componentName;
+                return _wireGauge;
             }
             set
             {
-                _componentName = value.ToUpper();
-                RaisePropertyChanged("componentName");
+                _wireGauge = value.ToUpper();
+                RaisePropertyChanged("wireGauge");
                 informationText = "";
             }
         }
 
-        public ObservableCollection<string> enclosureSizes
+        public decimal? newTimePercentage
         {
             get
             {
-                return _enclosureSizes;
+                return _newTimePercentage;
             }
             set
             {
-                _enclosureSizes = value;
-                RaisePropertyChanged("enclosureSizes");
-            }
-        }
-
-        public string enclosureSize
-        {
-            get
-            {
-                return _enclosureSize;
-            }
-            set
-            {
-                _enclosureSize = value;
-                RaisePropertyChanged("enclosureSize");
-                informationText = "";
-            }
-        }
-
-        public decimal? newTime
-        {
-            get
-            {
-                return _newTime;
-            }
-            set
-            {
-                _newTime = value;
-                RaisePropertyChanged("newTime");
+                _newTimePercentage = value;
+                RaisePropertyChanged("newTimePercentage");
                 informationText = "";
             }
         }
@@ -275,10 +244,10 @@ namespace RouteConfigurator.ViewModelEngineered
 
         #region Private Functions
         /// <summary>
-        /// Checks that the component does not already exist
+        /// Checks that the wire gauge does not already exist
         /// Calls checkComplete
         /// </summary>
-        /// <returns> true if the component is valid and doesn't already exist, false otherwise </returns>
+        /// <returns> true if the wire gauge is valid and doesn't already exist, false otherwise </returns>
         private bool checkValid()
         {
             bool valid = checkComplete();
@@ -286,28 +255,28 @@ namespace RouteConfigurator.ViewModelEngineered
             {
                 try
                 {
-                    //Check if the component already exists in the database as an component
-                    if (_serviceProxy.getFilteredComponents(componentName, enclosureSize).ToList().Count > 0)
+                    //Check if the wire gauge already exists in the database as a wire gauge
+                    if (_serviceProxy.getFilteredWireGauges(wireGauge).ToList().Count > 0)
                     {
-                        informationText = "This component already exists";
+                        informationText = "This wire gauge already exists";
                         valid = false;
                     }
                     /*
-                    //Check if the component already exists in the database as a new component request
-                    else if (_serviceProxy.getFilteredNewComponents("", componentName, enclosureSize).ToList().Count > 0)
+                    //Check if the wire gauge already exists in the database as a new wire gauge request
+                    else if (_serviceProxy.getFilteredNewWireGauges("", wireGauge).ToList().Count > 0)
                     {
-                        informationText = "Component is already waiting for approval.";
+                        informationText = "wire gauge is already waiting for approval.";
                         valid = false;
                     }
                     */
                     else
                     {
-                        //Check if the component is a duplicate in the ready to submit list
-                        foreach (EngineeredModification component in modificationsToSubmit)
+                        //Check if the wire gauge is a duplicate in the ready to submit list
+                        foreach (EngineeredModification newWireGauge in modificationsToSubmit)
                         {
-                            if (component.ComponentName.Equals(componentName) && component.EnclosureSize.Equals(enclosureSize))
+                            if (newWireGauge.Gauge.Equals(wireGauge))
                             {
-                                informationText = "This component is already ready to submit";
+                                informationText = "This wire gauge is already ready to submit";
                                 valid = false;
                                 break;
                             }
@@ -332,20 +301,15 @@ namespace RouteConfigurator.ViewModelEngineered
         {
             bool complete = true;
 
-            if (string.IsNullOrWhiteSpace(componentName))
+            if (string.IsNullOrWhiteSpace(wireGauge))
             {
                 complete = false;
-                informationText = "Enter a component name.";
+                informationText = "Enter a wire gauge.";
             }
-            else if (enclosureSize == null)
+            else if (newTimePercentage == null || newTimePercentage <= 0)
             {
                 complete = false;
-                informationText = "Select a enclosure size.";
-            }
-            else if (newTime == null || newTime <= 0)
-            {
-                complete = false;
-                informationText = "Enter a valid time.";
+                informationText = "Enter a valid time percentage.";
             }
 
             return complete;
