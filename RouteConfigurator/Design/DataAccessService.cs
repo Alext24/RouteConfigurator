@@ -818,6 +818,47 @@ namespace RouteConfigurator.Design
         #endregion
 
         #region Engineered Modifications Read
+        public IEnumerable<EngineeredModification> getFilteredEngineeredModifications(string ComponentName, string EnclosureSize, string EnclosureType, string Gauge, string Sender, string Reviewer)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.EngineeredModifications.Where(item => item.ComponentName.Contains(ComponentName) &&
+                                                                     item.EnclosureSize.Contains(EnclosureSize) &&
+                                                                     item.EnclosureType.Contains(EnclosureType) &&
+                                                                     item.Gauge.Contains(Gauge) &&
+                                                                     item.Sender.Contains(Sender) &&
+                                                                     item.Reviewer.Contains(Reviewer)).ToList();
+            }
+        }
+
+        public IEnumerable<EngineeredModification> getFilteredWaitingEngineeredModifications(string ComponentName, string EnclosureSize, string EnclosureType, string Gauge, string Sender, string Reviewer)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.EngineeredModifications.Where(item => (item.State == 0 || item.State == 3 || item.State == 4) &&
+                                                                      item.ComponentName.Contains(ComponentName) &&
+                                                                      item.EnclosureSize.Contains(EnclosureSize) &&
+                                                                      item.EnclosureType.Contains(EnclosureType) &&
+                                                                      item.Gauge.Contains(Gauge) &&
+                                                                      item.Sender.Contains(Sender) &&
+                                                                      item.Reviewer.Contains(Reviewer)).ToList();
+            }
+        }
+
+        public IEnumerable<EngineeredModification> getFilteredStateEngineeredModifications(int State, string ComponentName, string EnclosureSize, string EnclosureType, string Gauge, string Sender, string Reviewer)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.EngineeredModifications.Where(item => item.State == State &&
+                                                                     item.ComponentName.Contains(ComponentName) &&
+                                                                     item.EnclosureSize.Contains(EnclosureSize) &&
+                                                                     item.EnclosureType.Contains(EnclosureType) &&
+                                                                     item.Gauge.Contains(Gauge) &&
+                                                                     item.Sender.Contains(Sender) &&
+                                                                     item.Reviewer.Contains(Reviewer)).ToList();
+            }
+        }
+
         public IEnumerable<EngineeredModification> getFilteredNewComponents(string Sender, string ComponentName, string EnclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -883,6 +924,19 @@ namespace RouteConfigurator.Design
                                                                          item.EnclosureType.Equals("") &&
                                                                          item.ComponentName.Equals("")).ToList();
                 }
+            }
+        }
+
+        public IEnumerable<EngineeredModification> getNewWireGaugeMods(string WireGauge)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.EngineeredModifications.Where(item => item.IsNew == true &&
+                                                                     item.State == 0 &&
+                                                                     item.Gauge.Equals(WireGauge) &&
+                                                                     item.EnclosureSize.Equals("") &&
+                                                                     item.EnclosureType.Equals("") &&
+                                                                     item.ComponentName.Equals("")).ToList();
             }
         }
         #endregion

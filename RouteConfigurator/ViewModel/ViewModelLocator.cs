@@ -53,6 +53,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<ModifyEnclosuresPopupModel>();
             SimpleIoc.Default.Register<AddWireGaugePopupModel>();
             SimpleIoc.Default.Register<ModifyWireGaugesPopupModel>();
+            SimpleIoc.Default.Register<EngineeredRequestsViewModel>();
         }
 
         public static void setupNavigation()
@@ -95,6 +96,7 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<ModifyEnclosuresPopupModel>();
             SimpleIoc.Default.Unregister<AddWireGaugePopupModel>();
             SimpleIoc.Default.Unregister<ModifyWireGaugesPopupModel>();
+            SimpleIoc.Default.Unregister<EngineeredRequestsViewModel>();
         }
 
         public HomeViewModel Home
@@ -274,6 +276,16 @@ namespace RouteConfigurator.ViewModel
                 SimpleIoc.Default.Unregister<ModifyWireGaugesPopupModel>();
                 SimpleIoc.Default.Register<ModifyWireGaugesPopupModel>();
                 return ServiceLocator.Current.GetInstance<ModifyWireGaugesPopupModel>();
+            }
+        }
+
+        public EngineeredRequestsViewModel EngineeredRequests 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<EngineeredRequestsViewModel>();
+                SimpleIoc.Default.Register<EngineeredRequestsViewModel>();
+                return ServiceLocator.Current.GetInstance<EngineeredRequestsViewModel>();
             }
         }
     }

@@ -168,12 +168,16 @@
     <Compile Include="ViewEngineered\ModifyWireGaugesPopup.xaml.cs">
       <DependentUpon>ModifyWireGaugesPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewEngineered\EngineeredRequestsView.xaml.cs">
+      <DependentUpon>EngineeredRequestsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModelEngineered\AddComponentPopupModel.cs" />
     <Compile Include="ViewModelEngineered\AddWireGaugePopupModel.cs" />
     <Compile Include="ViewModelEngineered\EngineeredManagerViewModel.cs" />
     <Compile Include="ViewModelEngineered\ModifyComponentsPopupModel.cs" />
     <Compile Include="ViewModelEngineered\ModifyEnclosuresPopupModel.cs" />
     <Compile Include="ViewModelEngineered\ModifyWireGaugesPopupModel.cs" />
+    <Compile Include="ViewModelEngineered\EngineeredRequestsViewModel.cs" />
     <Compile Include="ViewModel\AddModelPopupModel.cs" />
     <Compile Include="ViewModel\AddOptionPopupModel.cs" />
     <Compile Include="ViewModel\AddTimeTrialPopupModel.cs" />
@@ -278,6 +282,10 @@
     <Page Include="ViewEngineered\ModifyWireGaugesPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewEngineered\EngineeredRequestsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\AddModelPopup.xaml">
       <SubType>Designer</SubType>

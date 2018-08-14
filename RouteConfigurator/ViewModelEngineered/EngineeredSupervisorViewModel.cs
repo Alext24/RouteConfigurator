@@ -127,8 +127,8 @@ namespace RouteConfigurator.ViewModelEngineered
         
         private void viewRequests()
         {
-            //RequestsView requests = new RequestsView();
-            //requests.Show();
+            EngineeredRequestsView requests = new EngineeredRequestsView();
+            requests.Show();
         }
 
         private void standardModels()

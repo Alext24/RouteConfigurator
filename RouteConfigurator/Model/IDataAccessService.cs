@@ -100,11 +100,15 @@ namespace RouteConfigurator.Model
         #endregion
 
         #region Engineered Modifications Read
-        
+        IEnumerable<EngineeredModification> getFilteredEngineeredModifications(string ComponentName, string EnclosureSize, string EnclosureType, string Gauge, string Sender, string Reviewer);
+        IEnumerable<EngineeredModification> getFilteredWaitingEngineeredModifications(string ComponentName, string EnclosureSize, string EnclosureType, string Gauge, string Sender, string Reviewer);
+        IEnumerable<EngineeredModification> getFilteredStateEngineeredModifications(int State, string ComponentName, string EnclosureSize, string EnclosureType, string Gauge, string Sender, string Reviewer);
+
         IEnumerable<EngineeredModification> getFilteredNewComponents(string Sender, string ComponentName, string EnclosureSize);
         IEnumerable<EngineeredModification> getFilteredModifiedComponents(string Sender, string ComponentName, string EnclosureSize);
         IEnumerable<EngineeredModification> getFilteredModifiedEnclosures(string Sender, string EnclosureSize, string EnclosureType);
         IEnumerable<EngineeredModification> getFilteredWireGaugeMods(string Sender, string WireGauge, bool IsNew);
+        IEnumerable<EngineeredModification> getNewWireGaugeMods(string WireGauge);
         #endregion
 
         #region Modify Engineered
