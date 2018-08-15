@@ -373,7 +373,7 @@ namespace RouteConfigurator.ViewModel
                 try
                 {
                     informationText = "Loading models...";
-                    modelsFound = new ObservableCollection<Model.Model>(_serviceProxy.getNumModelsFound(selectedDrive, AVText, boxSize, exactBoxSize));
+                    modelsFound = new ObservableCollection<Model.Model>(_serviceProxy.getModelsFound(selectedDrive, AVText, boxSize, exactBoxSize));
                     informationText = "";
                 }
                 catch (Exception e)

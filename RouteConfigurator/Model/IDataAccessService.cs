@@ -15,7 +15,7 @@ namespace RouteConfigurator.Model
         IEnumerable<Model> getModels();
         IEnumerable<Model> getFilteredModels(string modelFilter, string boxSizeFilter);
         IEnumerable<string> getDriveTypes();
-        IEnumerable<Model> getNumModelsFound(string drive, string av, string boxSize, bool exact);
+        IEnumerable<Model> getModelsFound(string drive, string av, string boxSize, bool exact);
         #endregion
 
         #region Option Read
@@ -24,7 +24,7 @@ namespace RouteConfigurator.Model
         IEnumerable<Option> getModelOptions(List<string> optionsList, string boxSize);
         decimal getTotalOptionsTime(string boxSize, List<string> options);
         IEnumerable<string> getOptionCodes();
-        IEnumerable<Option> getNumOptionsFound(string optionCode, string boxSize, bool exact);
+        IEnumerable<Option> getOptionsFound(string optionCode, string boxSize, bool exact);
         #endregion
 
         #region Override Read
@@ -49,7 +49,7 @@ namespace RouteConfigurator.Model
 
         IEnumerable<Modification> getFilteredNewModels(string Sender, string Base, string BoxSize);
         IEnumerable<Modification> getFilteredNewOptions(string Sender, string OptionCode, string BoxSize);
-        IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelName);
+        IEnumerable<Modification> getFilteredModifiedModels(string Sender, string ModelBase);
         IEnumerable<Modification> getFilteredModifiedOptions(string Sender, string OptionCode, string BoxSize);
 
         bool checkDuplicateOverrideDeletion(Modification mod);

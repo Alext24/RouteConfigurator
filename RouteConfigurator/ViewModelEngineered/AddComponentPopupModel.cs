@@ -111,7 +111,7 @@ namespace RouteConfigurator.ViewModelEngineered
                 //Clear input boxes
                 enclosureSize = null;
                 newTime = null;
-                informationText = "Component has been submitted.  Waiting for manager approval.";
+                informationText = "Component added";
             }
         }
 

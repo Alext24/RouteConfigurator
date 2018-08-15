@@ -178,27 +178,27 @@ namespace RouteConfigurator.ViewModel
                     {
                         if (mod.ModelBase.Length != 8)
                         {
-                            errorText += string.Format("Error adding Model {0}. Invalid Model format.", mod.ModelBase);
+                            errorText += string.Format("Error adding Model {0}. Invalid Model format.\n", mod.ModelBase);
                             numError++;
                         }
                         else if (_serviceProxy.getModel(mod.ModelBase) != null)
                         {
-                            errorText += string.Format("Error adding Model {0}. Model already exists.", mod.ModelBase);
+                            errorText += string.Format("Error adding Model {0}. Model already exists.\n", mod.ModelBase);
                             numError++;
                         }
                         else if (string.IsNullOrWhiteSpace(mod.BoxSize))
                         {
-                            errorText += string.Format("Error adding Model {0}. Invalid Box Size.", mod.ModelBase);
+                            errorText += string.Format("Error adding Model {0}. Invalid Box Size.\n", mod.ModelBase);
                             numError++;
                         }
                         else if (mod.NewDriveTime <= 0)
                         {
-                            errorText += string.Format("Error adding Model {0}. Invalid Drive Time: {1}.", mod.ModelBase, mod.NewDriveTime);
+                            errorText += string.Format("Error adding Model {0}. Invalid Drive Time: {1}.\n", mod.ModelBase, mod.NewDriveTime);
                             numError++;
                         }
                         else if (mod.NewAVTime <= 0)
                         {
-                            errorText += string.Format("Error adding Model {0}. Invalid AV Time: {1}.", mod.ModelBase, mod.NewAVTime);
+                            errorText += string.Format("Error adding Model {0}. Invalid AV Time: {1}.\n", mod.ModelBase, mod.NewAVTime);
                             numError++;
                         }
                         else
@@ -219,7 +219,7 @@ namespace RouteConfigurator.ViewModel
                     }
                     catch (Exception e)
                     {
-                        errorText += string.Format("Error adding model {0}. Problem accessing the database\n", mod.ModelBase);
+                        errorText += string.Format("Error adding model {0}. Problem accessing the database.\n", mod.ModelBase);
                         numError++;
 
                         Console.WriteLine(e.Message);
@@ -251,32 +251,32 @@ namespace RouteConfigurator.ViewModel
                     {
                         if (mod.OptionCode.Length != 2)
                         {
-                            errorText += string.Format("Error adding Option {0}. Option Code must be 2 characters.", mod.OptionCode);
+                            errorText += string.Format("Error adding Option {0}. Option Code must be 2 characters.\n", mod.OptionCode);
                             numError++;
                         }
                         else if (!mod.OptionCode.ElementAt(0).Equals('P') && !mod.OptionCode.ElementAt(0).Equals('T'))
                         {
-                            errorText += string.Format("Error adding Option {0}. Option Code must start with P or T.", mod.OptionCode);
+                            errorText += string.Format("Error adding Option {0}. Option Code must start with P or T.\n", mod.OptionCode);
                             numError++;
                         }
                         else if (mod.OptionCode.ElementAt(1).Equals('P') || mod.OptionCode.ElementAt(1).Equals('T'))
                         {
-                            errorText += string.Format("Error adding Option {0}. Option Code must not end with P or T.", mod.OptionCode);
+                            errorText += string.Format("Error adding Option {0}. Option Code must not end with P or T.\n", mod.OptionCode);
                             numError++;
                         }
                         else if (string.IsNullOrWhiteSpace(mod.BoxSize))
                         {
-                            errorText += string.Format("Error adding Option {0}. Invalid Box Size.", mod.OptionCode);
+                            errorText += string.Format("Error adding Option {0}. Invalid Box Size.\n", mod.OptionCode);
                             numError++;
                         }
                         else if (_serviceProxy.getFilteredOptions(mod.OptionCode, mod.BoxSize, true).ToList().Count > 0)
                         {
-                            errorText += string.Format("Error adding Option {0}. Option already exists.", mod.OptionCode);
+                            errorText += string.Format("Error adding Option {0}. Option already exists.\n", mod.OptionCode);
                             numError++;
                         }
                         else if (mod.NewTime <= 0)
                         {
-                            errorText += string.Format("Error adding Option {0}. Invalid Time: {1}.", mod.OptionCode, mod.NewTime);
+                            errorText += string.Format("Error adding Option {0}. Invalid Time: {1}.\n", mod.OptionCode, mod.NewTime);
                             numError++;
                         }
                         else
@@ -297,7 +297,7 @@ namespace RouteConfigurator.ViewModel
                     }
                     catch (Exception e)
                     {
-                        errorText += string.Format("Error adding option {0}-{1}\n", mod.OptionCode, mod.BoxSize);
+                        errorText += string.Format("Error adding option {0}-{1}.\n", mod.OptionCode, mod.BoxSize);
                         numError++;
 
                         informationText = "There was a problem accessing the database.";
@@ -327,12 +327,12 @@ namespace RouteConfigurator.ViewModel
                     {
                         if (mod.NewDriveTime <= 0)
                         {
-                            errorText += string.Format("Error modifying model {0}.  Invalid Drive Time: {1}", mod.ModelBase, mod.NewDriveTime);
+                            errorText += string.Format("Error modifying model {0}.  Invalid Drive Time: {1}.\n", mod.ModelBase, mod.NewDriveTime);
                             numError++;
                         }
                         else if (mod.NewAVTime <= 0)
                         {
-                            errorText += string.Format("Error modifying model {0}.  Invalid AV Time: {1}", mod.ModelBase, mod.NewAVTime);
+                            errorText += string.Format("Error modifying model {0}.  Invalid AV Time: {1}.\n", mod.ModelBase, mod.NewAVTime);
                             numError++;
                         }
                         else
@@ -356,7 +356,7 @@ namespace RouteConfigurator.ViewModel
                     }
                     catch (Exception e)
                     {
-                        errorText += string.Format("Error modifying model {0}\n", mod.ModelBase);
+                        errorText += string.Format("Error modifying model {0}.\n", mod.ModelBase);
                         numError++;
 
                         informationText = "There was a problem accessing the database.";
@@ -386,7 +386,7 @@ namespace RouteConfigurator.ViewModel
                     {
                         if (mod.NewTime <= 0)
                         {
-                            errorText += string.Format("Error modifying option {0}.  Invalid time: {1}", mod.OptionCode, mod.NewTime);
+                            errorText += string.Format("Error modifying option {0}.  Invalid time: {1}.\n", mod.OptionCode, mod.NewTime);
                             numError++;
                         }
                         else
@@ -399,7 +399,7 @@ namespace RouteConfigurator.ViewModel
                     }
                     catch (Exception e)
                     {
-                        errorText += string.Format("Error modifying option {0}-{1}\n", mod.OptionCode, mod.BoxSize);
+                        errorText += string.Format("Error modifying option {0}-{1}.\n", mod.OptionCode, mod.BoxSize);
                         numError++;
 
                         informationText = "There was a problem accessing the database.";
@@ -431,22 +431,22 @@ namespace RouteConfigurator.ViewModel
                     {
                         if (or.ModelNum.Length < 8)
                         {
-                            errorText += string.Format("Error adding override {0}.  Invalid Model Number format.", or.ModelNum);
+                            errorText += string.Format("Error adding override {0}.  Invalid Model Number format.\n", or.ModelNum);
                             numError++;
                         }
                         else if (_serviceProxy.getModel(or.ModelNum.Substring(0, 8)) == null)
                         {
-                            errorText += string.Format("Error adding override {0}.  Invalid Model: {1}.", or.ModelNum, or.ModelBase);
+                            errorText += string.Format("Error adding override {0}.  Invalid Model: {1}.\n", or.ModelNum, or.ModelBase);
                             numError++;
                         }
                         else if (or.OverrideTime <= 0)
                         {
-                            errorText += string.Format("Error adding override {0}.  Invalid Override Time: {1}.", or.ModelNum, or.OverrideTime);
+                            errorText += string.Format("Error adding override {0}.  Invalid Override Time: {1}.\n", or.ModelNum, or.OverrideTime);
                             numError++;
                         }
                         else if (or.OverrideRoute <= 0)
                         {
-                            errorText += string.Format("Error adding override {0}.  Invalid Override Route: {1}.", or.ModelNum, or.OverrideRoute);
+                            errorText += string.Format("Error adding override {0}.  Invalid Override Route: {1}.\n", or.ModelNum, or.OverrideRoute);
                             numError++;
                         }
                         else
@@ -465,7 +465,7 @@ namespace RouteConfigurator.ViewModel
                     }
                     catch (Exception e)
                     {
-                        errorText += string.Format("Error adding override {0}\n", or.ModelNum);
+                        errorText += string.Format("Error adding override {0}.\n", or.ModelNum);
                         numError++;
 
                         informationText = "There was a problem accessing the database.";

@@ -170,22 +170,22 @@ namespace RouteConfigurator.ViewModel
                     {
                         if (string.IsNullOrWhiteSpace(mod.ComponentName))
                         {
-                            errorText += string.Format("Error adding component {0}. Invalid component.", mod.ComponentName);
+                            errorText += string.Format("Error adding component {0}. Invalid component.\n", mod.ComponentName);
                             numError++;
                         }
                         else if (_serviceProxy.getComponent(mod.ComponentName, mod.EnclosureSize) != null)
                         {
-                            errorText += string.Format("Error adding component {0} - {1}. Component already exists.", mod.ComponentName, mod.EnclosureSize);
+                            errorText += string.Format("Error adding component {0} - {1}. Component already exists.\n", mod.ComponentName, mod.EnclosureSize);
                             numError++;
                         }
-                        else if (string.IsNullOrWhiteSpace(mod.EnclosureSize))
+                        else if (string.IsNullOrWhiteSpace(mod.EnclosureSize) || !(_serviceProxy.getEnclosureSizes().Contains(mod.EnclosureSize)))
                         {
-                            errorText += string.Format("Error adding component {0} - {1}. Invalid Enclosure Size.", mod.ComponentName, mod.EnclosureSize);
+                            errorText += string.Format("Error adding component {0} - {1}. Invalid Enclosure Size.\n", mod.ComponentName, mod.EnclosureSize);
                             numError++;
                         }
                         else if (mod.NewTime <= 0)
                         {
-                            errorText += string.Format("Error adding component {0}. Invalid Time: {1}.", mod.ComponentName, mod.NewTime);
+                            errorText += string.Format("Error adding component {0}. Invalid Time: {1}\n.", mod.ComponentName, mod.NewTime);
                             numError++;
                         }
                         else
@@ -234,7 +234,7 @@ namespace RouteConfigurator.ViewModel
                     {
                         if (mod.NewTime <= 0)
                         {
-                            errorText += string.Format("Error modifying component {0}.  Invalid Time: {1}", mod.ComponentName, mod.NewTime);
+                            errorText += string.Format("Error modifying component {0}.  Invalid Time: {1}.\n", mod.ComponentName, mod.NewTime);
                             numError++;
                         }
                         else
@@ -247,7 +247,7 @@ namespace RouteConfigurator.ViewModel
                     }
                     catch (Exception e)
                     {
-                        errorText += string.Format("Error modifying component {0}\n", mod.ComponentName);
+                        errorText += string.Format("Error modifying component {0}.\n", mod.ComponentName);
                         numError++;
 
                         informationText = "There was a problem accessing the database.";
@@ -277,7 +277,7 @@ namespace RouteConfigurator.ViewModel
                     {
                         if (mod.NewTime <= 0)
                         {
-                            errorText += string.Format("Error modifying enclosure {0} - {1}.  Invalid Time: {2}", mod.EnclosureType, mod.EnclosureSize, mod.NewTime);
+                            errorText += string.Format("Error modifying enclosure {0} - {1}.  Invalid Time: {2}.\n", mod.EnclosureType, mod.EnclosureSize, mod.NewTime);
                             numError++;
                         }
                         else
@@ -290,7 +290,7 @@ namespace RouteConfigurator.ViewModel
                     }
                     catch (Exception e)
                     {
-                        errorText += string.Format("Error modifying enclosure {0} - {1}\n", mod.EnclosureType, mod.EnclosureSize);
+                        errorText += string.Format("Error modifying enclosure {0} - {1}.\n", mod.EnclosureType, mod.EnclosureSize);
                         numError++;
 
                         informationText = "There was a problem accessing the database.";
@@ -324,17 +324,17 @@ namespace RouteConfigurator.ViewModel
                         {
                             if (string.IsNullOrWhiteSpace(mod.Gauge))
                             {
-                                errorText += string.Format("Error adding wire gauge {0}. Invalid gauge.", mod.Gauge);
+                                errorText += string.Format("Error adding wire gauge {0}. Invalid gauge.\n", mod.Gauge);
                                 numError++;
                             }
                             else if (_serviceProxy.getWireGauge(mod.Gauge) != null)
                             {
-                                errorText += string.Format("Error adding wire gauge {0}. Gauge already exists.", mod.Gauge);
+                                errorText += string.Format("Error adding wire gauge {0}. Gauge already exists.\n", mod.Gauge);
                                 numError++;
                             }
                             else if (mod.NewTimePercentage <= 0)
                             {
-                                errorText += string.Format("Error adding wire gauge {0}. Invalid Time: {1}.", mod.Gauge, mod.NewTimePercentage);
+                                errorText += string.Format("Error adding wire gauge {0}. Invalid Time: {1}.\n", mod.Gauge, mod.NewTimePercentage);
                                 numError++;
                             }
                             else
@@ -381,17 +381,17 @@ namespace RouteConfigurator.ViewModel
                         {
                             if (string.IsNullOrWhiteSpace(mod.Gauge))
                             {
-                                errorText += string.Format("Error modifying wire gauge {0}. Invalid gauge.", mod.Gauge);
+                                errorText += string.Format("Error modifying wire gauge {0}. Invalid gauge.\n", mod.Gauge);
                                 numError++;
                             }
                             else if (_serviceProxy.getWireGauge(mod.Gauge) == null)
                             {
-                                errorText += string.Format("Error modifying wire gauge {0}. Gauge does not exist.", mod.Gauge);
+                                errorText += string.Format("Error modifying wire gauge {0}. Gauge does not exist.\n", mod.Gauge);
                                 numError++;
                             }
                             else if (mod.NewTimePercentage <= 0)
                             {
-                                errorText += string.Format("Error modifying wire gauge {0}. Invalid Time: {1}.", mod.Gauge, mod.NewTimePercentage);
+                                errorText += string.Format("Error modifying wire gauge {0}. Invalid Time: {1}.\n", mod.Gauge, mod.NewTimePercentage);
                                 numError++;
                             }
                             else
@@ -404,7 +404,7 @@ namespace RouteConfigurator.ViewModel
                         }
                         catch (Exception e)
                         {
-                            errorText += string.Format("Error modifying wire gauge {0}\n", mod.Gauge);
+                            errorText += string.Format("Error modifying wire gauge {0}.\n", mod.Gauge);
                             numError++;
 
                             informationText = "There was a problem accessing the database.";

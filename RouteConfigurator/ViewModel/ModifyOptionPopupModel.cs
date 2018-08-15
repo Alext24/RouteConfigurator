@@ -344,7 +344,7 @@ namespace RouteConfigurator.ViewModel
                 try
                 {
                     informationText = "Loading options...";
-                    optionsFound = new ObservableCollection<Option>(_serviceProxy.getNumOptionsFound(selectedOptionCode, boxSize, exactBoxSize));
+                    optionsFound = new ObservableCollection<Option>(_serviceProxy.getOptionsFound(selectedOptionCode, boxSize, exactBoxSize));
                     informationText = "";
                 }
                 catch (Exception e)
