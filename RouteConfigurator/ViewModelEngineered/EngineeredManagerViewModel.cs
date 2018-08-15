@@ -183,9 +183,9 @@ namespace RouteConfigurator.ViewModel
                             errorText += string.Format("Error adding component {0} - {1}. Invalid Enclosure Size.\n", mod.ComponentName, mod.EnclosureSize);
                             numError++;
                         }
-                        else if (mod.NewTime <= 0)
+                        else if (mod.NewTime < 0)
                         {
-                            errorText += string.Format("Error adding component {0}. Invalid Time: {1}\n.", mod.ComponentName, mod.NewTime);
+                            errorText += string.Format("Error adding component {0}. Invalid Time: {1}.\n.", mod.ComponentName, mod.NewTime);
                             numError++;
                         }
                         else

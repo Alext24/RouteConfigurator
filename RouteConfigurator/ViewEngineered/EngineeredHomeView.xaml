@@ -9,8 +9,7 @@
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       xmlns:command="clr-namespace:GalaSoft.MvvmLight.Command;assembly=Galasoft.MvvmLight.Extras.WPF4"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      MinHeight="760"
+      MinHeight="800"
       MinWidth="700"
       Title="EngineeredHomeView"
       DataContext="{Binding EngineeredHome, Source={StaticResource Locator}}">

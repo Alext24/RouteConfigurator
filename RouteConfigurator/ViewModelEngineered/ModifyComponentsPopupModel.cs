@@ -60,7 +60,7 @@ namespace RouteConfigurator.ViewModelEngineered
         #region Commands
         private void loaded()
         {
-            components = new ObservableCollection<string>(_serviceProxy.getComponents());
+            components = new ObservableCollection<string>(_serviceProxy.getComponentNames());
             enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
         }
 
@@ -307,7 +307,7 @@ namespace RouteConfigurator.ViewModelEngineered
         {
             bool complete = true;
 
-            if(newTime == null || newTime <= 0)
+            if(newTime == null || newTime < 0)
             {
                 informationText = "No new information associated with modification.";
                 complete = false;

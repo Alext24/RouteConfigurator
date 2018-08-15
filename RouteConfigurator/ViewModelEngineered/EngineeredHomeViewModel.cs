@@ -41,6 +41,7 @@ namespace RouteConfigurator.ViewModelEngineered
         private string _prodSupCodeText;
 
         private ObservableCollection<EngineeredModelDTO> _engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>();
+        private ObservableCollection<Component> _enclosureSizeComponents = new ObservableCollection<Component>();
 
         /// <summary>
         /// Total time for all of the components entered
@@ -88,7 +89,7 @@ namespace RouteConfigurator.ViewModelEngineered
             wireGauges = new ObservableCollection<WireGauge>(_serviceProxy.getWireGauges());
             selectedWireGauge = wireGauges.Count > 0 ? wireGauges.ElementAt(0) : null;
 
-            engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>(_serviceProxy.getModelComponents(selectedEnclosureSize));
+            engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>(_serviceProxy.getModelComponents());
         }
 
         private void supervisorLogin()
@@ -129,6 +130,9 @@ namespace RouteConfigurator.ViewModelEngineered
             }
         }
 
+        /// <summary>
+        /// Calls calcTotalTime
+        /// </summary>
         public string selectedEnclosureType
         {
             get
@@ -158,6 +162,9 @@ namespace RouteConfigurator.ViewModelEngineered
             }
         }
 
+        /// <summary>
+        /// Calls updateComponentsTable
+        /// </summary>
         public string selectedEnclosureSize
         {
             get
@@ -187,6 +194,9 @@ namespace RouteConfigurator.ViewModelEngineered
             }
         }
 
+        /// <summary>
+        /// Calls calcTotalTime
+        /// </summary>
         public WireGauge selectedWireGauge
         {
             get
@@ -285,7 +295,7 @@ namespace RouteConfigurator.ViewModelEngineered
         #region Private Functions
         private void updateComponentsTable()
         {
-            engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>(_serviceProxy.getModelComponents(selectedEnclosureSize));
+            _enclosureSizeComponents = new ObservableCollection<Component>(_serviceProxy.getEnclosureSizeComponents(selectedEnclosureSize));
             calcTotalTime();
         }
 
@@ -303,9 +313,11 @@ namespace RouteConfigurator.ViewModelEngineered
                 totalTime += _serviceProxy.getEnclosure(selectedEnclosureType, selectedEnclosureSize).Time;
             }
 
-            foreach (EngineeredModelDTO component in engineeredModelComponents)
+            foreach (EngineeredModelDTO DTOcomponent in engineeredModelComponents)
             {
-                totalTime += component.TotalTime;
+                Component component = _enclosureSizeComponents.Where(x => x.ComponentName.Equals(DTOcomponent.ComponentName)).FirstOrDefault();
+                DTOcomponent.TotalTime = DTOcomponent.Quantity * component.Time;
+                totalTime += DTOcomponent.TotalTime;
             }
 
             if(selectedWireGauge != null)

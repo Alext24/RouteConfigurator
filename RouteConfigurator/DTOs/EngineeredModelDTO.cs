@@ -13,28 +13,21 @@ namespace RouteConfigurator.DTOs
 
         public string ComponentName { get; set; }
 
-        public string EnclosureSize { get; set; }
+        public int Quantity { get; set; }
 
-        private int _Quantity;
-        public int Quantity
+        private decimal _TotalTime;
+        public decimal TotalTime
         {
             get
             {
-                return _Quantity;
+                return _TotalTime;
             }
             set
             {
-                _Quantity = value;
-                OnPropertyChanged("Quantity");
-
-                TotalTime = Time * Quantity;
+                _TotalTime = value;
                 OnPropertyChanged("TotalTime");
             }
         }
-
-        public decimal Time { get; set; }
-
-        public decimal TotalTime { get; set; }
         
         private void OnPropertyChanged(string propertyName)
         {

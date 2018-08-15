@@ -27,8 +27,7 @@ namespace RouteConfigurator.ViewModelEngineered
 
         private string _componentName;
         public ObservableCollection<string> _enclosureSizes = new ObservableCollection<string>();
-        private string _enclosureSize;
-        private decimal? _newTime;
+        public ObservableCollection<Component> _componentList = new ObservableCollection<Component>();
         private string _description;
 
         private ObservableCollection<EngineeredModification> _modificationsToSubmit = new ObservableCollection<EngineeredModification>();
@@ -62,6 +61,7 @@ namespace RouteConfigurator.ViewModelEngineered
         private void loaded()
         {
             enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
+            newComponentList();
         }
 
         private async void addComponentAsync()
@@ -81,37 +81,40 @@ namespace RouteConfigurator.ViewModelEngineered
 
             if (checkValid())
             {
-                informationText = "Adding component...";
-                EngineeredModification mod = new EngineeredModification()
+                informationText = "Adding components...";
+                foreach (Component component in componentList)
                 {
-                    RequestDate = DateTime.Now,
-                    ReviewedDate = new DateTime(1900, 1, 1),
-                    Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
-                    State = 0,
-                    Sender = "TEMPORARY SENDER",
-                    Reviewer = "",
-                    IsNew = true,
-                    ComponentName = componentName,
-                    EnclosureSize = enclosureSize,
-                    EnclosureType = "",
-                    NewTime = (decimal)newTime,
-                    OldTime = 0,
-                    Gauge = "",
-                    NewTimePercentage = 0,
-                    OldTimePercentage = 0
-                };
+                    EngineeredModification mod = new EngineeredModification()
+                    {
+                        RequestDate = DateTime.Now,
+                        ReviewedDate = new DateTime(1900, 1, 1),
+                        Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
+                        State = 0,
+                        Sender = "TEMPORARY SENDER",
+                        Reviewer = "",
+                        IsNew = true,
+                        ComponentName = component.ComponentName,
+                        EnclosureSize = component.EnclosureSize,
+                        EnclosureType = "",
+                        NewTime = component.Time,
+                        OldTime = 0,
+                        Gauge = "",
+                        NewTimePercentage = 0,
+                        OldTimePercentage = 0
+                    };
 
-                // Since the observable collection was created on the UI thread 
-                // we have to add the override to the list using a delegate function.
-                App.Current.Dispatcher.Invoke(delegate
-                {
-                    modificationsToSubmit.Add(mod);
-                });
+                    // Since the observable collection was created on the UI thread 
+                    // we have to add the override to the list using a delegate function.
+                    App.Current.Dispatcher.Invoke(delegate
+                    {
+                        modificationsToSubmit.Add(mod);
+                    });
+                }
 
                 //Clear input boxes
-                enclosureSize = null;
-                newTime = null;
-                informationText = "Component added";
+                componentName = "";
+                newComponentList();
+                informationText = "Components added";
             }
         }
 
@@ -133,7 +136,7 @@ namespace RouteConfigurator.ViewModelEngineered
             {
                 try
                 {
-                    informationText = "Submitting component modifications...";
+                    informationText = "Submitting components...";
                     foreach (EngineeredModification mod in modificationsToSubmit)
                     {
                         _serviceProxy.addEngineeredModificationRequest(mod);
@@ -147,9 +150,8 @@ namespace RouteConfigurator.ViewModelEngineered
                 }
                 //Clear input boxes
                 componentName = "";
-                enclosureSize = null; 
-                newTime = null;
                 description = "";
+                newComponentList();
 
                 modificationsToSubmit = new ObservableCollection<EngineeredModification>();
 
@@ -190,30 +192,16 @@ namespace RouteConfigurator.ViewModelEngineered
             }
         }
 
-        public string enclosureSize
+        public ObservableCollection<Component> componentList 
         {
             get
             {
-                return _enclosureSize;
+                return _componentList;
             }
             set
             {
-                _enclosureSize = value;
-                RaisePropertyChanged("enclosureSize");
-                informationText = "";
-            }
-        }
-
-        public decimal? newTime
-        {
-            get
-            {
-                return _newTime;
-            }
-            set
-            {
-                _newTime = value;
-                RaisePropertyChanged("newTime");
+                _componentList = value;
+                RaisePropertyChanged("componentList");
                 informationText = "";
             }
         }
@@ -242,7 +230,6 @@ namespace RouteConfigurator.ViewModelEngineered
             {
                 _modificationsToSubmit = value;
                 RaisePropertyChanged("modificationsToSubmit");
-                informationText = "";
             }
         }
 
@@ -274,6 +261,20 @@ namespace RouteConfigurator.ViewModelEngineered
         #endregion
 
         #region Private Functions
+        private void newComponentList()
+        {
+            componentList = new ObservableCollection<Component>();
+            foreach(string enclosureSize in enclosureSizes)
+            {
+                componentList.Add(new Component
+                {
+                    ComponentName = "",
+                    EnclosureSize = enclosureSize,
+                    Time = 0
+                });
+            }
+        }
+
         /// <summary>
         /// Checks that the component does not already exist
         /// Calls checkComplete
@@ -287,13 +288,14 @@ namespace RouteConfigurator.ViewModelEngineered
                 try
                 {
                     //Check if the component already exists in the database as an component
-                    if (_serviceProxy.getFilteredComponents(componentName, enclosureSize).ToList().Count > 0)
+                    //if (_serviceProxy.getFilteredComponents(componentName, enclosureSize).ToList().Count > 0)
+                    if (_serviceProxy.getFilteredComponents(componentName, "").ToList().Count > 0)
                     {
                         informationText = "This component already exists";
                         valid = false;
                     }
                     //Check if the component already exists in the database as a new component request
-                    else if (_serviceProxy.getFilteredNewComponents("", componentName, enclosureSize).ToList().Count > 0)
+                    else if (_serviceProxy.getFilteredNewComponents("", componentName, "").ToList().Count > 0)
                     {
                         informationText = "Component is already waiting for approval.";
                         valid = false;
@@ -303,7 +305,7 @@ namespace RouteConfigurator.ViewModelEngineered
                         //Check if the component is a duplicate in the ready to submit list
                         foreach (EngineeredModification component in modificationsToSubmit)
                         {
-                            if (component.ComponentName.Equals(componentName) && component.EnclosureSize.Equals(enclosureSize))
+                            if (component.ComponentName.Equals(componentName))
                             {
                                 informationText = "This component is already ready to submit";
                                 valid = false;
@@ -323,7 +325,8 @@ namespace RouteConfigurator.ViewModelEngineered
 
         /// <summary>
         /// Checks to see if all necessary fields are filled out with correct formatting
-        /// before the component can be added.
+        /// before the component can be added.  Also modifies component list to set the 
+        /// component name to make adding them easier.
         /// </summary>
         /// <returns> true if the form is complete, otherwise false</returns>
         private bool checkComplete()
@@ -335,15 +338,16 @@ namespace RouteConfigurator.ViewModelEngineered
                 complete = false;
                 informationText = "Enter a component name.";
             }
-            else if (enclosureSize == null)
+            else
             {
-                complete = false;
-                informationText = "Select a enclosure size.";
-            }
-            else if (newTime == null || newTime <= 0)
-            {
-                complete = false;
-                informationText = "Enter a valid time.";
+                foreach(Component component in componentList)
+                {
+                    component.ComponentName = componentName;
+                    if(component.Time < 0)
+                    {
+                        component.Time = 0;
+                    }
+                }
             }
 
             return complete;

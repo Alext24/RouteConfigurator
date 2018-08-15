@@ -78,11 +78,12 @@ namespace RouteConfigurator.Model
         void deleteTimeTrial(TimeTrial tt);
         #endregion
 
-        IEnumerable<EngineeredModelDTO> getModelComponents(string enclosureSize);
+        IEnumerable<EngineeredModelDTO> getModelComponents();
 
         #region Components Read
         Component getComponent(string name, string enclosureSize);
-        IEnumerable<string> getComponents();
+        IEnumerable<string> getComponentNames();
+        IEnumerable<Component> getEnclosureSizeComponents(string enclosureSize);
         IEnumerable<Component> getFilteredComponents(string name, string enclosureSize);
         #endregion
 
@@ -91,6 +92,7 @@ namespace RouteConfigurator.Model
         IEnumerable<string> getEnclosureTypes();
         IEnumerable<string> getEnclosureSizes();
         IEnumerable<Enclosure> getFilteredEnclosures(string enclosureType, string enclosureSize);
+        IEnumerable<Enclosure> getExactEnclosures(string enclosureType, string enclosureSize);
         #endregion
 
         #region Wire Gauge Read

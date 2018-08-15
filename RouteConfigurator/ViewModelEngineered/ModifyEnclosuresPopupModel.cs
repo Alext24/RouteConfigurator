@@ -286,7 +286,7 @@ namespace RouteConfigurator.ViewModelEngineered
                 try
                 {
                     informationText = "Loading components...";
-                    enclosuresFound = new ObservableCollection<Enclosure>(_serviceProxy.getFilteredEnclosures(enclosureType, enclosureSize));
+                    enclosuresFound = new ObservableCollection<Enclosure>(_serviceProxy.getExactEnclosures(enclosureType, enclosureSize));
                     informationText = "";
                 }
                 catch (Exception e)

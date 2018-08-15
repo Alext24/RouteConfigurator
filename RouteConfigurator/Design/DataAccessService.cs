@@ -818,18 +818,17 @@ namespace RouteConfigurator.Design
         }
         #endregion
 
-        public IEnumerable<EngineeredModelDTO> getModelComponents(string enclosureSize)
+        public IEnumerable<EngineeredModelDTO> getModelComponents()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
-                return context.Components.Where(x => x.EnclosureSize.Equals(enclosureSize))
-                                         .Select(y => new EngineeredModelDTO
+                return context.Components.GroupBy(x => x.ComponentName)
+                                         .Select(y => y.FirstOrDefault())
+                                         .Select(z => new EngineeredModelDTO
                                          {
-                                             ComponentName = y.ComponentName,
-                                             EnclosureSize = y.EnclosureSize,
-                                             Time = y.Time,
-                                             TotalTime = 0,
-                                             Quantity = 0
+                                             ComponentName = z.ComponentName,
+                                             Quantity = 0,
+                                             TotalTime = 0
                                          }).ToList();
             }
         }
@@ -843,11 +842,19 @@ namespace RouteConfigurator.Design
             }
         }
 
-        public IEnumerable<string> getComponents()
+        public IEnumerable<string> getComponentNames()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Components.Select(x => x.ComponentName).ToList().Distinct();
+            }
+        }
+
+        public IEnumerable<Component> getEnclosureSizeComponents(string enclosureSize)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Components.Where(x => x.EnclosureSize.Equals(enclosureSize)).ToList();
             }
         }
 
@@ -892,6 +899,26 @@ namespace RouteConfigurator.Design
             {
                 return context.Enclosures.Where(x => x.EnclosureType.Contains(enclosureType) &&
                                                      x.EnclosureSize.Contains(enclosureSize)).ToList();
+            }
+        }
+
+        public IEnumerable<Enclosure> getExactEnclosures(string enclosureType, string enclosureSize)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                if (string.IsNullOrWhiteSpace(enclosureType))
+                {
+                    return context.Enclosures.Where(x => x.EnclosureSize.Equals(enclosureSize)).ToList();
+                }
+                else if (string.IsNullOrWhiteSpace(enclosureSize))
+                {
+                    return context.Enclosures.Where(x => x.EnclosureType.Equals(enclosureType)).ToList();
+                }
+                else
+                {
+                    return context.Enclosures.Where(x => x.EnclosureType.Equals(enclosureType) &&
+                                                         x.EnclosureSize.Equals(enclosureSize)).ToList();
+                }
             }
         }
         #endregion
