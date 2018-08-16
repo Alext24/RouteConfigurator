@@ -8,9 +8,9 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         MinHeight="550"
-        MinWidth="850"
+        MinWidth="1000"
         Height="550"
-        Width="850"
+        Width="1000"
         Title="Add Model"
         DataContext="{Binding AddModel, Source={StaticResource Locator}}">
 
@@ -37,7 +37,7 @@
                         <RowDefinition Height="auto"/>      <!--Row 0-->
                         <RowDefinition Height="auto"/>      <!--Row 1-->
                         <RowDefinition Height="auto"/>      <!--Row 2-->
-                        <RowDefinition Height="auto"/>        <!--Row 3-->
+                        <RowDefinition Height="auto"/>      <!--Row 3-->
                         <RowDefinition Height="auto"/>      <!--Row 4-->
                         <RowDefinition Height="10"/>        <!--Row 5-->
                         <RowDefinition Height="auto"/>      <!--Row 6-->
@@ -50,6 +50,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
                     <!--Row 0 setup: Title-->
@@ -58,42 +59,48 @@
 
                     <!--Row 1 setup: Input headers-->
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Model Name*"
-                               FontSize="16" Padding="20 0"/>
+                               FontSize="16" Padding="10 0"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="Box Size"
-                               FontSize="16" Padding="20 0"/>
+                               FontSize="16" Padding="10 0"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Drive Production Time"
-                               FontSize="16" Padding="20 0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Production Line"
+                               FontSize="16" Padding="10 0"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="3" Text="AV Production Time"
-                               FontSize="16" Padding="20 0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Drive Production Time"
+                               FontSize="16" Padding="10 0"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="4" Text="AV Production Time"
+                               FontSize="16" Padding="10 0"/>
 
                     <!--Row 2 setup: Input boxes-->
-                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0" MinWidth="160"
+                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="5 0 5 0" Width="160"
                              Text="{Binding modelNum}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" Width="80"
+                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="5 0" Width="100"
                              Text="{Binding boxSize}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0" Width="180"
+                    <ComboBox Grid.Row="2" Grid.Column="2" MaxDropDownHeight="150" Margin="5 0" FontSize="16" MinWidth="100"
+                              ItemsSource="{Binding productionLines}" SelectedValue="{Binding selectedLine}"/>
+
+                    <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="5 0" Width="180"
                              Text="{Binding driveTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" ToolTip="Format Example: '12.34' hours"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="3" FontSize="16" Margin="10 0" Width="180"
+                    <TextBox Grid.Row="2" Grid.Column="4" FontSize="16" Margin="5 0" Width="180"
                              Text="{Binding AVTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" ToolTip="Format Example: '12.34' hours"/>
 
                     <!--Row 3 setup: Description Header-->
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Request Description"
-                               FontSize="16" Padding="20 5 0 0"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="Request Description"
+                               FontSize="16" Padding="10 5 0 0"/>
 
                     <!--Row 4 setup: Description Text Box-->
-                    <TextBox Grid.Row="4" Grid.ColumnSpan="4" FontSize="16" MaxLines="2" Margin="10 0" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto"
+                    <TextBox Grid.Row="4" Grid.ColumnSpan="5" FontSize="16" MaxLines="2" Margin="5 0" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto"
                              Text="{Binding description}"/>
 
                     <!--Row 5 setup: Blank, Spacing-->
                     
                     <!--Row 7 setup: Columns 2-3: Model Information-->
-                    <Grid Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2">
+                    <Grid Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition Height="20"/>
@@ -139,19 +146,14 @@
                                    Text="{Binding prodSupCodeText}"/>
                     </Grid>
 
-                    <!--Row 8 setup: Asterisk header and submit button-->
-                    <TextBlock Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 5 10 0"
-                               Text="*Options are not necessary and will be removed when submitted."
-                               FontSize="10" TextWrapping="WrapWithOverflow"/>
-
-                    <Button Grid.Row="8" Grid.Column="3" Content="Submit Model" Command="{Binding submitCommand}" Margin="0 10 0 0"/>
+                    <Button Grid.Row="8" Grid.Column="4" Content="Submit Model" Command="{Binding submitCommand}" Margin="0 10 0 0"/>
 
                     <!--Row 6 setup: Options table header-->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Options" FontSize="16" Padding="20 5 0 5"/>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Options" FontSize="16" Padding="10 5 0 5"/>
 
                     <!--Row 7 setup: Columns 0-1: Options table-->
-                    <DataGrid  Height="130" MaxWidth="290" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True" AutoGenerateColumns="False"
-                               Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Margin="10 0"
+                    <DataGrid  Height="130" MaxWidth="300" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True" AutoGenerateColumns="False"
+                               Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5 0"
                                ItemsSource="{Binding options}" ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                         <DataGrid.Columns>
@@ -164,6 +166,10 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
+                    <!--Row 8 setup: Asterisk header and submit button-->
+                    <TextBlock Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Margin="5 5 5 0"
+                               Text="*Options are not necessary and will be removed when submitted."
+                               FontSize="10" TextWrapping="WrapWithOverflow"/>
                 </Grid>
             </Border>
 

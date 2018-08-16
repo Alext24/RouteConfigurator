@@ -81,5 +81,7 @@ namespace RouteConfigurator.Model
         public decimal OldOptionTime { get; set; }
         [StringLength(100)]
         public string OldOptionName { get; set; }
+
+        public string ProductLine { get; set; }
     }
 }

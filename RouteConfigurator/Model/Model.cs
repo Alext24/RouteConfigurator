@@ -28,6 +28,10 @@ namespace RouteConfigurator.Model
         [Display(Name = "AV Time")]
         public decimal AVTime { get; set; }
 
+        [Required(ErrorMessage = "Product Line is Required")]
+        [Display(Name = "Product Line")]
+        public string Line { get; set; }
+
         public virtual ICollection<Override> Overrides { get; set; }
 
         public virtual ICollection<TimeTrial> TimeTrials { get; set; }

@@ -26,5 +26,7 @@ namespace RouteConfigurator.Model
         public virtual DbSet<Component> Components { get; set; }
         public virtual DbSet<WireGauge> WireGauges { get; set; }
         public virtual DbSet<EngineeredModification> EngineeredModifications { get; set; }
+
+        public virtual DbSet<RouteQueue> RouteQueues { get; set; }
     }
 }

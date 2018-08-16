@@ -127,6 +127,7 @@ namespace RouteConfigurator.ViewModel
                             Reviewer = "",
                             ReviewDate = new DateTime(1900, 1, 1),
                             ModelBase = "",
+                            ProductLine = ""
                         };
 
                         _serviceProxy.addModificationRequest(modifiedOption);

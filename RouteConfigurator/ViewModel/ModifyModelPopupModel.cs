@@ -135,7 +135,8 @@ namespace RouteConfigurator.ViewModel
                             OldOptionName = "",
                             OptionCode = "",
                             NewTime = 0,
-                            OldOptionTime = 0
+                            OldOptionTime = 0,
+                            ProductLine = ""
                         };
 
                         _serviceProxy.addModificationRequest(modifiedModel);

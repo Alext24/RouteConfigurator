@@ -1,0 +1,210 @@
+﻿<Page x:Class="RouteConfigurator.View.RouteQueueView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RouteConfigurator.View"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      mc:Ignorable="d" 
+      MinHeight="700"
+      MinWidth="700"
+      Title="RouteQueue"
+      DataContext="{Binding RouteQueue, Source={StaticResource Locator}}">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding loadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Border Padding="50">
+        <Border.Background>
+            <ImageBrush ImageSource="/Backgrounds/OceanWaterBackground.jpg"/>
+        </Border.Background>
+
+        <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.Resources>
+                    <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
+                    <routeconfigurator:BooleanToVisiblityConverter x:Key="VisibilityConverter"/>
+                    <routeconfigurator:IntStateToTextStateConverter x:Key="StateConverter"/>
+                </Grid.Resources>
+
+                <Grid Panel.ZIndex="1" Height="100" Width="100">
+                    <fa:ImageAwesome Icon="Spinner" Spin="True" 
+                                 Visibility="{Binding loading, Converter={StaticResource VisibilityConverter}}"/>
+                </Grid>
+
+                <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0" HorizontalAlignment="Center">
+                    <Grid x:Name="Grid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--Route Queue Table Header-->
+                        <TextBlock Grid.Row="0" Text="Route Queue" FontSize="16"/>
+
+                        <!--Route Queue Table-->
+                        <DataGrid Grid.Row="1" x:Name="RouteQueueTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
+                              ItemsSource="{Binding routes}" SelectedValue="{Binding selectedRoute}" AutoGenerateColumns="False" CanUserAddRows="False"
+                              ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+
+                            <DataGrid.Columns>
+                                <!--Column 1: Delete Button-->
+                                <DataGridTemplateColumn x:Name="Delete">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Delete" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.HeaderTemplate>
+
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Delete" FontSize="9"
+                                                    Command="{Binding ElementName=RouteQueueTable, Path=DataContext.deleteCommand}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!--Column 2: Approve Check Box-->
+                                <DataGridTemplateColumn x:Name="CheckBox">
+                                    <DataGridTemplateColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTemplateColumn.HeaderStyle>
+                                    <DataGridTemplateColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.HeaderTemplate>
+
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                          IsChecked="{Binding IsApproved, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!--Column 3: Model Number-->
+                                <DataGridTextColumn x:Name="ModelNumber" Width="auto" FontSize="16" Binding="{Binding ModelNumber}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
+                                                     Text="{Binding ElementName=RouteQueueTable, Path=DataContext.modelNumberFilter, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                <TextBlock Text="Model" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Number" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 4: Route-->
+                                <DataGridTextColumn x:Name="Route" Width="auto" FontSize="16" Binding="{Binding Route}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Route" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 5: Product Line-->
+                                <DataGridTextColumn x:Name="ProductLine" Width="auto" FontSize="16" Binding="{Binding Line}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Product" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Line" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+
+                                <!--Column 6: Total Time-->
+                                <DataGridTextColumn x:Name="TotalTime" Width="auto" FontSize="16" Binding="{Binding TotalTime, Converter={StaticResource TimeConverter}}">
+                                    <DataGridTextColumn.HeaderStyle>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                        </Style>
+                                    </DataGridTextColumn.HeaderStyle>
+                                    <DataGridTextColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                <TextBlock Text="Production" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTextColumn.HeaderTemplate>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <Button Grid.Row="2" Content="Submit Routes" Margin="0 5 0 0" HorizontalAlignment="Center"
+                            Command="{Binding submitRoutesCommand}"/>
+                        <Button Grid.Row="2" Content="Go Back" Margin="0 5 0 0" HorizontalAlignment="Right"
+                            Command="{Binding goBackCommand}"/>
+                    </Grid>
+                </Border>
+
+                <!--Information text-->
+                <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
+                       FontSize="12" Text="{Binding informationText}" />
+            </Grid>
+        </Border>
+    </Border>
+</Page>

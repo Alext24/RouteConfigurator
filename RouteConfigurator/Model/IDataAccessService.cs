@@ -125,5 +125,11 @@ namespace RouteConfigurator.Model
 
         void updateEngineeredModification(EngineeredModification modification);
         #endregion
+
+        #region RouteQueue
+        IEnumerable<RouteQueue> getFilteredRouteQueues(string modelNumber);
+        void addRouteQueue(RouteQueue route);
+        void deleteQueuedRoute(RouteQueue selectedRoute);
+        #endregion
     }
 }

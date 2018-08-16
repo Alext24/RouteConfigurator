@@ -39,6 +39,7 @@ namespace RouteConfigurator.ViewModelEngineered
 
         private string _routeText;
         private string _prodSupCodeText;
+        private string _materialNumber;
 
         private ObservableCollection<EngineeredModelDTO> _engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>();
         private ObservableCollection<Component> _enclosureSizeComponents = new ObservableCollection<Component>();
@@ -55,8 +56,10 @@ namespace RouteConfigurator.ViewModelEngineered
 
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
+        public RelayCommand submitToQueueCommand { get; set; }
         public RelayCommand supervisorLoginCommand { get; set; }
         public RelayCommand managerLoginCommand { get; set; }
+        public RelayCommand routeQueueCommand { get; set; }
         public RelayCommand standardOrdersCommand { get; set; }
         public RelayCommand cellEditEndingCommand { get; set; }
         #endregion
@@ -70,8 +73,10 @@ namespace RouteConfigurator.ViewModelEngineered
             _navigationService = navigationService;
 
             loadedCommand = new RelayCommand(loaded);
+            submitToQueueCommand = new RelayCommand(submitToQueueAsync);
             supervisorLoginCommand = new RelayCommand(supervisorLogin);
             managerLoginCommand = new RelayCommand(managerLogin);
+            routeQueueCommand = new RelayCommand(routeQueue);
             standardOrdersCommand = new RelayCommand(standardOrders);
             cellEditEndingCommand = new RelayCommand (cellChanged);
         }
@@ -92,6 +97,49 @@ namespace RouteConfigurator.ViewModelEngineered
             engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>(_serviceProxy.getModelComponents());
         }
 
+        private async void submitToQueueAsync()
+        {
+            await Task.Run(() => submitToQueue());
+        }
+
+        private void submitToQueue()
+        {
+            if (string.IsNullOrWhiteSpace(prodSupCodeText))
+            {
+                informationText = "Complete route information before submitting route.";
+            }
+            else if (string.IsNullOrWhiteSpace(materialNumber))
+            {
+                informationText = "Enter the material number before submitting route.";
+            }
+            else
+            {
+                try
+                {
+                    informationText = "Adding route to queue...";
+                    RouteQueue route = new RouteQueue
+                    {
+                        Route = int.Parse(routeText),
+                        ModelNumber = materialNumber,
+                        Line = "ENG-FLR", //Engineered Floor Mount Line
+                        TotalTime = (decimal)totalTime,
+                        IsApproved = false,
+                        AddedDate = DateTime.Now,
+                        SubmittedDate = new DateTime(1900, 1, 1)
+                    };
+
+                    _serviceProxy.addRouteQueue(route);
+
+                    informationText = "Route added to queue.";
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database.";
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+
         private void supervisorLogin()
         {
             _navigationService.NavigateTo("EngineeredSupervisorView", true);
@@ -100,6 +148,11 @@ namespace RouteConfigurator.ViewModelEngineered
         private void managerLogin()
         {
             _navigationService.NavigateTo("EngineeredManagerView");
+        }
+
+        private void routeQueue()
+        {
+            _navigationService.NavigateTo("RouteQueueView");
         }
 
         private void standardOrders()
@@ -236,6 +289,19 @@ namespace RouteConfigurator.ViewModelEngineered
             {
                 _prodSupCodeText = value;
                 RaisePropertyChanged("prodSupCodeText");
+            }
+        }
+
+        public string materialNumber
+        {
+            get
+            {
+                return _materialNumber;
+            }
+            set
+            {
+                _materialNumber = value.ToUpper();
+                RaisePropertyChanged("materialNumber");
             }
         }
 

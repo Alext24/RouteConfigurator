@@ -7,7 +7,7 @@
       xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       mc:Ignorable="d" 
-      MinHeight="760"
+      MinHeight="775"
       MinWidth="700"
       Title="HomeView"
       DataContext="{Binding Home, Source={StaticResource Locator}}">
@@ -53,8 +53,8 @@
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <!--Row 0 setup: Part Number-->
@@ -85,17 +85,32 @@
                                    FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBox   Grid.Row="4" Grid.Column="1" Margin="10 0 0 0" IsReadOnly="True" Background="{StaticResource LightGray}"
                                    FontSize="20" VerticalAlignment="Center"
-                                   Text="{Binding productionTimeText}"/>
+                                   Text="{Binding productionTime, Converter={StaticResource TimeConverter}}"/>
 
                         <!--Row 5 setup: Blank, Spacing-->
 
+                        <!--Submit Route Button setup-->
+                            <Button Grid.Row="6" Grid.RowSpan="1" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 0 5"
+                                    Command="{Binding submitToQueueCommand}" ToolTip="Load route information into queue to be submitted later">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Submit Route"/>        
+                                        <TextBlock TextAlignment="Center" Text="To Queue"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
                         <!--Row 6 setup: Model search-->
-                        <TextBox   Grid.Row="6" Grid.Column="0" Margin="0 5" MaxWidth="239"
-                                   FontSize="20" 
-                                   Text="{Binding timeSearchModelNumber}"/>
-                        <Button    Grid.Row="6" Grid.Column="1" Content="Search" Padding="5" Margin="10 0 0 0"
-                                   FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                   Command="{Binding timeSearchCommand}"/>
+                        <Grid Grid.Row="6" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Margin="0 5" HorizontalAlignment="Stretch" FontSize="20" 
+                                     Text="{Binding timeSearchModelNumber}"/>
+                            <Button Grid.Column="1" Content="Search" Margin="10 5 0 5" FontSize="16" VerticalAlignment="Center"
+                                    Command="{Binding timeSearchCommand}"/>
+                        </Grid>
 
                         <!--Row 7 setup: Time Table-->
                         <DataGrid  Grid.Row="7" Grid.ColumnSpan="2" Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" BorderBrush="LightGray" IsReadOnly="True"
@@ -157,9 +172,10 @@
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="0" Padding="4" FontSize="16"
+                            <Button Grid.Column="0" Padding="4" FontSize="16" Margin="0 0 5 0"
                                     Command="{Binding supervisorLoginCommand}">
                                 <Button.Content>
                                     <StackPanel>
@@ -169,7 +185,7 @@
                                 </Button.Content>
                             </Button>
 
-                            <Button Grid.Column="1" Padding="4" FontSize="16" Margin="10 0 0 0" 
+                            <Button Grid.Column="1" Padding="4" FontSize="16" Margin="5 0 0 0" 
                                     Command="{Binding managerLoginCommand}">
                                 <Button.Content>
                                     <StackPanel>
@@ -179,7 +195,17 @@
                                 </Button.Content>
                             </Button>
 
-                            <Button Grid.Column="3" Padding="4" FontSize="16" Margin="10 0 0 0" 
+                            <Button Grid.Column="3" Padding="4" FontSize="16" Margin="0 0 5 0" 
+                                    Command="{Binding routeQueueCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="View Queued"/>        
+                                        <TextBlock TextAlignment="Center" Text="Routes"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <Button Grid.Column="4" Padding="4" FontSize="16" Margin="5 0 0 0" 
                                     Command="{Binding engineeredOrdersCommand}">
                                 <Button.Content>
                                     <StackPanel>

@@ -1195,5 +1195,36 @@ namespace RouteConfigurator.Design
             }
         }
         #endregion
+
+        #region RouteQueue
+        public IEnumerable<RouteQueue> getFilteredRouteQueues(string modelNumber)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.RouteQueues.Where(x => x.IsApproved == false &&
+                                                      x.ModelNumber.Contains(modelNumber)).ToList();
+            }
+        }
+
+        public void addRouteQueue(RouteQueue route)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                context.RouteQueues.Add(route);
+                context.SaveChanges();
+            }
+        }
+
+        public void deleteQueuedRoute(RouteQueue selectedRoute)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                RouteQueue route = context.RouteQueues.Find(selectedRoute.RouteQueueID);
+
+                context.RouteQueues.Remove(route);
+                context.SaveChanges();
+            }
+        }
+        #endregion
     }
 }

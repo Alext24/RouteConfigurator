@@ -135,6 +135,22 @@
     <Compile Include="Migrations\201808101336261_addedEngineeredModifications.Designer.cs">
       <DependentUpon>201808101336261_addedEngineeredModifications.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808151902581_AddedRouteQueue.cs" />
+    <Compile Include="Migrations\201808151902581_AddedRouteQueue.Designer.cs">
+      <DependentUpon>201808151902581_AddedRouteQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808152044180_addedLineToModel.cs" />
+    <Compile Include="Migrations\201808152044180_addedLineToModel.Designer.cs">
+      <DependentUpon>201808152044180_addedLineToModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808152120554_addedProductLineToModification.cs" />
+    <Compile Include="Migrations\201808152120554_addedProductLineToModification.Designer.cs">
+      <DependentUpon>201808152120554_addedProductLineToModification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808161602512_AddedAttributesToRouteQueue.cs" />
+    <Compile Include="Migrations\201808161602512_AddedAttributesToRouteQueue.Designer.cs">
+      <DependentUpon>201808161602512_AddedAttributesToRouteQueue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Component.cs" />
     <Compile Include="Model\Enclosure.cs" />
@@ -147,6 +163,7 @@
     <Compile Include="Model\Override.cs" />
     <Compile Include="Model\OverrideRequest.cs" />
     <Compile Include="Model\RouteConfiguratorDB.cs" />
+    <Compile Include="Model\RouteQueue.cs" />
     <Compile Include="Model\TimeTrial.cs" />
     <Compile Include="Model\TimeTrialsOptionTime.cs" />
     <Compile Include="Model\WireGauge.cs" />
@@ -189,6 +206,7 @@
     <Compile Include="ViewModel\ModifyModelPopupModel.cs" />
     <Compile Include="ViewModel\OverrideModelPopupModel.cs" />
     <Compile Include="ViewModel\RequestsViewModel.cs" />
+    <Compile Include="ViewModel\RouteQueueViewModel.cs" />
     <Compile Include="ViewModel\SupervisorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AddModelPopup.xaml.cs">
@@ -223,6 +241,9 @@
     </Compile>
     <Compile Include="ViewEngineered\EngineeredSupervisorView.xaml.cs">
       <DependentUpon>EngineeredSupervisorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RouteQueueView.xaml.cs">
+      <DependentUpon>RouteQueueView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SupervisorView.xaml.cs">
       <DependentUpon>SupervisorView.xaml</DependentUpon>
@@ -331,6 +352,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\RouteQueueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SupervisorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -382,6 +407,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808101336261_addedEngineeredModifications.resx">
       <DependentUpon>201808101336261_addedEngineeredModifications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808151902581_AddedRouteQueue.resx">
+      <DependentUpon>201808151902581_AddedRouteQueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808152044180_addedLineToModel.resx">
+      <DependentUpon>201808152044180_addedLineToModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808152120554_addedProductLineToModification.resx">
+      <DependentUpon>201808152120554_addedProductLineToModification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808161602512_AddedAttributesToRouteQueue.resx">
+      <DependentUpon>201808161602512_AddedAttributesToRouteQueue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

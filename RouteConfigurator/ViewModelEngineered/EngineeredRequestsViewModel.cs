@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RouteConfigurator.ViewModel
+namespace RouteConfigurator.ViewModelEngineered
 {
     public class EngineeredRequestsViewModel : ViewModelBase
     {

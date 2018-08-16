@@ -52,7 +52,7 @@ namespace RouteConfigurator.ViewModel
 
         private string _routeText;
         private string _prodSupCodeText;
-        private string _productionTimeText;
+        private decimal? _productionTime;
         private string _timeSearchModelNumber;
 
         private Model.Model _model;
@@ -71,9 +71,11 @@ namespace RouteConfigurator.ViewModel
         #endregion
 
         #region RelayCommands
+        public RelayCommand submitToQueueCommand { get; set; }
         public RelayCommand timeSearchCommand { get; set; }
         public RelayCommand supervisorLoginCommand { get; set; }
         public RelayCommand managerLoginCommand { get; set; }
+        public RelayCommand routeQueueCommand { get; set; }
         public RelayCommand engineeredOrdersCommand { get; set; }
         #endregion
 
@@ -85,14 +87,59 @@ namespace RouteConfigurator.ViewModel
         {
             _navigationService = navigationService;
 
+            submitToQueueCommand = new RelayCommand(submitToQueueAsync);
             timeSearchCommand = new RelayCommand(timeSearch);
             supervisorLoginCommand = new RelayCommand(supervisorLogin);
             managerLoginCommand = new RelayCommand(managerLogin);
+            routeQueueCommand = new RelayCommand(routeQueue);
             engineeredOrdersCommand = new RelayCommand(engineeredOrders);
         }
         #endregion
 
         #region Commands
+        private async void submitToQueueAsync()
+        {
+            await Task.Run(() => submitToQueue());
+        }
+
+        private void submitToQueue()
+        {
+            if (string.IsNullOrWhiteSpace(modelNumber))
+            {
+                informationText = "Enter a valid model before submitting route.";
+            }
+            else if (string.IsNullOrWhiteSpace(prodSupCodeText) || prodSupCodeText.Equals("N/A")) 
+            {
+                informationText = "Information is not valid. Cannot submit.";
+            }
+            else
+            {
+                try
+                {
+                    informationText = "Adding route to queue...";
+                    RouteQueue route = new RouteQueue
+                    {
+                        Route = int.Parse(routeText),
+                        ModelNumber = modelNumber,
+                        Line = getLine(),
+                        TotalTime = (decimal)productionTime,
+                        IsApproved = false,
+                        AddedDate = DateTime.Now,
+                        SubmittedDate = new DateTime(1900, 1, 1)
+                    };
+
+                    _serviceProxy.addRouteQueue(route);
+
+                    informationText = "Route added to queue.";
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database.";
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
+
         /// <summary>
         /// Calls modelNumberSectionsAsync 
         /// </summary>
@@ -110,6 +157,11 @@ namespace RouteConfigurator.ViewModel
         private void managerLogin()
         {
             _navigationService.NavigateTo("ManagerView");
+        }
+
+        private void routeQueue()
+        {
+            _navigationService.NavigateTo("RouteQueueView");
         }
 
         private void engineeredOrders()
@@ -166,16 +218,16 @@ namespace RouteConfigurator.ViewModel
             }
         }
 
-        public string productionTimeText
+        public decimal? productionTime
         {
             get
             {
-                return _productionTimeText;
+                return _productionTime;
             }
             set
             {
-                _productionTimeText = value;
-                RaisePropertyChanged("productionTimeText");
+                _productionTime = value;
+                RaisePropertyChanged("productionTime");
             }
         }
 
@@ -422,7 +474,7 @@ namespace RouteConfigurator.ViewModel
         {
             routeText = "";
             prodSupCodeText = "";
-            productionTimeText = "";
+            productionTime = null;
 
             if (string.IsNullOrWhiteSpace(_modelBase))
             {
@@ -448,7 +500,7 @@ namespace RouteConfigurator.ViewModel
 
                     routeText = string.Format("N/A");
                     prodSupCodeText = string.Format("N/A");
-                    productionTimeText = string.Format("N/A");
+                    productionTime = null;
                 }
             }
             catch (Exception e)
@@ -473,8 +525,9 @@ namespace RouteConfigurator.ViewModel
                     //Model's information is currently overriden
                     routeText = modelOverride.OverrideRoute.ToString();
 
-                    TimeSpan time = TimeSpan.FromHours((double)modelOverride.OverrideTime);
-                    productionTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
+                    //TimeSpan time = TimeSpan.FromHours((double)modelOverride.OverrideTime);
+                    //productionTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
+                    productionTime = modelOverride.OverrideTime;
 
                     setProdSupCode(modelOverride.OverrideTime);
                 }
@@ -484,7 +537,8 @@ namespace RouteConfigurator.ViewModel
                     decimal totalTime = getTotalTime();
 
                     TimeSpan time = TimeSpan.FromHours((double)totalTime);
-                    productionTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
+                    //productionTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
+                    productionTime = totalTime;
 
                     setRoute(time);
                     setProdSupCode(totalTime);
@@ -619,7 +673,7 @@ namespace RouteConfigurator.ViewModel
             {
                 //Format for route is "501",
                 //      2 digit hour,
-                //      0 if minutes < 30; 1 if > 30,
+                //      0 if minutes < 30; 1 if >= 30,
                 //      extra 2 digits for unique route if necessary
 
                 routeText = "501";
@@ -646,6 +700,12 @@ namespace RouteConfigurator.ViewModel
 
                 routeText = string.Concat(routeText, "00");
             }
+        }
+
+        private string getLine()
+        {
+            string line = "FIND LATER";
+            return line;
         }
         #endregion
     }

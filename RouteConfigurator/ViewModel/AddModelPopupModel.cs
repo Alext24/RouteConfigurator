@@ -28,11 +28,13 @@ namespace RouteConfigurator.ViewModel
 
         private string _modelNum;
         private string _boxSize;
+        private string _selectedLine;
         private decimal? _driveTime;
         private decimal? _AVTime;
 
         private bool _modelEntered = false;
         private bool _boxSizeEntered = false;
+        private bool _lineEntered = false;
         private bool _driveTimeEntered = false;
         private bool _AVTimeEntered = false;
 
@@ -42,6 +44,7 @@ namespace RouteConfigurator.ViewModel
         private string _prodSupCodeText;
         private string _description;
 
+        private ObservableCollection<string> _productionLines = new ObservableCollection<string>();
         private ObservableCollection<Option> _options = new ObservableCollection<Option>();
 
         private string _informationText;
@@ -60,6 +63,10 @@ namespace RouteConfigurator.ViewModel
         public AddModelPopupModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
+
+            productionLines.Add("FLOOR");
+            productionLines.Add("HYBRID");
+            productionLines.Add("NARROW");
 
             submitCommand = new RelayCommand(submitAsync);
         }
@@ -92,6 +99,7 @@ namespace RouteConfigurator.ViewModel
                     IsNew = true,
                     NewDriveTime = (decimal)driveTime,
                     NewAVTime = (decimal)AVTime,
+                    ProductLine = selectedLine,
 
                     Reviewer = "",
                     ReviewDate = new DateTime(1900,1,1),
@@ -118,7 +126,7 @@ namespace RouteConfigurator.ViewModel
         #region Public Variables
         /// <summary>
         /// Updates modelEntered boolean if not null
-        /// Calls updateOptions and checkForInfo
+        /// Calls updateOptions and updateInformation 
         /// </summary>
         public string modelNum
         {
@@ -151,7 +159,7 @@ namespace RouteConfigurator.ViewModel
 
         /// <summary>
         /// Updates boxSizeEntered boolean if not null
-        /// Calls updateOptions and checkForInfo
+        /// Calls updateOptions and updateInformation 
         /// </summary>
         public string boxSize
         {
@@ -181,8 +189,37 @@ namespace RouteConfigurator.ViewModel
         }
 
         /// <summary>
+        /// Updates lineEntered boolean if not null
+        /// calls updateInformation
+        /// </summary>
+        public string selectedLine
+        {
+            get
+            {
+                return _selectedLine;
+            }
+            set
+            {
+                _selectedLine = value;
+                RaisePropertyChanged("selectedLine");
+                informationText = "";
+
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _lineEntered = true;
+                }
+                else
+                {
+                    _lineEntered = false;
+                }
+
+                updateInformation();
+            }
+        }
+
+        /// <summary>
         /// Updates driveTimeEntered boolean if not null
-        /// Calls checkForInfo
+        /// Calls updateInformation
         /// </summary>
         public decimal? driveTime
         {
@@ -212,7 +249,7 @@ namespace RouteConfigurator.ViewModel
 
         /// <summary>
         /// Updates AVTimeEntered boolean if not null
-        /// Calls checkForInfo
+        /// Calls updateInformation
         /// </summary>
         public decimal? AVTime
         {
@@ -237,6 +274,19 @@ namespace RouteConfigurator.ViewModel
                 }
 
                 updateInformation();
+            }
+        }
+
+        public ObservableCollection<string> productionLines
+        {
+            get
+            {
+                return _productionLines;
+            }
+            set
+            {
+                _productionLines = value;
+                RaisePropertyChanged("productionLines");
             }
         }
 
@@ -427,7 +477,7 @@ namespace RouteConfigurator.ViewModel
         /// </summary>
         private void updateInformation()
         {
-            if (_modelEntered && _boxSizeEntered && _driveTimeEntered && _AVTimeEntered)
+            if (_modelEntered && _boxSizeEntered && _lineEntered && _driveTimeEntered && _AVTimeEntered)
             {
                 decimal modelTime = (decimal)(driveTime + AVTime);
 
@@ -505,7 +555,7 @@ namespace RouteConfigurator.ViewModel
 
             if (_modelEntered)
             {
-                if (_boxSizeEntered && _driveTimeEntered && _AVTimeEntered)
+                if (_boxSizeEntered && _lineEntered && _driveTimeEntered && _AVTimeEntered)
                 {
                     complete = true;
                 }

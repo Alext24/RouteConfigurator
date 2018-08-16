@@ -92,7 +92,8 @@ namespace RouteConfigurator.ViewModel
                     Reviewer = "",
                     ReviewDate = new DateTime(1900, 1, 1),
                     ModelBase = "",
-                    OldOptionName = ""
+                    OldOptionName = "",
+                    ProductLine = ""
                 };
 
                 // Since the observable collection was created on the UI thread 

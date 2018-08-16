@@ -47,15 +47,16 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>      <!--Row 0-->
-                            <RowDefinition Height="auto"/>        <!--Row 1: Spacing-->
-                            <RowDefinition Height="20"/>      <!--Row 2-->
+                            <RowDefinition Height="auto"/>      <!--Row 1-->
+                            <RowDefinition Height="20"/>        <!--Row 2: Spacing-->
                             <RowDefinition Height="auto"/>      <!--Row 3-->
                             <RowDefinition Height="auto"/>      <!--Row 4-->
                             <RowDefinition Height="20"/>        <!--Row 5: Spacing-->
                             <RowDefinition Height="auto"/>      <!--Row 6-->
-                            <RowDefinition Height="auto"/>      <!--Row 7-->
-                            <RowDefinition Height="20"/>        <!--Row 8: Spacing-->
-                            <RowDefinition Height="auto"/>      <!--Row 9-->
+                            <RowDefinition Height="*"/>         <!--Row 7-->
+                            <RowDefinition Height="auto"/>      <!--Row 8-->
+                            <RowDefinition Height="20"/>        <!--Row 9: Spacing-->
+                            <RowDefinition Height="auto"/>      <!--Row 10-->
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
@@ -63,7 +64,7 @@
                             <ColumnDefinition Width="10"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="10"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <!--Enclosure Type setup-->
@@ -87,38 +88,33 @@
                         <!--Enclosure Size setup-->
                         <TextBlock Grid.Row="0" Grid.Column="2" Text="Enclosure Size" FontSize="16"/>
 
-                        <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding enclosureSizes}" SelectedItem="{Binding selectedEnclosureSize}" BorderBrush="White">
+                        <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding enclosureSizes}" SelectedItem="{Binding selectedEnclosureSize}" BorderBrush="White" MaxHeight="100" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                             <ListBox.ItemContainerStyle>
                                 <Style TargetType="{x:Type ListBoxItem}">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                                <RadioButton Content="{TemplateBinding Content}" FontSize="16" VerticalContentAlignment="Center"
+                                                <RadioButton Content="{TemplateBinding Content}" FontSize="16" VerticalContentAlignment="Center" Padding="0 0 10 0"
                                                              IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsSelected}"/>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
                                 </Style>
                             </ListBox.ItemContainerStyle>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
                         </ListBox>
-                        
+
                         <!--Wire Gauge setup-->
                         <TextBlock Grid.Row="0" Grid.Column="4" Text="Customer Input AWG" FontSize="16"/>
                         <ComboBox Grid.Row="1" Grid.Column="4" ItemsSource="{Binding wireGauges}" DisplayMemberPath="Gauge" SelectedItem="{Binding selectedWireGauge}"
                                   MaxDropDownHeight="150" FontSize="16" VerticalAlignment="Top"/>
 
-                        <!--Row 3 setup: Route-->
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Route" FontSize="16" HorizontalAlignment="Right" Margin="0 0 0 0"/>
-                        <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding routeText}" FontSize="16"/>
-
-                        <!--Row 4 setup: Prod Sup Code-->
-                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Prod Sup Code" FontSize="16" HorizontalAlignment="Right" Margin="0 0 0 0"/>
-                        <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding prodSupCodeText}" FontSize="16"/>
-
-                        <!--Row 5 setup: Blank, Spacing-->
-
-                        <!--Row 6 setup: Time Table-->
-                        <DataGrid  Grid.Row="6" Grid.ColumnSpan="5" Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                        <!--Row 3 setup: Components Table-->
+                        <DataGrid  Grid.Row="3" Grid.ColumnSpan="5" Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                                    ItemsSource="{Binding engineeredModelComponents}"  AutoGenerateColumns="False" BorderBrush="LightGray"
                                    ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
@@ -138,8 +134,8 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <!--Row 7 setup: Total Production Time-->
-                        <Border Grid.Row="7" Grid.ColumnSpan="5" BorderBrush="LightGray" BorderThickness="1">
+                        <!--Row 4 setup: Total Production Time-->
+                        <Border Grid.Row="4" Grid.ColumnSpan="5" BorderBrush="LightGray" BorderThickness="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="6"/>
@@ -156,14 +152,43 @@
                             </Grid>
                         </Border>
 
-                        <!--Row 8 setup: Blank, Spacing-->
+                        <!--Row 5 setup: Blank, Spacing-->
 
-                        <!--Row 9 setup: Navigation Buttons-->
-                        <Grid Grid.Row="9" Grid.ColumnSpan="5">
+                        <!--Row 8 setup: Material Number-->
+                        <TextBlock Grid.Row="8" Grid.Column="0" Text="Material Number" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center"/> 
+                        <TextBox   Grid.Row="8" Grid.Column="2" VerticalAlignment="Center" MaxWidth="140"
+                                   FontSize="16" Text="{Binding materialNumber}" Margin="0 5"/>
+
+                        <!--Submit Route Button setup-->
+                            <Button Grid.Row="7" Grid.RowSpan="2" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                                    Command="{Binding submitToQueueCommand}" ToolTip="Load route information into queue to be submitted later">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="Submit Route"/>        
+                                        <TextBlock TextAlignment="Center" Text="To Queue"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            
+                        <!--Row 6 setup: Route-->
+                        <TextBlock Grid.Row="6" Grid.Column="0" Text="Route" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBox   Grid.Row="6" Grid.Column="2" IsReadOnly="True" Background="{StaticResource LightGray}" VerticalAlignment="Center"
+                                   FontSize="16" Text="{Binding routeText}" Margin="0 5"/>
+
+                        <!--Row 7 setup: Prod Sup Code-->
+                        <TextBlock Grid.Row="7" Grid.Column="0" Text="Prod Sup Code" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center"/> 
+                        <TextBox   Grid.Row="7" Grid.Column="2" IsReadOnly="True" Background="{StaticResource LightGray}" VerticalAlignment="Center"
+                                   FontSize="16" Text="{Binding prodSupCodeText}" Margin="0 5"/>
+
+                        <!--Row 9 setup: Blank, Spacing-->
+
+                        <!--Row 10 setup: Navigation Buttons-->
+                        <Grid Grid.Row="10" Grid.ColumnSpan="5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
 
@@ -187,7 +212,17 @@
                                 </Button.Content>
                             </Button>
 
-                            <Button Grid.Column="3" Padding="4" FontSize="16" Margin="10 0 0 0" 
+                            <Button Grid.Column="3" Padding="4" FontSize="16" Margin="0 0 5 0" 
+                                    Command="{Binding routeQueueCommand}">
+                                <Button.Content>
+                                    <StackPanel>
+                                        <TextBlock TextAlignment="Center" Text="View Queued"/>        
+                                        <TextBlock TextAlignment="Center" Text="Routes"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                            <Button Grid.Column="4" Padding="4" FontSize="16" Margin="10 0 0 0" 
                                     Command="{Binding standardOrdersCommand}">
                                 <Button.Content>
                                     <StackPanel>

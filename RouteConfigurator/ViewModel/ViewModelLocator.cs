@@ -54,6 +54,8 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<AddWireGaugePopupModel>();
             SimpleIoc.Default.Register<ModifyWireGaugesPopupModel>();
             SimpleIoc.Default.Register<EngineeredRequestsViewModel>();
+
+            SimpleIoc.Default.Register<RouteQueueViewModel>();
         }
 
         public static void setupNavigation()
@@ -67,6 +69,8 @@ namespace RouteConfigurator.ViewModel
             navigationService.Configure("EngineeredHomeView", new System.Uri("/ViewEngineered/EngineeredHomeView.xaml", UriKind.Relative));
             navigationService.Configure("EngineeredSupervisorView", new System.Uri("/ViewEngineered/EngineeredSupervisorView.xaml", UriKind.Relative));
             navigationService.Configure("EngineeredManagerView", new System.Uri("/ViewEngineered/EngineeredManagerView.xaml", UriKind.Relative));
+
+            navigationService.Configure("RouteQueueView", new System.Uri("/View/RouteQueueView.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
@@ -97,6 +101,8 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Unregister<AddWireGaugePopupModel>();
             SimpleIoc.Default.Unregister<ModifyWireGaugesPopupModel>();
             SimpleIoc.Default.Unregister<EngineeredRequestsViewModel>();
+
+            SimpleIoc.Default.Unregister<RouteQueueViewModel>();
         }
 
         public HomeViewModel Home
@@ -286,6 +292,16 @@ namespace RouteConfigurator.ViewModel
                 SimpleIoc.Default.Unregister<EngineeredRequestsViewModel>();
                 SimpleIoc.Default.Register<EngineeredRequestsViewModel>();
                 return ServiceLocator.Current.GetInstance<EngineeredRequestsViewModel>();
+            }
+        }
+
+        public RouteQueueViewModel RouteQueue 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<RouteQueueViewModel>();
+                SimpleIoc.Default.Register<RouteQueueViewModel>();
+                return ServiceLocator.Current.GetInstance<RouteQueueViewModel>();
             }
         }
     }

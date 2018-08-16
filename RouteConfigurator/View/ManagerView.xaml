@@ -246,6 +246,25 @@
                                         </DataGridTextColumn.HeaderTemplate>
                                     </DataGridTextColumn>
 
+                                    <!--Column 8: Product Line-->
+                                    <DataGridTextColumn x:Name="NMProductLine" Width="auto" FontSize="16" Binding="{Binding ProductLine}">
+                                        <DataGridTextColumn.HeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                                            </Style>
+                                        </DataGridTextColumn.HeaderStyle>
+                                        <DataGridTextColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
+
+                                                    <TextBlock Text="Product" FontSize ="12" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Line" FontSize ="12" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTextColumn.HeaderTemplate>
+                                    </DataGridTextColumn>
+
                                     <!--Column 8: Sender-->
                                     <DataGridTextColumn x:Name="NMSender" Width="auto" FontSize="16" Binding="{Binding Sender}" IsReadOnly="True">
                                         <DataGridTextColumn.HeaderStyle>
