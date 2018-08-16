@@ -81,7 +81,7 @@
 
                     <!--Row 6 setup: New Time-->
                     <TextBlock Grid.Row="6" Grid.Column="0" Text="New Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                    <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding newTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" Margin="5" MaxWidth="160" Text="{Binding newTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16"/>
 
                     <!--Row 8 setup: Description Header-->
                     <TextBlock Grid.Row="8" Grid.Column="0" Text="Request Description" VerticalAlignment="Center" FontSize="16" Padding="5"/>

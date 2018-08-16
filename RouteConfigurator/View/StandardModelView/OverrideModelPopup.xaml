@@ -8,9 +8,9 @@
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d" 
         MinHeight="550"
-        MinWidth="750"
+        MinWidth="740"
         Height="550"
-        Width="750"
+        Width="740"
         Title="Override Model"
         DataContext="{Binding OverrideModel, Source={StaticResource Locator}}">
 
@@ -44,13 +44,13 @@
                         <RowDefinition Height="auto"/>      <!--Row 7-->
                         <RowDefinition Height="10"/>      <!--Row 8-->
                         <RowDefinition Height="auto"/>      <!--Row 9-->
-                        <RowDefinition Height="auto"/>      <!--Row 10-->
+                        <RowDefinition Height="*"/>      <!--Row 10-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>                 <!--Col 0-->
+                        <ColumnDefinition Width="auto"/>    <!--Col 0-->
                         <ColumnDefinition Width="auto"/>    <!--Col 1-->
-                        <ColumnDefinition Width="auto"/>    <!--Col 2-->
+                        <ColumnDefinition Width="*"/>    <!--Col 2-->
                         <ColumnDefinition Width="10"/>      <!--Col 3-->
                         <ColumnDefinition Width="auto"/>    <!--Col 4-->
                     </Grid.ColumnDefinitions>
@@ -65,21 +65,21 @@
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="Override Route" FontSize="16" Padding="20 0"/>
 
                     <!--Row 2 setup: Input boxes-->
-                    <TextBox Grid.Row="2" Grid.Column="0" Margin="10 0" VerticalContentAlignment="Center" 
+                    <TextBox Grid.Row="2" Grid.Column="0" Margin="10 0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="180"
                              Text="{Binding modelText}" FontSize="16"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="10 0" VerticalContentAlignment="Center" Width="120"
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="10 0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="120"
                              Text="{Binding overrideTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16"/>
-                    <TextBox Grid.Row="2" Grid.Column="2" Margin="10 0" VerticalContentAlignment="Center" Width="130"
+                    <TextBox Grid.Row="2" Grid.Column="2" Margin="10 0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="130"
                              Text="{Binding overrideRoute, TargetNullValue=''}" FontSize="16"/>
 
                     <!--Row 3 setup: Blank, Spacing-->
 
                     <!--Row 4 setup: Description Header-->
                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Request Description" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="16" Padding="5"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="10 5 10 5" MaxWidth="270"
+                    <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="10 5 10 5" HorizontalAlignment="Stretch" 
                              Text="{Binding description}" TextWrapping="WrapWithOverflow" FontSize="16" MaxLines="2" VerticalScrollBarVisibility="Auto"/>
 
-                        <!--Add Override Button-->
+                    <!--Add Override Button-->
                     <Button Grid.Row="3" Grid.RowSpan="2" Grid.Column="4" Content="Add Override" FontSize="16"
                             Command="{Binding addOverrideCommand}" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
 
@@ -91,9 +91,9 @@
 
                     <!--Row 5 setup: Calculated info-->
                     <TextBlock Grid.Row="7" Grid.Column="0" Padding="0 0 5 0" Text="Calculated" FontSize="16" HorizontalAlignment="Right"/>
-                    <TextBox Grid.Row="7" Grid.Column="1" Margin="10 0" Width="120"
+                    <TextBox Grid.Row="7" Grid.Column="1" Margin="10 0" Width="120" Background="{StaticResource LightGray}"
                              Text="{Binding modelTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                    <TextBox Grid.Row="7" Grid.Column="2" Margin="10 0" Width="130"
+                    <TextBox Grid.Row="7" Grid.Column="2" Margin="10 0" Width="130" HorizontalAlignment="Left" Background="{StaticResource LightGray}"
                              Text="{Binding modelRoute}" FontSize="16" VerticalContentAlignment="Center" IsReadOnly="True"/>
 
                     <!--Row 8 setup: Blank, Spacing-->
@@ -107,8 +107,8 @@
                                Text="Current Overrides to Submit" VerticalAlignment="Bottom" FontSize="16"/>
 
                     <!--Row 10 setup: Overrides table-->
-                    <DataGrid Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Top" Margin="0 0 50 0"
-                              Height="130" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
+                    <DataGrid Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Stretch" Margin="0 0 50 0"
+                              MinHeight="100" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
                               ItemsSource="{Binding overridesToSubmit}" AutoGenerateColumns="False"
                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 

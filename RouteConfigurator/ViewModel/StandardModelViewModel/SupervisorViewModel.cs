@@ -721,17 +721,20 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private void updateTTTable()
         {
-            try
+            if (selectedModel != null)
             {
-                informationText = "Retrieving time trials...";
-                timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter, optionTextChecked));
-                calcTTAverages();
-                informationText = "";
-            }
-            catch (Exception e)
-            {
-                informationText = "There was a problem accessing the database";
-                Console.WriteLine(e);
+                try
+                {
+                    informationText = "Retrieving time trials...";
+                    timeTrials = new ObservableCollection<TimeTrial>(_serviceProxy.getFilteredTimeTrials(selectedModel.Base, optionTextFilter, salesFilter, productionNumFilter, optionTextChecked));
+                    calcTTAverages();
+                    informationText = "";
+                }
+                catch (Exception e)
+                {
+                    informationText = "There was a problem accessing the database";
+                    Console.WriteLine(e);
+                }
             }
         }
 

@@ -96,7 +96,7 @@
                                Text="Current Wire Gauges to Submit" VerticalAlignment="Bottom" Padding="0 5"/>
 
                     <!--Wire Gauge table-->
-                    <DataGrid Grid.Row="7" Grid.Column="0" MinHeight="140" Width="auto" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
+                    <DataGrid Grid.Row="7" Grid.Column="0" MinHeight="120" Width="auto" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
                               Margin="10 0" ItemsSource="{Binding modificationsToSubmit}" AutoGenerateColumns="False" HorizontalAlignment="Stretch"
                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
