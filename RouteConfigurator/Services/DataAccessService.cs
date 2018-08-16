@@ -706,8 +706,9 @@ namespace RouteConfigurator.Services
                         context.Modifications.Add(newMod);
                     }
                     else
-                    {
-                        mod.State = 1;  //If nothing is changed accept the modification
+                    { 
+                        //If nothing is changed accept the modification
+                        mod.State = 1; 
                     }
                 }
                 //If modification is checked to deny
@@ -721,19 +722,20 @@ namespace RouteConfigurator.Services
         }
 
         /// <summary>
-        /// 
+        /// Updates the override request upon approval or denial of the request
         /// </summary>
-        /// <param name="overrideRequest"></param>
+        /// <param name="overrideRequest"> the override request to update </param>
         public void updateOverrideRequest(OverrideRequest overrideRequest)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 OverrideRequest or = context.OverrideRequests.Find(overrideRequest.OverrideRequestID);
 
-                //Update modification info for approval or denial
+                //Update override request info for approval or denial
                 or.ReviewDate = overrideRequest.ReviewDate;
                 or.Reviewer = overrideRequest.Reviewer;
 
+                //If override request is checked to approve
                 if (overrideRequest.State == 3)
                 {
                     //Check if the Database Override Request has any different elements than the passed in Override Request
@@ -755,8 +757,8 @@ namespace RouteConfigurator.Services
 
                     if (changed)
                     {
-                        //Deny the old request.  Create a new request for the manager.  Add it.
-                        or.State = 2;   //Database Override Request Denied
+                        //Deny the old request.  Create a new request from the manager.  Add it.
+                        or.State = 2;   //Database Supervisor Override Request Denied
 
                         OverrideRequest newOR = new OverrideRequest()
                         {
@@ -774,16 +776,9 @@ namespace RouteConfigurator.Services
 
                         if (modelNumChanged)
                         {
-                            if(context.Models.Find(newOR.ModelNum.Substring(0, 8)) != null)
-                            {
-                                newOR.ModelBase = newOR.ModelNum.Substring(0, 8);
-                                newOR.ModelTime = 0;
-                                newOR.ModelRoute = 0;
-                            }
-                            else
-                            {
-                                throw new Exception("Invalid Model");
-                            }
+                            newOR.ModelBase = newOR.ModelNum.Substring(0, 8);
+                            newOR.ModelTime = 0;
+                            newOR.ModelRoute = 0;
                         }
                         else
                         {
@@ -796,9 +791,11 @@ namespace RouteConfigurator.Services
                     }
                     else
                     {
+                        //If nothing is changed accept the override request
                         or.State = 1;   //Approved
                     }
                 }
+                //If override request is checked to deny
                 else if(overrideRequest.State == 4)
                 {
                     or.State = 2;   //Denied
@@ -808,6 +805,10 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <summary>
+        /// Deletes a time trial from the database
+        /// </summary>
+        /// <param name="tt"> the time trial to delete </param>
         public void deleteTimeTrial(TimeTrial tt)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -819,6 +820,10 @@ namespace RouteConfigurator.Services
         }
         #endregion
 
+        /// <summary>
+        /// Filters to return a distinct list of every component, disregarding enclosure size
+        /// </summary>
+        /// <returns> returns a list containing all possible components </returns>
         public IEnumerable<EngineeredModelDTO> getModelComponents()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -835,6 +840,9 @@ namespace RouteConfigurator.Services
         }
 
         #region Components Read
+        /// <param name="name"> name of the component </param>
+        /// <param name="enclosureSize"> enclosure size of the component </param>
+        /// <returns> returns the component found with the primary keys, otherwise null </returns>
         public Component getComponent(string name, string enclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -843,6 +851,7 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <returns> returns a distinct list of all component names </returns>
         public IEnumerable<string> getComponentNames()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -851,6 +860,8 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <param name="enclosureSize"> enclosure size for the components </param>
+        /// <returns> returns a list of components for a selected enclosure size </returns>
         public IEnumerable<Component> getEnclosureSizeComponents(string enclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -859,6 +870,9 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <param name="name"> component name</param>
+        /// <param name="enclosureSize"> enclosure size for component </param>
+        /// <returns> returns a list of components that contain the filters </returns>
         public IEnumerable<Component> getFilteredComponents(string name, string enclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -870,6 +884,9 @@ namespace RouteConfigurator.Services
         #endregion
 
         #region Enclosure Read
+        /// <param name="enclosureType"> enclosure type ex. T1, T12, T3R </param>
+        /// <param name="enclosureSize"> enclosure size </param>
+        /// <returns> returns an enclosure found by the primary keys, otherwise null </returns>
         public Enclosure getEnclosure(string enclosureType, string enclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -878,6 +895,7 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <returns> returns a list of distinct enclosure types </returns>
         public IEnumerable<string> getEnclosureTypes()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -886,6 +904,7 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <returns> returns a list of distinct enclosure sizes </returns>
         public IEnumerable<string> getEnclosureSizes()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -894,6 +913,9 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <param name="enclosureType"> enclosure type </param>
+        /// <param name="enclosureSize"> enclosure size </param>
+        /// <returns> returns a list of enclosures that contain the filters </returns>
         public IEnumerable<Enclosure> getFilteredEnclosures(string enclosureType, string enclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -903,6 +925,10 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <remarks> if either filter is null, method only filters for the other filter </remarks>
+        /// <param name="enclosureType"> enclosure type </param>
+        /// <param name="enclosureSize"> enclosure size </param>
+        /// <returns> returns a list of enclosures that match the filters </returns>
         public IEnumerable<Enclosure> getExactEnclosures(string enclosureType, string enclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -925,6 +951,8 @@ namespace RouteConfigurator.Services
         #endregion
 
         #region Wire Gauge Read
+        /// <param name="gauge"> gauge of the wire </param>
+        /// <returns> returns the wire gauge found by the primary key, otherwise null </returns>
         public WireGauge getWireGauge(string gauge)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -933,6 +961,7 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <returns> returns a list of all wire gauges </returns>
         public IEnumerable<WireGauge> getWireGauges()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -941,140 +970,199 @@ namespace RouteConfigurator.Services
             }
         }
 
-        public IEnumerable<WireGauge> getFilteredWireGauges(string wireGauge)
+        /// <param name="gauge"> gauge of the wire </param>
+        /// <returns> returns a list of wire gauges that contain the filter </returns>
+        public IEnumerable<WireGauge> getFilteredWireGauges(string gauge)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
-                return context.WireGauges.Where(x => x.Gauge.Contains(wireGauge)).ToList();
+                return context.WireGauges.Where(x => x.Gauge.Contains(gauge)).ToList();
             }
         }
         #endregion
 
         #region Engineered Modifications Read
+        /// <remarks> Includes all states in the returned list but filters the other parameters </remarks>
+        /// <param name="ComponentName"> component name </param>
+        /// <param name="EnclosureSize"> enclosure size </param>
+        /// <param name="EnclosureType"> enclosure type </param>
+        /// <param name="Gauge"> gauge of the wire </param>
+        /// <param name="Sender"> user who sent the modification </param>
+        /// <param name="Reviewer"> user who approved/denied the modification </param>
+        /// <returns> returns a list of engineered modifications that contain the filters </returns>
         public IEnumerable<EngineeredModification> getFilteredEngineeredModifications(string ComponentName, string EnclosureSize, string EnclosureType, string Gauge, string Sender, string Reviewer)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.EngineeredModifications.Where(x => x.ComponentName.Contains(ComponentName) &&
-                                                                     x.EnclosureSize.Contains(EnclosureSize) &&
-                                                                     x.EnclosureType.Contains(EnclosureType) &&
-                                                                     x.Gauge.Contains(Gauge) &&
-                                                                     x.Sender.Contains(Sender) &&
-                                                                     x.Reviewer.Contains(Reviewer)).ToList();
+                                                                  x.EnclosureSize.Contains(EnclosureSize) &&
+                                                                  x.EnclosureType.Contains(EnclosureType) &&
+                                                                  x.Gauge.Contains(Gauge) &&
+                                                                  x.Sender.Contains(Sender) &&
+                                                                  x.Reviewer.Contains(Reviewer)).ToList();
             }
         }
 
+        /// <remarks> Includes only the waiting states (state = 0 (waiting), 3 (currently checked to approve), or 4 (currently checked to decline))
+        ///           in the returned list and filters the other parameters </remarks>
+        /// <param name="ComponentName"> component name </param>
+        /// <param name="EnclosureSize"> enclosure size </param>
+        /// <param name="EnclosureType"> enclosure type </param>
+        /// <param name="Gauge"> gauge of the wire </param>
+        /// <param name="Sender"> user who sent the modification </param>
+        /// <param name="Reviewer"> user who approved/denied the modification </param>
+        /// <returns> returns a list of engineered modifications that contain the filters </returns>
         public IEnumerable<EngineeredModification> getFilteredWaitingEngineeredModifications(string ComponentName, string EnclosureSize, string EnclosureType, string Gauge, string Sender, string Reviewer)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.EngineeredModifications.Where(x => (x.State == 0 || x.State == 3 || x.State == 4) &&
-                                                                      x.ComponentName.Contains(ComponentName) &&
-                                                                      x.EnclosureSize.Contains(EnclosureSize) &&
-                                                                      x.EnclosureType.Contains(EnclosureType) &&
-                                                                      x.Gauge.Contains(Gauge) &&
-                                                                      x.Sender.Contains(Sender) &&
-                                                                      x.Reviewer.Contains(Reviewer)).ToList();
+                                                                   x.ComponentName.Contains(ComponentName) &&
+                                                                   x.EnclosureSize.Contains(EnclosureSize) &&
+                                                                   x.EnclosureType.Contains(EnclosureType) &&
+                                                                   x.Gauge.Contains(Gauge) &&
+                                                                   x.Sender.Contains(Sender) &&
+                                                                   x.Reviewer.Contains(Reviewer)).ToList();
             }
         }
 
+        /// <remarks> Used to filter for approved state or declined state modifications while still 
+        ///           filtering for the other parameters </remarks>
+        /// <param name="State"></param>
+        /// <param name="ComponentName"> component name </param>
+        /// <param name="EnclosureSize"> enclosure size </param>
+        /// <param name="EnclosureType"> enclosure type </param>
+        /// <param name="Gauge"> gauge of the wire </param>
+        /// <param name="Sender"> user who sent the modification </param>
+        /// <param name="Reviewer"> user who approved/denied the modification </param>
+        /// <returns> returns a list of engineered modifications that contain the filters </returns>
         public IEnumerable<EngineeredModification> getFilteredStateEngineeredModifications(int State, string ComponentName, string EnclosureSize, string EnclosureType, string Gauge, string Sender, string Reviewer)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.EngineeredModifications.Where(x => x.State == State &&
-                                                                     x.ComponentName.Contains(ComponentName) &&
-                                                                     x.EnclosureSize.Contains(EnclosureSize) &&
-                                                                     x.EnclosureType.Contains(EnclosureType) &&
-                                                                     x.Gauge.Contains(Gauge) &&
-                                                                     x.Sender.Contains(Sender) &&
-                                                                     x.Reviewer.Contains(Reviewer)).ToList();
+                                                                  x.ComponentName.Contains(ComponentName) &&
+                                                                  x.EnclosureSize.Contains(EnclosureSize) &&
+                                                                  x.EnclosureType.Contains(EnclosureType) &&
+                                                                  x.Gauge.Contains(Gauge) &&
+                                                                  x.Sender.Contains(Sender) &&
+                                                                  x.Reviewer.Contains(Reviewer)).ToList();
             }
         }
 
+        /// <remarks> Matching EnclosureType and Gauge to "", with isNew == true ensures it is a new component request </remarks>
+        /// <param name="Sender"> user who sent the modification </param>
+        /// <param name="ComponentName"> component name </param>
+        /// <param name="EnclosureSize"> enclosure size </param>
+        /// <returns> returns a list of unapproved new component requests that contain the filters</returns>
         public IEnumerable<EngineeredModification> getFilteredNewComponents(string Sender, string ComponentName, string EnclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.EngineeredModifications.Where(x => x.IsNew == true &&
-                                                                     x.State == 0 &&
-                                                                     x.Sender.Contains(Sender) &&
-                                                                     x.ComponentName.Contains(ComponentName) &&
-                                                                     x.EnclosureSize.Contains(EnclosureSize) &&
-                                                                     x.EnclosureType.Equals("") &&
-                                                                     x.Gauge.Equals("")).ToList();
+                                                                  x.State == 0 &&
+                                                                  x.Sender.Contains(Sender) &&
+                                                                  x.ComponentName.Contains(ComponentName) &&
+                                                                  x.EnclosureSize.Contains(EnclosureSize) &&
+                                                                  x.EnclosureType.Equals("") &&
+                                                                  x.Gauge.Equals("")).ToList();
             }
         }
 
+        /// <remarks> Matching EnclosureType and Gauge to "", with isNew == false, ensures it is a modified component request </remarks>
+        /// <param name="Sender"> user who sent the modification </param>
+        /// <param name="ComponentName"> component name </param>
+        /// <param name="EnclosureSize"> enclosure size </param>
+        /// <returns> returns a list of unapproved modified component requests that contain the filters</returns>
         public IEnumerable<EngineeredModification> getFilteredModifiedComponents(string Sender, string ComponentName, string EnclosureSize)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.EngineeredModifications.Where(x => x.IsNew == false &&
-                                                                     x.State == 0 &&
-                                                                     x.Sender.Contains(Sender) &&
-                                                                     x.ComponentName.Contains(ComponentName) &&
-                                                                     x.EnclosureSize.Contains(EnclosureSize) &&
-                                                                     x.EnclosureType.Equals("") &&
-                                                                     x.Gauge.Equals("")).ToList();
+                                                                  x.State == 0 &&
+                                                                  x.Sender.Contains(Sender) &&
+                                                                  x.ComponentName.Contains(ComponentName) &&
+                                                                  x.EnclosureSize.Contains(EnclosureSize) &&
+                                                                  x.EnclosureType.Equals("") &&
+                                                                  x.Gauge.Equals("")).ToList();
             }
         }
 
+        /// <remarks> Matching ComponentName and Gauge to "", with isNew == false, ensures it is a modified enclosure request </remarks>
+        /// <param name="Sender"> user who sent the modification </param>
+        /// <param name="EnclosureSize"> enclosure size </param>
+        /// <param name="EnclosureType"> enclosure type </param>
+        /// <returns> returns a list of unapproved modified component requests that contain the filters</returns>
         public IEnumerable<EngineeredModification> getFilteredModifiedEnclosures(string Sender, string EnclosureSize, string EnclosureType)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.EngineeredModifications.Where(x => x.IsNew == false &&
-                                                                     x.State == 0 &&
-                                                                     x.Sender.Contains(Sender) &&
-                                                                     x.EnclosureSize.Contains(EnclosureSize) &&
-                                                                     x.EnclosureType.Contains(EnclosureType) &&
-                                                                     x.ComponentName.Equals("") &&
-                                                                     x.Gauge.Equals("")).ToList();
+                                                                  x.State == 0 &&
+                                                                  x.Sender.Contains(Sender) &&
+                                                                  x.EnclosureSize.Contains(EnclosureSize) &&
+                                                                  x.EnclosureType.Contains(EnclosureType) &&
+                                                                  x.ComponentName.Equals("") &&
+                                                                  x.Gauge.Equals("")).ToList();
             }
         }
 
-        public IEnumerable<EngineeredModification> getFilteredWireGaugeMods(string Sender, string WireGauge, bool IsNew)
+        /// <remarks> Matching ComponentName, EnclosureSize, and EnclosureType to "", ensures it is a wire gauge request </remarks>
+        /// <param name="Sender"> user who sent the modification </param>
+        /// <param name="Gauge"> gauge of the wire </param>
+        /// <param name="IsNew"> true if the request is for a new item, false otherwise </param>
+        /// <returns> returns a list of unapproved wire gauge requests that contain the filters</returns>
+        public IEnumerable<EngineeredModification> getFilteredWireGaugeMods(string Sender, string Gauge, bool IsNew)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 if (IsNew)
                 {
+                    //If IsNew filter is true, then only return new wire gauge requests
                     return context.EngineeredModifications.Where(x => x.IsNew == IsNew &&
-                                                                         x.State == 0 &&
-                                                                         x.Sender.Contains(Sender) &&
-                                                                         x.Gauge.Contains(WireGauge) &&
-                                                                         x.EnclosureSize.Equals("") &&
-                                                                         x.EnclosureType.Equals("") &&
-                                                                         x.ComponentName.Equals("")).ToList();
+                                                                      x.State == 0 &&
+                                                                      x.Sender.Contains(Sender) &&
+                                                                      x.Gauge.Contains(Gauge) &&
+                                                                      x.EnclosureSize.Equals("") &&
+                                                                      x.EnclosureType.Equals("") &&
+                                                                      x.ComponentName.Equals("")).ToList();
                 }
                 else
                 {
+                    //If IsNew filter is false, then return all wire gauge requests
                     return context.EngineeredModifications.Where(x => x.State == 0 &&
-                                                                         x.Sender.Contains(Sender) &&
-                                                                         x.Gauge.Contains(WireGauge) &&
-                                                                         x.EnclosureSize.Equals("") &&
-                                                                         x.EnclosureType.Equals("") &&
-                                                                         x.ComponentName.Equals("")).ToList();
+                                                                      x.Sender.Contains(Sender) &&
+                                                                      x.Gauge.Contains(Gauge) &&
+                                                                      x.EnclosureSize.Equals("") &&
+                                                                      x.EnclosureType.Equals("") &&
+                                                                      x.ComponentName.Equals("")).ToList();
                 }
             }
         }
 
-        public IEnumerable<EngineeredModification> getNewWireGaugeMods(string WireGauge)
+        /// <remarks> Ensures that the wire gauge size matches exactly </remarks>
+        /// <remarks> Matching ComponentName, EnclosureSize, and EnclosureType to "", ensures it is a wire gauge request </remarks>
+        /// <param name="Gauge"> gauge of the wire </param>
+        /// <returns> returns a list of unapproved wire gauge requests that meet the filters</returns>
+        public IEnumerable<EngineeredModification> getNewWireGaugeMods(string Gauge)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.EngineeredModifications.Where(x => x.IsNew == true &&
-                                                                     x.State == 0 &&
-                                                                     x.Gauge.Equals(WireGauge) &&
-                                                                     x.EnclosureSize.Equals("") &&
-                                                                     x.EnclosureType.Equals("") &&
-                                                                     x.ComponentName.Equals("")).ToList();
+                                                                  x.State == 0 &&
+                                                                  x.Gauge.Equals(Gauge) &&
+                                                                  x.EnclosureSize.Equals("") &&
+                                                                  x.EnclosureType.Equals("") &&
+                                                                  x.ComponentName.Equals("")).ToList();
             }
         }
         #endregion
 
         #region Modify Engineered
+        /// <summary>
+        /// Adds a engineered modification to the database
+        /// </summary>
+        /// <param name="mod"> the modification to add </param>
         public void addEngineeredModificationRequest(EngineeredModification mod)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -1084,6 +1172,10 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <summary>
+        /// Adds a component to the database
+        /// </summary>
+        /// <param name="component"> the component to add </param>
         public void addComponent(Component component)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -1093,6 +1185,10 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <summary>
+        /// Adds a wire gauge to the database
+        /// </summary>
+        /// <param name="wireGauge"> the wire gauge to add </param>
         public void addWireGauge(WireGauge wireGauge)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -1102,6 +1198,12 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <summary>
+        /// Updates the component with a new time
+        /// </summary>
+        /// <param name="name"> component name </param>
+        /// <param name="enclosureSize"> enclosure size of the component </param>
+        /// <param name="newTime"> new time to associate with component </param>
         public void updateComponent(string name, string enclosureSize, decimal newTime)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -1112,6 +1214,12 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <summary>
+        /// Updates the enclosure with a new time
+        /// </summary>
+        /// <param name="enclosureType"> enclosuer type </param>
+        /// <param name="enclosureSize"> enclosure size </param>
+        /// <param name="newTime"> new time to associate with enclosure </param>
         public void updateEnclosure(string enclosureType, string enclosureSize, decimal newTime)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -1122,6 +1230,11 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <summary>
+        /// Updates the wire gauge with a new time percentage
+        /// </summary>
+        /// <param name="gauge"> gauge of the wire </param>
+        /// <param name="newTimePercentage"> new time percentage to associate with wire gauge </param>
         public void updateWireGauge(string gauge, decimal newTimePercentage)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -1132,6 +1245,10 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <summary>
+        /// Updates the engineered modification upon approval or denial
+        /// </summary>
+        /// <param name="modification"> the engineered modification to update </param>
         public void updateEngineeredModification(EngineeredModification modification)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -1142,10 +1259,12 @@ namespace RouteConfigurator.Services
                 mod.ReviewedDate = modification.ReviewedDate;
                 mod.Reviewer = modification.Reviewer;
 
+                //If modification is checked to approve
                 if (modification.State == 3)
                 {
                     bool changed = false;
 
+                    //Check if the manager changed anything.  Only matters for accepted requests
                     if ((!modification.ComponentName.Equals(mod.ComponentName)) ||
                         (!modification.EnclosureSize.Equals(mod.EnclosureSize)) ||
                         (!modification.EnclosureType.Equals(mod.EnclosureType)) ||
@@ -1159,7 +1278,7 @@ namespace RouteConfigurator.Services
                     if (changed)
                     {
                         //Deny the old request.  Create a new request for the manager.  Add it.
-                        mod.State = 2;   //Database Override Request Denied
+                        mod.State = 2;   //Database Supervisor Modification Request Denied
 
                         EngineeredModification newMod = new EngineeredModification()
                         {
@@ -1184,12 +1303,14 @@ namespace RouteConfigurator.Services
                     }
                     else
                     {
+                        //If nothing is changed accept the modification
                         mod.State = 1;
                     }
                 }
+                //If modification is checked to deny
                 else if (modification.State == 4) 
                 {
-                    mod.State = 2;
+                    mod.State = 2; //Request denied
                 }
 
                 context.SaveChanges();
@@ -1198,6 +1319,9 @@ namespace RouteConfigurator.Services
         #endregion
 
         #region RouteQueue
+        /// <remarks> Only returns the queued routes that have not been approved yet </remarks>
+        /// <param name="modelNumber"> full model number (standard or engineered) with options </param>
+        /// <returns> returns a list of queued routes that contain the filter </returns>
         public IEnumerable<RouteQueue> getFilteredRouteQueues(string modelNumber)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -1207,6 +1331,10 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <summary>
+        /// Adds a route to the queue
+        /// </summary>
+        /// <param name="route"> route to be added </param>
         public void addRouteQueue(RouteQueue route)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
@@ -1216,6 +1344,10 @@ namespace RouteConfigurator.Services
             }
         }
 
+        /// <summary>
+        /// Deletes a route from the queue
+        /// </summary>
+        /// <param name="selectedRoute"> route to be deleted </param>
         public void deleteQueuedRoute(RouteQueue selectedRoute)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())

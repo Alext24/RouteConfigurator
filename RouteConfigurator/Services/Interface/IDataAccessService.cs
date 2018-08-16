@@ -97,7 +97,7 @@ namespace RouteConfigurator.Services.Interface
         #region Wire Gauge Read
         WireGauge getWireGauge(string gauge);
         IEnumerable<WireGauge> getWireGauges();
-        IEnumerable<WireGauge> getFilteredWireGauges(string wireGuage);
+        IEnumerable<WireGauge> getFilteredWireGauges(string guage);
         #endregion
 
         #region Engineered Modifications Read
@@ -108,8 +108,8 @@ namespace RouteConfigurator.Services.Interface
         IEnumerable<EngineeredModification> getFilteredNewComponents(string Sender, string ComponentName, string EnclosureSize);
         IEnumerable<EngineeredModification> getFilteredModifiedComponents(string Sender, string ComponentName, string EnclosureSize);
         IEnumerable<EngineeredModification> getFilteredModifiedEnclosures(string Sender, string EnclosureSize, string EnclosureType);
-        IEnumerable<EngineeredModification> getFilteredWireGaugeMods(string Sender, string WireGauge, bool IsNew);
-        IEnumerable<EngineeredModification> getNewWireGaugeMods(string WireGauge);
+        IEnumerable<EngineeredModification> getFilteredWireGaugeMods(string Sender, string Gauge, bool IsNew);
+        IEnumerable<EngineeredModification> getNewWireGaugeMods(string Gauge);
         #endregion
 
         #region Modify Engineered
