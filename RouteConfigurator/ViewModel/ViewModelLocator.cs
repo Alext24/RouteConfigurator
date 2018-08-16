@@ -10,11 +10,11 @@
 */
 
 using CommonServiceLocator;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using RouteConfigurator.Design;
-using RouteConfigurator.Model;
-using RouteConfigurator.ViewModelEngineered;
+using RouteConfigurator.Services;
+using RouteConfigurator.Services.Interface;
+using RouteConfigurator.ViewModel.EngineeredModelViewModel;
+using RouteConfigurator.ViewModel.StandardModelViewModel;
 using System;
 
 namespace RouteConfigurator.ViewModel
@@ -62,13 +62,13 @@ namespace RouteConfigurator.ViewModel
         {
             var navigationService = new FrameNavigationService();
 
-            navigationService.Configure("HomeView", new System.Uri("/View/HomeView.xaml", UriKind.Relative));
-            navigationService.Configure("SupervisorView", new System.Uri("/View/SupervisorView.xaml", UriKind.Relative));
-            navigationService.Configure("ManagerView", new System.Uri("/View/ManagerView.xaml", UriKind.Relative));
+            navigationService.Configure("HomeView", new System.Uri("/View/StandardModelView/HomeView.xaml", UriKind.Relative));
+            navigationService.Configure("SupervisorView", new System.Uri("/View/StandardModelView/SupervisorView.xaml", UriKind.Relative));
+            navigationService.Configure("ManagerView", new System.Uri("/View/StandardModelView/ManagerView.xaml", UriKind.Relative));
 
-            navigationService.Configure("EngineeredHomeView", new System.Uri("/ViewEngineered/EngineeredHomeView.xaml", UriKind.Relative));
-            navigationService.Configure("EngineeredSupervisorView", new System.Uri("/ViewEngineered/EngineeredSupervisorView.xaml", UriKind.Relative));
-            navigationService.Configure("EngineeredManagerView", new System.Uri("/ViewEngineered/EngineeredManagerView.xaml", UriKind.Relative));
+            navigationService.Configure("EngineeredHomeView", new System.Uri("/View/EngineeredModelView/EngineeredHomeView.xaml", UriKind.Relative));
+            navigationService.Configure("EngineeredSupervisorView", new System.Uri("/View/EngineeredModelView/EngineeredSupervisorView.xaml", UriKind.Relative));
+            navigationService.Configure("EngineeredManagerView", new System.Uri("/View/EngineeredModelView/EngineeredManagerView.xaml", UriKind.Relative));
 
             navigationService.Configure("RouteQueueView", new System.Uri("/View/RouteQueueView.xaml", UriKind.Relative));
 

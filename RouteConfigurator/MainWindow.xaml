@@ -21,6 +21,6 @@
     </Window.Resources>
 
     <Grid>
-        <Frame x:Name="mainFrame" Source="/View/HomeView.xaml" NavigationUIVisibility="Hidden"/>
+        <Frame x:Name="mainFrame" Source="/View/StandardModelView/HomeView.xaml" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Window> 

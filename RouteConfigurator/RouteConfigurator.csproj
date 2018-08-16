@@ -88,8 +88,8 @@
     <Compile Include="Converters\CheckBoxToModStateConverter.cs" />
     <Compile Include="Converters\DecimalTimeToStringConverter.cs" />
     <Compile Include="Converters\IntStateToTextStateConverter.cs" />
-    <Compile Include="Design\DataAccessService.cs" />
-    <Compile Include="Design\FrameNavigationService.cs" />
+    <Compile Include="Services\DataAccessService.cs" />
+    <Compile Include="Services\FrameNavigationService.cs" />
     <Compile Include="DTOs\EngineeredModelDTO.cs" />
     <Compile Include="Migrations\201807161826584_initialDatabase3.cs" />
     <Compile Include="Migrations\201807161826584_initialDatabase3.Designer.cs">
@@ -152,100 +152,100 @@
       <DependentUpon>201808161602512_AddedAttributesToRouteQueue.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model\Component.cs" />
-    <Compile Include="Model\Enclosure.cs" />
-    <Compile Include="Model\EngineeredModification.cs" />
-    <Compile Include="Model\IDataAccessService.cs" />
-    <Compile Include="Model\IFrameNavigationService.cs" />
-    <Compile Include="Model\Model.cs" />
-    <Compile Include="Model\Modification.cs" />
-    <Compile Include="Model\Option.cs" />
-    <Compile Include="Model\Override.cs" />
-    <Compile Include="Model\OverrideRequest.cs" />
-    <Compile Include="Model\RouteConfiguratorDB.cs" />
+    <Compile Include="Model\EF_EngineeredModels\Component.cs" />
+    <Compile Include="Model\EF_EngineeredModels\Enclosure.cs" />
+    <Compile Include="Model\EF_EngineeredModels\EngineeredModification.cs" />
+    <Compile Include="Services\Interface\IDataAccessService.cs" />
+    <Compile Include="Services\Interface\IFrameNavigationService.cs" />
+    <Compile Include="Model\EF_StandardModels\StandardModel.cs" />
+    <Compile Include="Model\EF_StandardModels\Modification.cs" />
+    <Compile Include="Model\EF_StandardModels\Option.cs" />
+    <Compile Include="Model\EF_StandardModels\Override.cs" />
+    <Compile Include="Model\EF_StandardModels\OverrideRequest.cs" />
+    <Compile Include="Model\Context\RouteConfiguratorDB.cs" />
     <Compile Include="Model\RouteQueue.cs" />
-    <Compile Include="Model\TimeTrial.cs" />
-    <Compile Include="Model\TimeTrialsOptionTime.cs" />
-    <Compile Include="Model\WireGauge.cs" />
-    <Compile Include="ViewEngineered\AddComponentPopup.xaml.cs">
+    <Compile Include="Model\EF_StandardModels\TimeTrial.cs" />
+    <Compile Include="Model\EF_StandardModels\TimeTrialsOptionTime.cs" />
+    <Compile Include="Model\EF_EngineeredModels\WireGauge.cs" />
+    <Compile Include="View\EngineeredModelView\AddComponentPopup.xaml.cs">
       <DependentUpon>AddComponentPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewEngineered\AddWireGaugePopup.xaml.cs">
+    <Compile Include="View\EngineeredModelView\AddWireGaugePopup.xaml.cs">
       <DependentUpon>AddWireGaugePopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewEngineered\EngineeredManagerView.xaml.cs">
+    <Compile Include="View\EngineeredModelView\EngineeredManagerView.xaml.cs">
       <DependentUpon>EngineeredManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewEngineered\ModifyComponentsPopup.xaml.cs">
+    <Compile Include="View\EngineeredModelView\ModifyComponentsPopup.xaml.cs">
       <DependentUpon>ModifyComponentsPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewEngineered\ModifyEnclosuresPopup.xaml.cs">
+    <Compile Include="View\EngineeredModelView\ModifyEnclosuresPopup.xaml.cs">
       <DependentUpon>ModifyEnclosuresPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewEngineered\ModifyWireGaugesPopup.xaml.cs">
+    <Compile Include="View\EngineeredModelView\ModifyWireGaugesPopup.xaml.cs">
       <DependentUpon>ModifyWireGaugesPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewEngineered\EngineeredRequestsView.xaml.cs">
+    <Compile Include="View\EngineeredModelView\EngineeredRequestsView.xaml.cs">
       <DependentUpon>EngineeredRequestsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModelEngineered\AddComponentPopupModel.cs" />
-    <Compile Include="ViewModelEngineered\AddWireGaugePopupModel.cs" />
-    <Compile Include="ViewModelEngineered\EngineeredManagerViewModel.cs" />
-    <Compile Include="ViewModelEngineered\ModifyComponentsPopupModel.cs" />
-    <Compile Include="ViewModelEngineered\ModifyEnclosuresPopupModel.cs" />
-    <Compile Include="ViewModelEngineered\ModifyWireGaugesPopupModel.cs" />
-    <Compile Include="ViewModelEngineered\EngineeredRequestsViewModel.cs" />
-    <Compile Include="ViewModel\AddModelPopupModel.cs" />
-    <Compile Include="ViewModel\AddOptionPopupModel.cs" />
-    <Compile Include="ViewModel\AddTimeTrialPopupModel.cs" />
-    <Compile Include="ViewModelEngineered\EngineeredHomeViewModel.cs" />
-    <Compile Include="ViewModelEngineered\EngineeredSupervisorViewModel.cs" />
-    <Compile Include="ViewModel\HomeViewModel.cs" />
-    <Compile Include="ViewModel\ManagerViewModel.cs" />
-    <Compile Include="ViewModel\ModifyOptionPopupModel.cs" />
-    <Compile Include="ViewModel\ModifyModelPopupModel.cs" />
-    <Compile Include="ViewModel\OverrideModelPopupModel.cs" />
-    <Compile Include="ViewModel\RequestsViewModel.cs" />
+    <Compile Include="ViewModel\EngineeredModelViewModel\AddComponentPopupModel.cs" />
+    <Compile Include="ViewModel\EngineeredModelViewModel\AddWireGaugePopupModel.cs" />
+    <Compile Include="ViewModel\EngineeredModelViewModel\EngineeredManagerViewModel.cs" />
+    <Compile Include="ViewModel\EngineeredModelViewModel\ModifyComponentsPopupModel.cs" />
+    <Compile Include="ViewModel\EngineeredModelViewModel\ModifyEnclosuresPopupModel.cs" />
+    <Compile Include="ViewModel\EngineeredModelViewModel\ModifyWireGaugesPopupModel.cs" />
+    <Compile Include="ViewModel\EngineeredModelViewModel\EngineeredRequestsViewModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\AddModelPopupModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\AddOptionPopupModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\AddTimeTrialPopupModel.cs" />
+    <Compile Include="ViewModel\EngineeredModelViewModel\EngineeredHomeViewModel.cs" />
+    <Compile Include="ViewModel\EngineeredModelViewModel\EngineeredSupervisorViewModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\HomeViewModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\ManagerViewModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\ModifyOptionPopupModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\ModifyModelPopupModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\OverrideModelPopupModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\RequestsViewModel.cs" />
     <Compile Include="ViewModel\RouteQueueViewModel.cs" />
-    <Compile Include="ViewModel\SupervisorViewModel.cs" />
+    <Compile Include="ViewModel\StandardModelViewModel\SupervisorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="View\AddModelPopup.xaml.cs">
+    <Compile Include="View\StandardModelView\AddModelPopup.xaml.cs">
       <DependentUpon>AddModelPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\AddOptionPopup.xaml.cs">
+    <Compile Include="View\StandardModelView\AddOptionPopup.xaml.cs">
       <DependentUpon>AddOptionPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\AddTimeTrialPopup.xaml.cs">
+    <Compile Include="View\StandardModelView\AddTimeTrialPopup.xaml.cs">
       <DependentUpon>AddTimeTrialPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewEngineered\EngineeredHomeView.xaml.cs">
+    <Compile Include="View\EngineeredModelView\EngineeredHomeView.xaml.cs">
       <DependentUpon>EngineeredHomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\HomeView.xaml.cs">
+    <Compile Include="View\StandardModelView\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ManagerView.xaml.cs">
+    <Compile Include="View\StandardModelView\ManagerView.xaml.cs">
       <DependentUpon>ManagerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ModifyOptionPopup.xaml.cs">
+    <Compile Include="View\StandardModelView\ModifyOptionPopup.xaml.cs">
       <DependentUpon>ModifyOptionPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ModifyModelPopup.xaml.cs">
+    <Compile Include="View\StandardModelView\ModifyModelPopup.xaml.cs">
       <DependentUpon>ModifyModelPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OverrideModelPopup.xaml.cs">
+    <Compile Include="View\StandardModelView\OverrideModelPopup.xaml.cs">
       <DependentUpon>OverrideModelPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\RequestsView.xaml.cs">
+    <Compile Include="View\StandardModelView\RequestsView.xaml.cs">
       <DependentUpon>RequestsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewEngineered\EngineeredSupervisorView.xaml.cs">
+    <Compile Include="View\EngineeredModelView\EngineeredSupervisorView.xaml.cs">
       <DependentUpon>EngineeredSupervisorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\RouteQueueView.xaml.cs">
       <DependentUpon>RouteQueueView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SupervisorView.xaml.cs">
+    <Compile Include="View\StandardModelView\SupervisorView.xaml.cs">
       <DependentUpon>SupervisorView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
@@ -280,75 +280,75 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ViewEngineered\AddComponentPopup.xaml">
+    <Page Include="View\EngineeredModelView\AddComponentPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ViewEngineered\AddWireGaugePopup.xaml">
+    <Page Include="View\EngineeredModelView\AddWireGaugePopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ViewEngineered\EngineeredManagerView.xaml">
+    <Page Include="View\EngineeredModelView\EngineeredManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ViewEngineered\ModifyComponentsPopup.xaml">
+    <Page Include="View\EngineeredModelView\ModifyComponentsPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ViewEngineered\ModifyEnclosuresPopup.xaml">
+    <Page Include="View\EngineeredModelView\ModifyEnclosuresPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ViewEngineered\ModifyWireGaugesPopup.xaml">
+    <Page Include="View\EngineeredModelView\ModifyWireGaugesPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ViewEngineered\EngineeredRequestsView.xaml">
+    <Page Include="View\EngineeredModelView\EngineeredRequestsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\AddModelPopup.xaml">
+    <Page Include="View\StandardModelView\AddModelPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\AddOptionPopup.xaml">
+    <Page Include="View\StandardModelView\AddOptionPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\AddTimeTrialPopup.xaml">
+    <Page Include="View\StandardModelView\AddTimeTrialPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ViewEngineered\EngineeredHomeView.xaml">
+    <Page Include="View\EngineeredModelView\EngineeredHomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\HomeView.xaml">
+    <Page Include="View\StandardModelView\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ManagerView.xaml">
+    <Page Include="View\StandardModelView\ManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ModifyOptionPopup.xaml">
+    <Page Include="View\StandardModelView\ModifyOptionPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ModifyModelPopup.xaml">
+    <Page Include="View\StandardModelView\ModifyModelPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OverrideModelPopup.xaml">
+    <Page Include="View\StandardModelView\OverrideModelPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\RequestsView.xaml">
+    <Page Include="View\StandardModelView\RequestsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ViewEngineered\EngineeredSupervisorView.xaml">
+    <Page Include="View\EngineeredModelView\EngineeredSupervisorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -356,7 +356,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SupervisorView.xaml">
+    <Page Include="View\StandardModelView\SupervisorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -434,23 +434,21 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Images\" />
+    <Resource Include="Images\Backgrounds\StarrySkyBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Backgrounds\StarrySkyBackground.jpg" />
+    <Resource Include="Images\Backgrounds\OceanWaterBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Backgrounds\OceanWaterBackground.jpg" />
+    <Resource Include="Images\Backgrounds\CloudBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Backgrounds\CloudBackground.jpg" />
+    <Resource Include="Images\Backgrounds\WaterBackground.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Backgrounds\WaterBackground.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Backgrounds\MountainLakeBackground.jpg" />
+    <Resource Include="Images\Backgrounds\MountainLakeBackground.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

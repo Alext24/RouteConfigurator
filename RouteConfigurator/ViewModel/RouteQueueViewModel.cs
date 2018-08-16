@@ -1,13 +1,11 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
-using RouteConfigurator.Design;
 using RouteConfigurator.Model;
+using RouteConfigurator.Services;
+using RouteConfigurator.Services.Interface;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 

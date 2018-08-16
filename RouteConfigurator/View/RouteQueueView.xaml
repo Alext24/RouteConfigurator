@@ -21,7 +21,7 @@
 
     <Border Padding="50">
         <Border.Background>
-            <ImageBrush ImageSource="/Backgrounds/OceanWaterBackground.jpg"/>
+            <ImageBrush ImageSource="/Images/Backgrounds/OceanWaterBackground.jpg"/>
         </Border.Background>
 
         <Border Background="{StaticResource LightBlue}" Padding="10" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Stretch">
