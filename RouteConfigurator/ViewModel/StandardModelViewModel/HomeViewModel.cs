@@ -121,8 +121,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     RouteQueue route = new RouteQueue
                     {
                         Route = int.Parse(routeText),
-                        ModelNumber = modelNumber,
-                        Line = getLine(),
+                        ModelNumber = model.Base,
+                        Line = model.Line,
                         TotalTime = (decimal)productionTime,
                         IsApproved = false,
                         AddedDate = DateTime.Now,
@@ -701,12 +701,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
                 routeText = string.Concat(routeText, "00");
             }
-        }
-
-        private string getLine()
-        {
-            string line = "FIND LATER";
-            return line;
         }
         #endregion
     }

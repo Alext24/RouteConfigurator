@@ -33,21 +33,25 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         private ObservableCollection<EngineeredModification> _modifiedEnclosures = new ObservableCollection<EngineeredModification>();
         private ObservableCollection<EngineeredModification> _wireGaugeMods = new ObservableCollection<EngineeredModification>();
 
+        // New component modification table helpers
         private string _NCSenderFilter = "";
         private string _NCNameFilter = "";
         private string _NCEnclosureSizeFilter = "";
         private EngineeredModification _selectedNewComponent;
 
+        // Modified component modification table helpers
         private string _MCSenderFilter = "";
         private string _MCNameFilter = "";
         private string _MCEnclosureSizeFilter = "";
         private EngineeredModification _selectedModifiedComponent;
 
+        // Modified enclosure modification table helpers
         private string _MESenderFilter = "";
         private string _MEEnclosureSizeFilter = "";
         private string _MEEnclosureTypeFilter = "";
         private EngineeredModification _selectedModifiedEnclosure;
 
+        // Wire gauge modification table helpers
         private string _WGSenderFilter = "";
         private string _WGGaugeFilter = "";
         private bool _WGIsNewFilter = false;
@@ -85,6 +89,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region Commands
+        /// <summary>
+        /// Loads all tables
+        /// </summary>
         private void loaded()
         {
             updateNewComponentTableAsync();
@@ -93,6 +100,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             updateWireGaugeModTableAsync();
         }
 
+        /// <summary>
+        /// Opens the engineered supervisor screen in a new window
+        /// </summary>
         private void openSupervisorView()
         {
             MainWindow secondWindow = new MainWindow();
@@ -104,6 +114,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             secondWindow.MinWidth = 1400;
         }
 
+        /// <summary>
+        /// Clears all table filters and reloads the tables
+        /// </summary>
         private void refreshTables()
         {
             informationText = "";
@@ -148,18 +161,25 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             refreshTables();
         }
 
+        /// <summary>
+        /// Submits the checked modifications to the database and creates or modifies the
+        /// information as needed
+        /// Calls updateModification
+        /// </summary>
         private void submitChecked()
         {
             informationText = "Submitting changes...";
+
             int numApproved = 0;
             int numDenied = 0;
             int numError = 0;
             string errorText = "";
 
             //Go through each table
-            //check for state to equal 3 (approved) or 4 (declined)
+            //check for state to equal 3 (checked to approve) or 4 (checked to decline)
             foreach (EngineeredModification mod in newComponents)
             {
+                //If modification is checked to approve
                 if (mod.State == 3)
                 {
                     mod.ComponentName = mod.ComponentName.ToUpper();
@@ -167,6 +187,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
                     try
                     {
+                        //Ensure information is still valid
                         if (string.IsNullOrWhiteSpace(mod.ComponentName))
                         {
                             errorText += string.Format("Error adding component {0}. Invalid component.\n", mod.ComponentName);
@@ -210,6 +231,8 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                         Console.WriteLine(e.Message);
                     }
                 }
+                //If modification is checked to deny
+                //Update the modification in the database to save the state to denied
                 else if (mod.State == 4)
                 {
                     try
@@ -227,11 +250,13 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
             foreach (EngineeredModification mod in modifiedComponents)
             {
+                //If modification is checked to approve
                 if (mod.State == 3)
                 {
                     try
                     {
-                        if (mod.NewTime <= 0)
+                        //Ensure information is still valid
+                        if (mod.NewTime < 0)
                         {
                             errorText += string.Format("Error modifying component {0}.  Invalid Time: {1}.\n", mod.ComponentName, mod.NewTime);
                             numError++;
@@ -253,6 +278,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                         Console.WriteLine(e.Message);
                     }
                 }
+                //If checked to deny
                 else if (mod.State == 4)
                 {
                     try
@@ -270,11 +296,13 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
             foreach (EngineeredModification mod in modifiedEnclosures)
             {
+                //If checked to approve
                 if (mod.State == 3)
                 {
                     try
                     {
-                        if (mod.NewTime <= 0)
+                        //Ensure information is still valid
+                        if (mod.NewTime < 0)
                         {
                             errorText += string.Format("Error modifying enclosure {0} - {1}.  Invalid Time: {2}.\n", mod.EnclosureType, mod.EnclosureSize, mod.NewTime);
                             numError++;
@@ -296,6 +324,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                         Console.WriteLine(e.Message);
                     }
                 }
+                //If checked to deny
                 else if (mod.State == 4)
                 {
                     try
@@ -313,14 +342,17 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
             foreach(EngineeredModification mod in wireGaugeMods)
             {
+                //Check if the wire gauge modification is adding a new wire gauge or modifying an old wire gauge
                 if (mod.IsNew)
                 {
+                    //If checked to approve
                     if (mod.State == 3)
                     {
                         mod.Gauge = mod.Gauge.ToUpper();
 
                         try
                         {
+                            //Ensure information is still valid
                             if (string.IsNullOrWhiteSpace(mod.Gauge))
                             {
                                 errorText += string.Format("Error adding wire gauge {0}. Invalid gauge.\n", mod.Gauge);
@@ -358,6 +390,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                             Console.WriteLine(e.Message);
                         }
                     }
+                    //If checked to deny
                     else if (mod.State == 4)
                     {
                         try
@@ -372,12 +405,15 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                         }
                     }
                 }
+                //If the modification is for modyfing a wire gauge
                 else
                 {
+                    //If checked to approve
                     if (mod.State == 3)
                     {
                         try
                         {
+                            //Ensure information is still valid
                             if (string.IsNullOrWhiteSpace(mod.Gauge))
                             {
                                 errorText += string.Format("Error modifying wire gauge {0}. Invalid gauge.\n", mod.Gauge);
@@ -410,6 +446,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                             Console.WriteLine(e.Message);
                         }
                     }
+                    //If checked to deny
                     else if (mod.State == 4)
                     {
                         try
@@ -426,6 +463,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                 }
             }
 
+            //Display a summary message
             if (numError > 0)
             {
                 MessageBox.Show(string.Format("Approved: {0}\n" +
@@ -573,6 +611,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _selectedNewComponent = value;
                 RaisePropertyChanged("selectedNewComponent");
+                informationText = "";
             }
         }
 
@@ -643,6 +682,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _selectedModifiedComponent = value;
                 RaisePropertyChanged("selectedModifiedComponent");
+                informationText = "";
             }
         }
 
@@ -713,6 +753,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _selectedModifiedEnclosure = value;
                 RaisePropertyChanged("selectedModifiedEnclosure");
+                informationText = "";
             }
         }
 
@@ -783,6 +824,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _selectedWireGaugeMod = value;
                 RaisePropertyChanged("selectedWireGaugeMod");
+                informationText = "";
             }
         }
 
@@ -823,6 +865,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             informationText = "";
         }
 
+        /// <summary>
+        /// Updates the new component modification table
+        /// </summary>
         private void updateNewComponentTable()
         {
             try
@@ -845,6 +890,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             informationText = "";
         }
 
+        /// <summary>
+        /// Updates the modified component modification table
+        /// </summary>
         private void updateModifiedComponentTable()
         {
             try
@@ -867,6 +915,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             informationText = "";
         }
 
+        /// <summary>
+        /// Updates the modified enclosure modification table
+        /// </summary>
         private void updateModifiedEnclosureTable()
         {
             try
@@ -889,6 +940,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             informationText = "";
         }
 
+        /// <summary>
+        /// Updates the wire gauge modification table
+        /// </summary>
         private void updateWireGaugeModTable()
         {
             try
@@ -903,7 +957,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         }
 
         /// <summary>
-        /// Updates the modification review date and reviewer.
+        /// Sets the modification review date and reviewer and updates the database with the new information
         /// Should be surrounded by a try catch
         /// </summary>
         /// <param name="mod"></param>

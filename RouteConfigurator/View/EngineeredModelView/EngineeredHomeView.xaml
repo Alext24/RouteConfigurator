@@ -153,10 +153,10 @@
 
                         <!--Row 5 setup: Blank, Spacing-->
 
-                        <!--Row 8 setup: Material Number-->
-                        <TextBlock Grid.Row="8" Grid.Column="0" Text="Material Number" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center"/> 
+                        <!--Row 8 setup: Model Number-->
+                        <TextBlock Grid.Row="8" Grid.Column="0" Text="Model Number" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center"/> 
                         <TextBox   Grid.Row="8" Grid.Column="2" VerticalAlignment="Center" MaxWidth="140"
-                                   FontSize="16" Text="{Binding materialNumber}" Margin="0 5"/>
+                                   FontSize="16" Text="{Binding modelNumber}" Margin="0 5"/>
 
                         <!--Submit Route Button setup-->
                             <Button Grid.Row="7" Grid.RowSpan="2" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" 

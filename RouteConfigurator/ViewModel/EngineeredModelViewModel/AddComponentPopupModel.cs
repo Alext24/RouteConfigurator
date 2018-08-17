@@ -26,7 +26,12 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
         private string _componentName;
         public ObservableCollection<string> _enclosureSizes = new ObservableCollection<string>();
-        public ObservableCollection<Component> _componentList = new ObservableCollection<Component>();
+
+        /// <summary>
+        /// Used to hold a list of all the different enclosure sizes so a user can enter the time it takes
+        /// the component for each enclosure size
+        /// </summary>
+        public ObservableCollection<Component> _enclosureSizeTimes = new ObservableCollection<Component>();
         private string _description;
 
         private ObservableCollection<EngineeredModification> _modificationsToSubmit = new ObservableCollection<EngineeredModification>();
@@ -57,10 +62,31 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region Commands
-        private void loaded()
+        private async void loaded()
         {
-            enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
-            newComponentList();
+            loading = true;
+            await Task.Run(() => getEnclosureSizes());
+            loading = false;
+
+            newEnclosureSizeTimesAsync();
+        }
+
+        /// <summary>
+        /// Loads the different enclosure sizes
+        /// </summary>
+        private void getEnclosureSizes()
+        {
+            try
+            {
+                informationText = "Loading enclosure sizes...";
+                enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
+                informationText = "";
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
 
         private async void addComponentAsync()
@@ -71,8 +97,8 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         }
 
         /// <summary>
-        /// Creates the new component modification and adds it to the modifications to submit list
-        /// Calls checkValid
+        /// Creates the new component modifications for each enclosure size and adds them to the modifications to submit list
+        /// Calls checkValid and newEnclosureSizeTimes
         /// </summary>
         private void addComponent()
         {
@@ -81,7 +107,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             if (checkValid())
             {
                 informationText = "Adding components...";
-                foreach (Component component in componentList)
+                foreach (Component component in enclosureSizeTimes)
                 {
                     EngineeredModification mod = new EngineeredModification()
                     {
@@ -112,7 +138,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
                 //Clear input boxes
                 componentName = "";
-                newComponentList();
+                newEnclosureSizeTimes();
                 informationText = "Components added";
             }
         }
@@ -126,6 +152,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
         /// <summary>
         /// Submits each of the new component modifications to the database
+        /// Calls newEnclosureSizeTimes
         /// </summary>
         private void submit()
         {
@@ -150,7 +177,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                 //Clear input boxes
                 componentName = "";
                 description = "";
-                newComponentList();
+                newEnclosureSizeTimes();
 
                 modificationsToSubmit = new ObservableCollection<EngineeredModification>();
 
@@ -191,16 +218,16 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
         }
 
-        public ObservableCollection<Component> componentList 
+        public ObservableCollection<Component> enclosureSizeTimes 
         {
             get
             {
-                return _componentList;
+                return _enclosureSizeTimes;
             }
             set
             {
-                _componentList = value;
-                RaisePropertyChanged("componentList");
+                _enclosureSizeTimes = value;
+                RaisePropertyChanged("enclosureSizeTimes");
                 informationText = "";
             }
         }
@@ -260,12 +287,22 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region Private Functions
-        private void newComponentList()
+        private async void newEnclosureSizeTimesAsync()
         {
-            componentList = new ObservableCollection<Component>();
+            loading = true;
+            await Task.Run(() => newEnclosureSizeTimes());
+            loading = false;
+        }
+
+        /// <summary>
+        /// Creates a new list for the user to enter component times for each enclosure size
+        /// </summary>
+        private void newEnclosureSizeTimes()
+        {
+            enclosureSizeTimes = new ObservableCollection<Component>();
             foreach(string enclosureSize in enclosureSizes)
             {
-                componentList.Add(new Component
+                enclosureSizeTimes.Add(new Component
                 {
                     ComponentName = "",
                     EnclosureSize = enclosureSize,
@@ -287,8 +324,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                 try
                 {
                     //Check if the component already exists in the database as an component
-                    //if (_serviceProxy.getFilteredComponents(componentName, enclosureSize).ToList().Count > 0)
-                    if (_serviceProxy.getFilteredComponents(componentName, "").ToList().Count > 0)
+                    if (_serviceProxy.getComponentNames().Contains(componentName))
                     {
                         informationText = "This component already exists";
                         valid = false;
@@ -339,7 +375,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
             else
             {
-                foreach(Component component in componentList)
+                foreach(Component component in enclosureSizeTimes)
                 {
                     component.ComponentName = componentName;
                     if(component.Time < 0)

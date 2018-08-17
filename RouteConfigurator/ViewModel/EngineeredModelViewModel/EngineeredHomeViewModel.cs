@@ -38,13 +38,20 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
         private string _routeText;
         private string _prodSupCodeText;
-        private string _materialNumber;
+        private string _modelNumber;
 
+        /// <summary>
+        /// List of components where the user can enter in a qunatity of those components to add to the total time
+        /// </summary>
         private ObservableCollection<EngineeredModelDTO> _engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>();
+
+        /// <summary>
+        /// List of the components for the currently selected enclosure size to get the time for each component
+        /// </summary>
         private ObservableCollection<Component> _enclosureSizeComponents = new ObservableCollection<Component>();
 
         /// <summary>
-        /// Total time for all of the components entered
+        /// Total time for the entered information
         /// </summary>
         private decimal? _totalTime;
 
@@ -71,7 +78,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         {
             _navigationService = navigationService;
 
-            loadedCommand = new RelayCommand(loaded);
+            loadedCommand = new RelayCommand(loadedAsync);
             submitToQueueCommand = new RelayCommand(submitToQueueAsync);
             supervisorLoginCommand = new RelayCommand(supervisorLogin);
             managerLoginCommand = new RelayCommand(managerLogin);
@@ -82,8 +89,20 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region Commands
+        private async void loadedAsync()
+        {
+            loading = true;
+            await Task.Run(() => loaded());
+            loading = false;
+        }
+
+        /// <summary>
+        /// Loads the information needed for the window
+        /// </summary>
         private void loaded()
         {
+            informationText = "Loading information...";
+
             enclosureTypes = new ObservableCollection<string>(_serviceProxy.getEnclosureTypes());
             selectedEnclosureType = enclosureTypes.Count > 0 ? enclosureTypes.ElementAt(0) : null;
 
@@ -94,6 +113,8 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             selectedWireGauge = wireGauges.Count > 0 ? wireGauges.ElementAt(0) : null;
 
             engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>(_serviceProxy.getModelComponents());
+
+            informationText = "";
         }
 
         private async void submitToQueueAsync()
@@ -101,13 +122,16 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             await Task.Run(() => submitToQueue());
         }
 
+        /// <summary>
+        /// Adds the route information to the database if all the information is filled out
+        /// </summary>
         private void submitToQueue()
         {
             if (string.IsNullOrWhiteSpace(prodSupCodeText))
             {
                 informationText = "Complete route information before submitting route.";
             }
-            else if (string.IsNullOrWhiteSpace(materialNumber))
+            else if (string.IsNullOrWhiteSpace(modelNumber))
             {
                 informationText = "Enter the material number before submitting route.";
             }
@@ -119,7 +143,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                     RouteQueue route = new RouteQueue
                     {
                         Route = int.Parse(routeText),
-                        ModelNumber = materialNumber,
+                        ModelNumber = modelNumber,
                         Line = "ENG-FLR", //Engineered Floor Mount Line
                         TotalTime = (decimal)totalTime,
                         IsApproved = false,
@@ -160,11 +184,12 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         }
 
         /// <summary>
-        /// Calls calcTotalTime
+        /// Method is called when the user changes the quantity of a component
+        /// Calls calcTotalTimeAsync
         /// </summary>
         private void cellChanged()
         {
-            calcTotalTime();
+            calcTotalTimeAsync();
         }
         #endregion
 
@@ -183,7 +208,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         }
 
         /// <summary>
-        /// Calls calcTotalTime
+        /// Calls calcTotalTimeAsync
         /// </summary>
         public string selectedEnclosureType
         {
@@ -197,7 +222,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                 RaisePropertyChanged("selectedEnclosureType");
                 informationText = "";
 
-                calcTotalTime();
+                calcTotalTimeAsync();
             }
         }
 
@@ -215,7 +240,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         }
 
         /// <summary>
-        /// Calls updateComponentsTable
+        /// Calls updateComponentsTableAsync
         /// </summary>
         public string selectedEnclosureSize
         {
@@ -229,7 +254,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                 RaisePropertyChanged("selectedEnclosureSize");
                 informationText = "";
 
-                updateComponentsTable();
+                updateComponentsTableAsync();
             }
         }
 
@@ -247,7 +272,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         }
 
         /// <summary>
-        /// Calls calcTotalTime
+        /// Calls calcTotalTimeAsync
         /// </summary>
         public WireGauge selectedWireGauge
         {
@@ -261,7 +286,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                 RaisePropertyChanged("selectedWireGauge");
                 informationText = "";
 
-                calcTotalTime();
+                calcTotalTimeAsync();
             }
         }
 
@@ -291,16 +316,16 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
         }
 
-        public string materialNumber
+        public string modelNumber
         {
             get
             {
-                return _materialNumber;
+                return _modelNumber;
             }
             set
             {
-                _materialNumber = value.ToUpper();
-                RaisePropertyChanged("materialNumber");
+                _modelNumber = value.ToUpper();
+                RaisePropertyChanged("modelNumber");
             }
         }
 
@@ -358,19 +383,39 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region Private Functions
-        private void updateComponentsTable()
+        private async void updateComponentsTableAsync()
         {
-            _enclosureSizeComponents = new ObservableCollection<Component>(_serviceProxy.getEnclosureSizeComponents(selectedEnclosureSize));
-            calcTotalTime();
+            loading = true;
+            await Task.Run(() => updateComponentsTable());
+            loading = false;
         }
 
         /// <summary>
-        /// Sums the component times
+        /// Updates the list of components for the new enclosure size so the component times are accurate
+        /// Calls calcTotalTime
+        /// </summary>
+        private void updateComponentsTable()
+        {
+            informationText = "Updating information...";
+            _enclosureSizeComponents = new ObservableCollection<Component>(_serviceProxy.getEnclosureSizeComponents(selectedEnclosureSize));
+            calcTotalTime();
+            informationText = "";
+        }
+
+        private async void calcTotalTimeAsync()
+        {
+            loading = true;
+            await Task.Run(() => calcTotalTime());
+            loading = false;
+        }
+        /// <summary>
+        /// Sums the component times with the enclosure type time and wire gauge time
         /// Calls setProdSupCode and setRoute
         /// </summary>
         /// <returns> total production time for the model</returns>
         private void calcTotalTime()
         {
+            informationText = "Calculating total time...";
             totalTime = 0;
 
             if(selectedEnclosureType != null && selectedEnclosureSize != null)
@@ -394,6 +439,8 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
             TimeSpan time = TimeSpan.FromHours((double)totalTime);
             setRoute(time);
+
+            informationText = "";
         }
 
         /// <summary>

@@ -36,7 +36,6 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region RelayCommands
-        public RelayCommand loadedCommand { get; set; }
         public RelayCommand addWireGaugeCommand { get; set; }
         public RelayCommand submitCommand { get; set; }
         #endregion
@@ -49,17 +48,12 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         {
             _navigationService = navigationService;
 
-            loadedCommand = new RelayCommand(loaded);
             addWireGaugeCommand = new RelayCommand(addWireGaugeAsync);
             submitCommand = new RelayCommand(submitAsync);
         }
         #endregion
 
         #region Commands
-        private void loaded()
-        {
-        }
-
         private async void addWireGaugeAsync()
         {
             loading = true;
@@ -68,7 +62,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         }
 
         /// <summary>
-        /// Creates the new component modification and adds it to the modifications to submit list
+        /// Creates the new wire gauge modification and adds it to the modifications to submit list
         /// Calls checkValid
         /// </summary>
         private void addWireGauge()
@@ -107,7 +101,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                 //Clear input boxes
                 wireGauge = "";
                 newTimePercentage = null;
-                informationText = "Wire Gauge has been submitted.  Waiting for manager approval.";
+                informationText = "Wire Gauge added";
             }
         }
 
@@ -119,7 +113,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         }
 
         /// <summary>
-        /// Submits each of the new component modifications to the database
+        /// Submits each of the new wire gauge modifications to the database
         /// </summary>
         private void submit()
         {
@@ -129,7 +123,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 try
                 {
-                    informationText = "Submitting wire gauge modifications...";
+                    informationText = "Submitting wire gauges...";
                     foreach (EngineeredModification mod in modificationsToSubmit)
                     {
                         _serviceProxy.addEngineeredModificationRequest(mod);
@@ -141,6 +135,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                     Console.WriteLine(e);
                     return;
                 }
+
                 //Clear input boxes
                 wireGauge = "";
                 newTimePercentage = null;
@@ -255,7 +250,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                 try
                 {
                     //Check if the wire gauge already exists in the database as a wire gauge
-                    if (_serviceProxy.getFilteredWireGauges(wireGauge).ToList().Count > 0)
+                    if (_serviceProxy.getWireGauge(wireGauge) != null)
                     {
                         informationText = "This wire gauge already exists";
                         valid = false;
@@ -263,7 +258,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                     //Check if the wire gauge already exists in the database as a new wire gauge request
                     else if (_serviceProxy.getNewWireGaugeMods(wireGauge).ToList().Count > 0)
                     {
-                        informationText = "wire gauge is already waiting for approval.";
+                        informationText = "This wire gauge is already waiting for approval.";
                         valid = false;
                     }
                     else
@@ -291,7 +286,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
         /// <summary>
         /// Checks to see if all necessary fields are filled out with correct formatting
-        /// before the component can be added.
+        /// before the wire gauge can be added.
         /// </summary>
         /// <returns> true if the form is complete, otherwise false</returns>
         private bool checkComplete()
@@ -303,7 +298,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                 complete = false;
                 informationText = "Enter a wire gauge.";
             }
-            else if (newTimePercentage == null || newTimePercentage <= 0)
+            else if (newTimePercentage == null || newTimePercentage < 0)
             {
                 complete = false;
                 informationText = "Enter a valid time percentage.";

@@ -15,12 +15,6 @@
         Title="AddWireGauge"
         DataContext="{Binding AddWireGauge, Source={StaticResource Locator}}">
 
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding loadedCommand}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
-
     <Border Padding="40" Background="{StaticResource LightBlue}">
         <Grid>
             <Grid.RowDefinitions>
@@ -48,7 +42,7 @@
                         <RowDefinition Height="auto"/>      <!--Row 4-->
                         <RowDefinition Height="10"/>        <!--Row 5-->
                         <RowDefinition Height="auto"/>      <!--Row 6-->
-                        <RowDefinition Height="*"/>      <!--Row 7-->
+                        <RowDefinition Height="*"/>         <!--Row 7-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>

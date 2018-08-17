@@ -25,11 +25,17 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
         public ObservableCollection<string> _components = new ObservableCollection<string>();
         private string _component = "";
+
         public ObservableCollection<string> _enclosureSizes = new ObservableCollection<string>();
         private string _enclosureSize = "";
+
         private decimal? _newTime;
         private string _description;
 
+        /// <summary>
+        /// All components found that meet the filters
+        /// These are the components that will be modified when submitted
+        /// </summary>
         private ObservableCollection<Component> _componentsFound = new ObservableCollection<Component>();
 
         private string _informationText;
@@ -50,16 +56,36 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         {
             _navigationService = navigationService;
 
-            loadedCommand = new RelayCommand(loaded);
+            loadedCommand = new RelayCommand(loadedAsync);
             submitCommand = new RelayCommand(submitAsync);
         }
         #endregion
 
         #region Commands
+        private async void loadedAsync()
+        {
+            loading = true;
+            await Task.Run(() => loaded());
+            loading = false;
+        }
+
+        /// <summary>
+        /// Loads the information for the page
+        /// </summary>
         private void loaded()
         {
-            components = new ObservableCollection<string>(_serviceProxy.getComponentNames());
-            enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
+            informationText = "Loading information...";
+            try
+            {
+                components = new ObservableCollection<string>(_serviceProxy.getComponentNames());
+                enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
+            informationText = "";
         }
 
         private async void submitAsync()
@@ -84,6 +110,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 try
                 {
+                    informationText = "Submitting component modifications...";
+
+                    //Create a new modification for each component in the list
                     foreach (Component component in componentsFound)
                     {
                         EngineeredModification modifiedComponent = new EngineeredModification()
@@ -276,6 +305,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         /// </summary>
         private void updateComponentsTable()
         {
+            //If neither filter has been selected, make sure the list is empty
             if(string.IsNullOrWhiteSpace(component) && string.IsNullOrWhiteSpace(enclosureSize))
             {
                 componentsFound = new ObservableCollection<Component>();
@@ -298,7 +328,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
         /// <summary>
         /// Checks to see if all necessary fields are filled out with correct formatting
-        /// before the option can be added.
+        /// before the component modification can be added.
         /// </summary>
         /// <returns> true if the form is complete, otherwise false</returns>
         private bool checkComplete()

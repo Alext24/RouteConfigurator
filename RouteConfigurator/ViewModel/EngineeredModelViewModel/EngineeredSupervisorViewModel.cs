@@ -5,7 +5,9 @@ using RouteConfigurator.Model.EF_EngineeredModels;
 using RouteConfigurator.Services;
 using RouteConfigurator.Services.Interface;
 using RouteConfigurator.View.EngineeredModelView;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 {
@@ -22,6 +24,12 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        /// <summary>
+        /// Boolean to determine if the go home button is visible and enabled or not
+        /// True means button is enabled and visible, false means button is disabled and collapsed
+        /// Button needs to be disabled when the user opens the supervisor screen in a new window,
+        /// because the go home button of the new window changes the old screen
+        /// </summary>
         private bool _goHomeAllowed = false;
 
         private ObservableCollection<Component> _components = new ObservableCollection<Component>();
@@ -86,9 +94,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #region Commands
         private void loaded()
         {
-            updateComponentTable();
-            updateEnclosureTable();
-            updateWireGaugeTable();
+            updateComponentTableAsync();
+            updateEnclosureTableAsync();
+            updateWireGaugeTableAsync();
         }
 
         private void addComponent()
@@ -175,11 +183,12 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _selectedComponent = value;
                 RaisePropertyChanged("selectedComponent");
+                informationText = "";
             }
         }
 
         /// <summary>
-        /// Calls updateComponentTable
+        /// Calls updateComponentTableAsync
         /// </summary>
         public string componentNameFilter
         {
@@ -191,13 +200,14 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _componentNameFilter = value.ToUpper();
                 RaisePropertyChanged("componentNameFilter");
+                informationText = "";
 
-                updateComponentTable();
+                updateComponentTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateComponentTable
+        /// Calls updateComponentTableAsync
         /// </summary>
         public string componentEnclosureSizeFilter
         {
@@ -209,8 +219,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _componentEnclosureSizeFilter = value.ToUpper();
                 RaisePropertyChanged("componentEnclosureSizeFilter");
+                informationText = "";
 
-                updateComponentTable();
+                updateComponentTableAsync();
             }
         }
 
@@ -237,11 +248,12 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _selectedEnclosure = value;
                 RaisePropertyChanged("selectedEnclosure");
+                informationText = "";
             }
         }
 
         /// <summary>
-        /// Calls updateEnclosureTable
+        /// Calls updateEnclosureTableAsync
         /// </summary>
         public string enclosureTypeFilter
         {
@@ -253,13 +265,14 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _enclosureTypeFilter = value.ToUpper();
                 RaisePropertyChanged("enclosureTypeFilter");
+                informationText = "";
 
-                updateEnclosureTable();
+                updateEnclosureTableAsync();
             }
         }
 
         /// <summary>
-        /// Calls updateEnclosureTable
+        /// Calls updateEnclosureTableAsync
         /// </summary>
         public string enclosureSizeFilter
         {
@@ -271,8 +284,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _enclosureSizeFilter = value.ToUpper();
                 RaisePropertyChanged("enclosureSizeFilter");
+                informationText = "";
 
-                updateEnclosureTable();
+                updateEnclosureTableAsync();
             }
         }
 
@@ -299,11 +313,12 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _selectedWireGauge = value;
                 RaisePropertyChanged("selectedWireGauge");
+                informationText = "";
             }
         }
 
         /// <summary>
-        /// Calls updateWireGaugeTable
+        /// Calls updateWireGaugeTableAsync
         /// </summary>
         public string wireGaugeFilter
         {
@@ -315,8 +330,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _wireGaugeFilter = value.ToUpper();
                 RaisePropertyChanged("wireGaugeFilter");
+                informationText = "";
 
-                updateWireGaugeTable();
+                updateWireGaugeTableAsync();
             }
         }
 
@@ -348,19 +364,70 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region Private Functions
+        private async void updateComponentTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateComponentTable());
+            loading = false;
+        }
+
         private void updateComponentTable()
         {
-            components = new ObservableCollection<Component>(_serviceProxy.getFilteredComponents(componentNameFilter, componentEnclosureSizeFilter));
+            try
+            {
+                informationText = "Retrieving components...";
+                components = new ObservableCollection<Component>(_serviceProxy.getFilteredComponents(componentNameFilter, componentEnclosureSizeFilter));
+                informationText = "";
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
+        }
+
+        private async void updateEnclosureTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateEnclosureTable());
+            loading = false;
         }
 
         private void updateEnclosureTable()
         {
-            enclosures = new ObservableCollection<Enclosure>(_serviceProxy.getFilteredEnclosures(enclosureTypeFilter, enclosureSizeFilter));
+            try
+            {
+                informationText = "Retrieving enclosures...";
+                enclosures = new ObservableCollection<Enclosure>(_serviceProxy.getFilteredEnclosures(enclosureTypeFilter, enclosureSizeFilter));
+                informationText = "";
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
+        }
+
+        private async void updateWireGaugeTableAsync()
+        {
+            loading = true;
+            await Task.Run(() => updateWireGaugeTable());
+            loading = false;
         }
 
         private void updateWireGaugeTable()
         {
-            wireGauges = new ObservableCollection<WireGauge>(_serviceProxy.getFilteredWireGauges(wireGaugeFilter));
+            try
+            {
+                informationText = "Retrieving wire gauges...";
+                wireGauges = new ObservableCollection<WireGauge>(_serviceProxy.getFilteredWireGauges(wireGaugeFilter));
+                informationText = "";
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
         }
         #endregion
     }

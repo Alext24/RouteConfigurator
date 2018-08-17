@@ -25,11 +25,17 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
         public ObservableCollection<string> _enclosureTypes = new ObservableCollection<string>();
         private string _enclosureType = "";
+
         public ObservableCollection<string> _enclosureSizes = new ObservableCollection<string>();
         private string _enclosureSize = "";
+
         private decimal? _newTime;
         private string _description;
 
+        /// <summary>
+        /// All enclosures found that meet the filters
+        /// These are the enclosures that will be modified when submitted
+        /// </summary>
         private ObservableCollection<Enclosure> _enclosuresFound = new ObservableCollection<Enclosure>();
 
         private string _informationText;
@@ -56,10 +62,30 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region Commands
+        private async void loadedAsync()
+        {
+            loading = true;
+            await Task.Run(() => loaded());
+            loading = false;
+        }
+
+        /// <summary>
+        /// Loads the information for the page
+        /// </summary>
         private void loaded()
         {
-            enclosureTypes = new ObservableCollection<string>(_serviceProxy.getEnclosureTypes());
-            enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
+            informationText = "Loading information...";
+            try
+            {
+                enclosureTypes = new ObservableCollection<string>(_serviceProxy.getEnclosureTypes());
+                enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
+            informationText = "";
         }
 
         private async void submitAsync()
@@ -84,6 +110,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 try
                 {
+                    informationText = "Submitting enclosure modifications...";
+
+                    //Create a new modification for each enclosure in the list
                     foreach (Enclosure enclosure in enclosuresFound)
                     {
                         EngineeredModification modifiedEnclosure = new EngineeredModification()
@@ -231,7 +260,6 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _enclosuresFound = value;
                 RaisePropertyChanged("enclosuresFound");
-                informationText = "";
             }
         }
 
@@ -275,6 +303,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         /// </summary>
         private void updateEnclosureTable()
         {
+            //If neither filter has been selected, make sure the list is empty
             if(string.IsNullOrWhiteSpace(enclosureType) && string.IsNullOrWhiteSpace(enclosureSize))
             {
                 enclosuresFound = new ObservableCollection<Enclosure>();
@@ -297,14 +326,14 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
         /// <summary>
         /// Checks to see if all necessary fields are filled out with correct formatting
-        /// before the option can be added.
+        /// before the enclosure modification can be added.
         /// </summary>
         /// <returns> true if the form is complete, otherwise false</returns>
         private bool checkComplete()
         {
             bool complete = true;
 
-            if(newTime == null || newTime <= 0)
+            if(newTime == null || newTime < 0)
             {
                 informationText = "No new information associated with modification.";
                 complete = false;

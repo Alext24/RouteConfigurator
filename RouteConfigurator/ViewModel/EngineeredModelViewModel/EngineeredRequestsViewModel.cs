@@ -58,6 +58,9 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region Commands
+        /// <summary>
+        /// Calls updateModificationsTableAsync
+        /// </summary>
         private void loaded()
         {
             updateModificationsTableAsync();
@@ -82,6 +85,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             {
                 _selectedModification = value;
                 RaisePropertyChanged("selectedModification");
+                informationText = "";
             }
         }
 
@@ -228,12 +232,16 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         private async void updateModificationsTableAsync()
         {
             loading = true;
-            informationText = "Loading tables...";
+            informationText = "Loading table...";
             await Task.Run(() => updateModificationsTable());
             loading = false;
             informationText = "";
         }
 
+        /// <summary>
+        /// Updates the modifications with the entered filters
+        /// Calls getStateFilter
+        /// </summary>
         private void updateModificationsTable()
         {
             int stateFilter = getStateFilter(StateFilter);
@@ -263,6 +271,11 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
         }
 
+        /// <summary>
+        /// Associates an integer with the entered state filter
+        /// </summary>
+        /// <param name="stateText"> the entered state filter </param>
+        /// <returns> an integer corresponding to the state filter </returns>
         private int getStateFilter(string stateText)
         {
             int stateFilter = -1;

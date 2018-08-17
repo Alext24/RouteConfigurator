@@ -45,10 +45,10 @@
                         <RowDefinition Height="auto"/>      <!--Row 1-->
                         <RowDefinition Height="auto"/>      <!--Row 2-->
                         <RowDefinition Height="auto"/>      <!--Row 3-->
-                        <RowDefinition Height="*"/>      <!--Row 4-->
+                        <RowDefinition Height="*"/>         <!--Row 4-->
                         <RowDefinition Height="10"/>        <!--Row 5-->
                         <RowDefinition Height="auto"/>      <!--Row 6-->
-                        <RowDefinition Height="2*"/>      <!--Row 7-->
+                        <RowDefinition Height="2*"/>        <!--Row 7-->
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -65,25 +65,10 @@
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Component Name"
                                FontSize="16" Padding="20 0"/>
 
-<!--
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="Enclosure Size"
-                               FontSize="16" Padding="20 0"/>
-
-                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Production Time"
-                               FontSize="16" Padding="20 0"/>
--->
-
                     <!--Row 2 setup: Input boxes-->
                     <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0" MinWidth="160" HorizontalAlignment="Stretch"
                              Text="{Binding componentName}"/>
 
-<!--
-                    <ComboBox Grid.Row="2" Grid.Column="1" MaxDropDownHeight="150" Margin="10 0" FontSize="16"
-                              ItemsSource="{Binding enclosureSizes}" SelectedValue="{Binding enclosureSize}"/>
-
-                    <TextBox Grid.Row="2" Grid.Column="2" FontSize="16" Margin="10 0" Width="180"
-                             Text="{Binding newTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" ToolTip="Format Example: '12.34' hours"/>
--->
                     <!--Row 3 setup: Description Header-->
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Request Description"
                                FontSize="16" Padding="20 5 0 0"/>
@@ -93,7 +78,7 @@
                              Text="{Binding description}"/>
 
                     <DataGrid Grid.Row="1" Grid.Column="1" Grid.RowSpan="4" Grid.ColumnSpan="2" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
-                              Margin="10 0" ItemsSource="{Binding componentList}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                              Margin="10 0" ItemsSource="{Binding enclosureSizeTimes}" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                         <DataGrid.Columns>
