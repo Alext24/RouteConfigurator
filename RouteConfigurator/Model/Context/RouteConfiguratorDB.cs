@@ -11,7 +11,7 @@ namespace RouteConfigurator.Model.Context
 
         }
 
-        public virtual DbSet<EF_StandardModels.StandardModel> Models { get; set; }
+        public virtual DbSet<StandardModel> Models { get; set; }
         public virtual DbSet<Option> Options { get; set; }
         public virtual DbSet<TimeTrial> TimeTrials { get; set; }
         public virtual DbSet<TimeTrialsOptionTime> TTOptionTimes { get; set; }
