@@ -25,25 +25,35 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        //Inputs
         private string _modelNum;
         private string _boxSize;
         private string _selectedLine;
         private decimal? _driveTime;
         private decimal? _AVTime;
+        private string _description;
 
+        //Entered information tracking booleans
         private bool _modelEntered = false;
         private bool _boxSizeEntered = false;
         private bool _lineEntered = false;
         private bool _driveTimeEntered = false;
         private bool _AVTimeEntered = false;
 
+        //Output information
         private string _modelTimeText;
         private string _totalTimeText;
         private string _routeText;
         private string _prodSupCodeText;
-        private string _description;
 
+        /// <summary>
+        /// List of possible production lines
+        /// </summary>
         private ObservableCollection<string> _productionLines = new ObservableCollection<string>();
+
+        /// <summary>
+        /// List of options extracted from the model number
+        /// </summary>
         private ObservableCollection<Option> _options = new ObservableCollection<Option>();
 
         private string _informationText;
@@ -78,6 +88,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             await Task.Run(() => submit());
             loading = false;
         }
+
         /// <summary>
         /// Submits the new model modification to the database
         /// </summary>
@@ -86,29 +97,30 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             if (checkValid())
             {
                 informationText = "Submitting model...";
-                Modification newModel = new Modification()
-                {
-                    RequestDate = DateTime.Now,
-                    ModelBase = modelNum.Substring(0, 8),
-                    BoxSize = boxSize,
-                    Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
-                    State = 0,
-                    Sender = "TEMPORARY PLACEHOLDER",
-                    IsOption = false,
-                    IsNew = true,
-                    NewDriveTime = (decimal)driveTime,
-                    NewAVTime = (decimal)AVTime,
-                    ProductLine = selectedLine,
-
-                    Reviewer = "",
-                    ReviewDate = new DateTime(1900,1,1),
-                    NewName = "",
-                    OldOptionName = "",
-                    OptionCode = ""
-                };
 
                 try
                 {
+                    Modification newModel = new Modification()
+                    {
+                        RequestDate = DateTime.Now,
+                        ModelBase = modelNum.Substring(0, 8),
+                        BoxSize = boxSize,
+                        Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
+                        State = 0,
+                        Sender = "TEMPORARY PLACEHOLDER",
+                        IsOption = false,
+                        IsNew = true,
+                        NewDriveTime = (decimal)driveTime,
+                        NewAVTime = (decimal)AVTime,
+                        ProductLine = selectedLine,
+
+                        Reviewer = "",
+                        ReviewDate = new DateTime(1900, 1, 1),
+                        NewName = "",
+                        OldOptionName = "",
+                        OptionCode = ""
+                    };
+
                     _serviceProxy.addModificationRequest(newModel);
                     informationText = "Model has been submitted.  Waiting for manager approval.";
                 }
@@ -124,7 +136,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
         #region Public Variables
         /// <summary>
-        /// Updates modelEntered boolean if not null
+        /// Updates modelEntered boolean
         /// Calls updateOptions and updateInformation 
         /// </summary>
         public string modelNum
@@ -157,7 +169,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
-        /// Updates boxSizeEntered boolean if not null
+        /// Updates boxSizeEntered boolean
         /// Calls updateOptions and updateInformation 
         /// </summary>
         public string boxSize
@@ -170,7 +182,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             {
                 _boxSize = value.ToUpper();
                 RaisePropertyChanged("boxSize");
-
                 informationText = "";
 
                 if (!string.IsNullOrWhiteSpace(value))
@@ -188,7 +199,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
-        /// Updates lineEntered boolean if not null
+        /// Updates lineEntered boolean
         /// calls updateInformation
         /// </summary>
         public string selectedLine
@@ -217,7 +228,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
-        /// Updates driveTimeEntered boolean if not null
+        /// Updates driveTimeEntered boolean
         /// Calls updateInformation
         /// </summary>
         public decimal? driveTime
@@ -230,7 +241,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             {
                 _driveTime = value;
                 RaisePropertyChanged("driveTime");
-
                 informationText = "";
 
                 if (value != null & value > 0)
@@ -247,7 +257,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
-        /// Updates AVTimeEntered boolean if not null
+        /// Updates AVTimeEntered boolean
         /// Calls updateInformation
         /// </summary>
         public decimal? AVTime
@@ -260,7 +270,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             {
                 _AVTime = value;
                 RaisePropertyChanged("AVTime");
-
                 informationText = "";
 
                 if (value != null & value > 0)
@@ -273,6 +282,20 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 }
 
                 updateInformation();
+            }
+        }
+
+        public string description 
+        {
+            get
+            {
+                return _description;
+            }
+            set
+            {
+                _description = value;
+                RaisePropertyChanged("description");
+                informationText = "";
             }
         }
 
@@ -354,20 +377,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
         }
 
-        public string description 
-        {
-            get
-            {
-                return _description;
-            }
-            set
-            {
-                _description = value;
-                RaisePropertyChanged("description");
-                informationText = "";
-            }
-        }
-
         public string informationText 
         {
             get
@@ -405,7 +414,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         {
             if (_modelEntered && _boxSizeEntered)
             {
-                List<String> optionsList = parseOptions(modelNum);
+                List<string> optionsList = parseOptions(modelNum);
 
                 try
                 {
@@ -424,11 +433,11 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// Takes the combined options from the model number and splits
         /// them into seperate options.
         /// </summary>
-        /// <param name="model"> full model number entered</param>
-        /// <returns> list of options that are a part of the model</returns>
+        /// <param name="model"> full model number entered </param>
+        /// <returns> list of options that are a part of the model </returns>
         private List<string> parseOptions(string model)
         {
-            List<String> optionsList = new List<string>();
+            List<string> optionsList = new List<string>();
             if (model.Length >= 8)
             {
                 string options = model.Substring(8);
@@ -514,24 +523,21 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             bool valid = checkComplete();
             if (valid)
             {
-                //Check if the model already exists in the database as a model
                 string modelBase = modelNum.Substring(0, 8);
 
                 try
                 {
+                    //Check if the model already exists in the database as a model
                     if (_serviceProxy.getModel(modelBase) != null)
                     {
                         informationText = string.Format("Model {0} already exists.", modelBase);
                         valid = false;
                     }
-                    else
+                    //Check if the model already exists in the database as a new model request
+                    else if (_serviceProxy.getFilteredNewModels("", modelBase, "").ToList().Count > 0)
                     {
-                        //Check if the model already exists in the database as a new model request
-                        if (_serviceProxy.getFilteredNewModels("", modelBase, "").ToList().Count > 0)
-                        {
-                            informationText = string.Format("Model {0} is already waiting for approval.", modelBase);
-                            valid = false;
-                        }
+                        informationText = string.Format("Model {0} is already waiting for approval.", modelBase);
+                        valid = false;
                     }
                 }
                 catch (Exception e)
@@ -574,7 +580,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// <summary>
         /// Determines the product supervisor code based off the production time
         /// </summary>
-        /// <param name="time"> the production time for the model</param>
+        /// <param name="time"> the production time for the model </param>
         private void setProdSupCode(decimal time)
         {
             if(time <= 0)
@@ -630,7 +636,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// <summary>
         /// Determines the route number based off the production time
         /// </summary>
-        /// <param name="time"> the production time for the model</param>
+        /// <param name="time"> the production time for the model </param>
         private void setRoute(TimeSpan time)
         {
             if (time.TotalMinutes <= 0)

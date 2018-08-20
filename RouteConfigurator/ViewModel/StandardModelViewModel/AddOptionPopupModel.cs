@@ -24,6 +24,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        //Inputs
         private string _optionCode;
         private string _boxSize;
         private decimal? _time;
@@ -64,7 +65,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
-        /// Creates the new option modification and adds it to the options to submit list
+        /// Creates the new option modification and adds it to the modifications to submit list
         /// Calls checkValid
         /// </summary>
         private void addOption()
@@ -74,6 +75,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             if (checkValid())
             {
                 informationText = "Adding option...";
+
                 Modification mod = new Modification()
                 {
                     RequestDate = DateTime.Now,
@@ -95,7 +97,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 };
 
                 // Since the observable collection was created on the UI thread 
-                // we have to add the override to the list using a delegate function.
+                // we have to add the option to the list using a delegate function.
                 App.Current.Dispatcher.Invoke(delegate
                 {
                     modificationsToSubmit.Add(mod);
@@ -127,6 +129,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 try
                 {
                     informationText = "Submitting option modifications...";
+
                     foreach (Modification mod in modificationsToSubmit)
                     {
                         _serviceProxy.addModificationRequest(mod);
@@ -138,6 +141,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     Console.WriteLine(e);
                     return;
                 }
+
                 //Clear input boxes
                 optionCode = "";
                 boxSize = "";
@@ -285,28 +289,25 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     //Check if the option already exists in the database as an option
                     if (_serviceProxy.getFilteredOptions(optionCode, boxSize, true).ToList().Count > 0)
                     {
-                        informationText = "This option already exists";
+                        informationText = string.Format("Option {0}-{1} already exists.", optionCode, boxSize);
+                        valid = false;
+                    }
+                    //Check if the option already exists in the database as a new option request
+                    else if (_serviceProxy.getFilteredNewOptions("", optionCode, boxSize).ToList().Count > 0)
+                    {
+                        informationText = string.Format("Option {0}-{1} is already waiting for approval.", optionCode, boxSize);
                         valid = false;
                     }
                     else
                     {
-                        //Check if the option already exists in the database as a new option request
-                        if (_serviceProxy.getFilteredNewOptions("", optionCode, boxSize).ToList().Count > 0)
+                        //Check if the option is a duplicate in the ready to submit list
+                        foreach (Modification newOption in modificationsToSubmit)
                         {
-                            informationText = string.Format("Option {0}-{1} is already waiting for approval.", optionCode, boxSize);
-                            valid = false;
-                        }
-                        else
-                        {
-                            //Check if the option is a duplicate in the ready to submit list
-                            foreach (Modification newOption in modificationsToSubmit)
+                            if (newOption.OptionCode.Equals(optionCode) && newOption.BoxSize.Equals(boxSize))
                             {
-                                if (newOption.OptionCode.Equals(optionCode) && newOption.BoxSize.Equals(boxSize))
-                                {
-                                    informationText = "This option is already ready to submit";
-                                    valid = false;
-                                    break;
-                                }
+                                informationText = "This option is already ready to submit";
+                                valid = false;
+                                break;
                             }
                         }
                     }

@@ -25,12 +25,17 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        /// <summary>
+        /// List of new time trials that the user has added that are waiting to be submitted
+        /// </summary>
         private ObservableCollection<TimeTrial> _timeTrials = new ObservableCollection<TimeTrial>();
 
+        //Model input and helpers
         private string _modelText = "";
         private ObservableCollection<StandardModel> _models = new ObservableCollection<StandardModel>();
         private StandardModel _selectedModel;
 
+        //Inputs
         private DateTime? _date;
         private int? _salesOrder;
         private int? _productionNum;
@@ -38,11 +43,15 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private decimal? _AVTime;
         private decimal? _totalTime;
 
-        private bool _haveOptionTimes = false;
-
+        // Option input and helpers
         private int? _numOptions;
         private bool _hasOptions = false;
         private ObservableCollection<TimeTrialsOptionTime> _TTOptions = new ObservableCollection<TimeTrialsOptionTime>();
+
+        /// <summary>
+        /// True if all option times have been filled out, false otherwise
+        /// </summary>
+        private bool _haveOptionTimes = false;
 
         private string _informationText;
 
@@ -77,6 +86,9 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             loading = false;
         }
 
+        /// <summary>
+        /// Loads all standard models into a list for the dropdown box
+        /// </summary>
         private void getModels()
         {
             try
@@ -101,7 +113,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
         /// <summary>
         /// Adds a time trial to the list to be submitted
-        /// Calls checkValid and getOptionsText
+        /// Calls checkValid, calcTotalTime, and getOptionsText
         /// </summary>
         private void addTT()
         {
@@ -109,6 +121,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             if (checkValid())
             {
                 informationText = "Adding time trial...";
+
                 TimeTrial newTT = new TimeTrial()
                 {
                     ProductionNumber = (int)productionNum,
@@ -123,6 +136,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     TotalTime = calcTotalTime()
                 };
 
+                //Instantiates the options that were a part of the model
                 foreach (TimeTrialsOptionTime TTOption in TTOptions)
                 {
                     TTOption.OptionCode = TTOption.OptionCode.ToUpper();
@@ -135,17 +149,18 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 //Sort list alphabetically
                 newTT.TTOptionTimes = new ObservableCollection<TimeTrialsOptionTime>(newTT.TTOptionTimes.OrderBy(i => i.OptionCode));
 
+                //Returns a string containing the model options from the list of options
                 newTT.OptionsText = getOptionsText(newTT.TTOptionTimes);
 
                 // Since the observable collection was created on the UI thread 
-                // we have to add the override to the list using a delegate function.
+                // we have to add the time trial to the list using a delegate function.
                 App.Current.Dispatcher.Invoke(delegate
                 {
                     timeTrials.Add(newTT);
                 });
 
                 // Clear necessary input boxes
-                productionNum++;
+                productionNum++;    //Plan for the user to enter time trials in production number order
                 driveTime = null;
                 AVTime = null;
                 totalTime = null;
@@ -183,6 +198,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     Console.WriteLine(e);
                     return;
                 }
+
                 //Clear input boxes
                 selectedModel = null;
                 date = null;
@@ -445,12 +461,14 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         #region Private Functions
         /// <summary>
         /// Calculates the total time by adding the drive time, AV time, and option times
+        /// or uses the user entered total time
         /// </summary>
-        /// <returns>Total time</returns>
+        /// <returns> returns the total time for the model </returns>
         private decimal calcTotalTime()
         {
             decimal totTime = 0;
 
+            //If user has filled out all option times, the av time, and the drive time then calculate the total time
             if (_haveOptionTimes && AVTime != null && AVTime > 0 && driveTime != null && driveTime > 0)
             {
                 totTime = (decimal)(driveTime + AVTime);
@@ -459,8 +477,10 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     totTime += TTOption.Time;
                 }
 
-                totalTime = totTime;
+                totalTime = totTime;    //Update the total time field
             }
+            //If the user has not filled out all necessary fields to calculate the total time,
+            //then take the total time entry field
             else
             {
                 totTime = (decimal)totalTime;
@@ -470,7 +490,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
-        /// Checks that the time trials does not already exist
+        /// Checks that the time trial does not already exist
         /// Calls checkComplete
         /// </summary>
         /// <returns></returns>
@@ -496,6 +516,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                             {
                                 informationText = string.Format("Time Trial for Production Number {0} is already ready to submit", productionNum);
                                 valid = false;
+                                break;
                             }
                         }
                     }
@@ -535,6 +556,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
             else
             {
+                //Check that options are filled out
                 foreach (TimeTrialsOptionTime option in TTOptions)
                 {
                     if (!complete)
@@ -576,6 +598,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     }
                 }
 
+                //Check for duplicate options
                 if (complete && TTOptions.GroupBy(n => n.OptionCode).Any(c => c.Count() > 1))
                 {
                     complete = false;
@@ -585,6 +608,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
             if (complete)
             {
+                //If the AV time, Drive time, or all options times are not filled out, then the total time needs to be filled out
                 if(!_haveOptionTimes || driveTime == null || driveTime <= 0 || AVTime == null || AVTime <= 0)
                 {
                     if(totalTime == null || totalTime <= 0)
@@ -611,7 +635,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// text part of the model number
         /// </summary>
         /// <param name="options"> list of options for the model </param>
-        /// <returns> options text </returns>
+        /// <returns> returns the options text string </returns>
         private string getOptionsText(ICollection<TimeTrialsOptionTime> options)
         {
             if (options.Count > 0)
@@ -633,6 +657,11 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                         case 'T':
                             {
                                 controlOptions.Add(option.OptionCode.ElementAt(1));
+                                break;
+                            }
+                        case 'S':
+                            {
+                                //Ignoring software options
                                 break;
                             }
                         default:
