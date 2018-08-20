@@ -1,8 +1,15 @@
 ﻿using System.ComponentModel;
 
-namespace RouteConfigurator.DTOs
+namespace RouteConfigurator.ViewModel.EngineeredModelViewModel.Helper
 {
-    public class EngineeredModelDTO : INotifyPropertyChanged
+    /// <summary>
+    /// This helper class is used to hold the information that the user needs to 
+    /// estimate the engineered model production time.
+    /// The user will be able to enter the quantity and then the total time will be calculated.
+    /// This class implements INotifyPropertyChanged in order to update the total time attribute for
+    /// the dataGrid when the user enters the quantity and the total time is updated.
+    /// </summary>
+    public class EngineeredModelComponentEntry : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 

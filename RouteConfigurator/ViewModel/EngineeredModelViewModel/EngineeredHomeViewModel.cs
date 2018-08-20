@@ -1,11 +1,11 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
-using RouteConfigurator.DTOs;
 using RouteConfigurator.Model;
 using RouteConfigurator.Model.EF_EngineeredModels;
 using RouteConfigurator.Services;
 using RouteConfigurator.Services.Interface;
+using RouteConfigurator.ViewModel.EngineeredModelViewModel.Helper;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -43,7 +43,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         /// <summary>
         /// List of components where the user can enter in a qunatity of those components to add to the total time
         /// </summary>
-        private ObservableCollection<EngineeredModelDTO> _engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>();
+        private ObservableCollection<EngineeredModelComponentEntry> _engineeredModelComponents = new ObservableCollection<EngineeredModelComponentEntry>();
 
         /// <summary>
         /// List of the components for the currently selected enclosure size to get the time for each component
@@ -103,18 +103,26 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         {
             informationText = "Loading information...";
 
-            enclosureTypes = new ObservableCollection<string>(_serviceProxy.getEnclosureTypes());
-            selectedEnclosureType = enclosureTypes.Count > 0 ? enclosureTypes.ElementAt(0) : null;
+            try
+            {
+                enclosureTypes = new ObservableCollection<string>(_serviceProxy.getEnclosureTypes());
+                selectedEnclosureType = enclosureTypes.Count > 0 ? enclosureTypes.ElementAt(0) : null;
 
-            enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
-            selectedEnclosureSize = enclosureSizes.Count > 0 ? enclosureSizes.ElementAt(0) : null;
+                enclosureSizes = new ObservableCollection<string>(_serviceProxy.getEnclosureSizes());
+                selectedEnclosureSize = enclosureSizes.Count > 0 ? enclosureSizes.ElementAt(0) : null;
 
-            wireGauges = new ObservableCollection<WireGauge>(_serviceProxy.getWireGauges());
-            selectedWireGauge = wireGauges.Count > 0 ? wireGauges.ElementAt(0) : null;
+                wireGauges = new ObservableCollection<WireGauge>(_serviceProxy.getWireGauges());
+                selectedWireGauge = wireGauges.Count > 0 ? wireGauges.ElementAt(0) : null;
 
-            engineeredModelComponents = new ObservableCollection<EngineeredModelDTO>(_serviceProxy.getModelComponents());
+                engineeredModelComponents = new ObservableCollection<EngineeredModelComponentEntry>(_serviceProxy.getModelComponents());
 
-            informationText = "";
+                informationText = "";
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database.";
+                Console.WriteLine(e.Message);
+            }
         }
 
         private async void submitToQueueAsync()
@@ -329,7 +337,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
         }
 
-        public ObservableCollection<EngineeredModelDTO> engineeredModelComponents 
+        public ObservableCollection<EngineeredModelComponentEntry> engineeredModelComponents 
         {
             get
             {
@@ -397,9 +405,18 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         private void updateComponentsTable()
         {
             informationText = "Updating information...";
-            _enclosureSizeComponents = new ObservableCollection<Component>(_serviceProxy.getEnclosureSizeComponents(selectedEnclosureSize));
-            calcTotalTime();
-            informationText = "";
+            try
+            {
+                _enclosureSizeComponents = new ObservableCollection<Component>(_serviceProxy.getEnclosureSizeComponents(selectedEnclosureSize));
+                calcTotalTime();
+
+                informationText = "";
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database.";
+                Console.WriteLine(e.Message);
+            }
         }
 
         private async void calcTotalTimeAsync()
@@ -418,29 +435,37 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             informationText = "Calculating total time...";
             totalTime = 0;
 
-            if(selectedEnclosureType != null && selectedEnclosureSize != null)
+            try
             {
-                totalTime += _serviceProxy.getEnclosure(selectedEnclosureType, selectedEnclosureSize).Time;
-            }
+                if (selectedEnclosureType != null && selectedEnclosureSize != null)
+                {
+                    totalTime += _serviceProxy.getEnclosure(selectedEnclosureType, selectedEnclosureSize).Time;
+                }
 
-            foreach (EngineeredModelDTO DTOcomponent in engineeredModelComponents)
+                foreach (EngineeredModelComponentEntry DTOcomponent in engineeredModelComponents)
+                {
+                    Component component = _enclosureSizeComponents.Where(x => x.ComponentName.Equals(DTOcomponent.ComponentName)).FirstOrDefault();
+                    DTOcomponent.TotalTime = DTOcomponent.Quantity * component.Time;
+                    totalTime += DTOcomponent.TotalTime;
+                }
+
+                if (selectedWireGauge != null)
+                {
+                    totalTime += (totalTime * selectedWireGauge.TimePercentage);
+                }
+
+                setProdSupCode((decimal)totalTime);
+
+                TimeSpan time = TimeSpan.FromHours((double)totalTime);
+                setRoute(time);
+
+                informationText = "";
+            }
+            catch (Exception e)
             {
-                Component component = _enclosureSizeComponents.Where(x => x.ComponentName.Equals(DTOcomponent.ComponentName)).FirstOrDefault();
-                DTOcomponent.TotalTime = DTOcomponent.Quantity * component.Time;
-                totalTime += DTOcomponent.TotalTime;
+                informationText = "There was a problem accessing the database.";
+                Console.WriteLine(e.Message);
             }
-
-            if(selectedWireGauge != null)
-            {
-                totalTime += (totalTime * selectedWireGauge.TimePercentage);
-            }
-
-            setProdSupCode((decimal)totalTime);
-
-            TimeSpan time = TimeSpan.FromHours((double)totalTime);
-            setRoute(time);
-
-            informationText = "";
         }
 
         /// <summary>

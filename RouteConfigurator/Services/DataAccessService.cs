@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Data.Entity;
-using RouteConfigurator.DTOs;
 using RouteConfigurator.Model.Context;
 using RouteConfigurator.Model.EF_EngineeredModels;
 using RouteConfigurator.Model.EF_StandardModels;
 using RouteConfigurator.Services.Interface;
+using RouteConfigurator.ViewModel.EngineeredModelViewModel.Helper;
 
 namespace RouteConfigurator.Services
 {
@@ -824,13 +824,13 @@ namespace RouteConfigurator.Services
         /// Filters to return a distinct list of every component, disregarding enclosure size
         /// </summary>
         /// <returns> returns a list containing all possible components </returns>
-        public IEnumerable<EngineeredModelDTO> getModelComponents()
+        public IEnumerable<EngineeredModelComponentEntry> getModelComponents()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
                 return context.Components.GroupBy(x => x.ComponentName)
                                          .Select(y => y.FirstOrDefault())
-                                         .Select(z => new EngineeredModelDTO
+                                         .Select(z => new EngineeredModelComponentEntry
                                          {
                                              ComponentName = z.ComponentName,
                                              Quantity = 0,

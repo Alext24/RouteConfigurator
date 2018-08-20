@@ -1,7 +1,7 @@
-﻿using RouteConfigurator.DTOs;
-using RouteConfigurator.Model;
+﻿using RouteConfigurator.Model;
 using RouteConfigurator.Model.EF_EngineeredModels;
 using RouteConfigurator.Model.EF_StandardModels;
+using RouteConfigurator.ViewModel.EngineeredModelViewModel.Helper;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -77,7 +77,7 @@ namespace RouteConfigurator.Services.Interface
         void deleteTimeTrial(TimeTrial tt);
         #endregion
 
-        IEnumerable<EngineeredModelDTO> getModelComponents();
+        IEnumerable<EngineeredModelComponentEntry> getModelComponents();
 
         #region Components Read
         Component getComponent(string name, string enclosureSize);
