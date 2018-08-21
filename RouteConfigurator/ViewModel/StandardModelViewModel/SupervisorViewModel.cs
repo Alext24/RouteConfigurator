@@ -25,20 +25,26 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        /// <summary>
+        /// Boolean to determine if the go home button is visible and enabled or not
+        /// True means button is enabled and visible, false means button is disabled and collapsed
+        /// Button needs to be disabled when the user opens the supervisor screen in a new window,
+        /// because the go home button of the new window changes the old screen
+        /// </summary>
         private bool _goHomeAllowed = false;
 
-        // Model Table
+        // Model Table list and filters
         private static ObservableCollection<StandardModel> _models;
         private StandardModel _selectedModel;
         private string _modelFilter = "";
         private string _boxSizeFilter = "";
 
-        // Options Table
+        // Options Table list and filters
         private static ObservableCollection<Option> _options;
         private string _optionFilter = "";
         private string _optionBoxSizeFilter = "";
 
-        // Time Trial Table
+        // Time Trial Table list, filters, and helpers
         private bool _TTVisible = false;
         private ObservableCollection<TimeTrial> _timeTrials;
         private TimeTrial _selectedTimeTrial;
@@ -50,7 +56,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private decimal _averageDriveTime;
         private decimal _averageAVTime;
 
-        // Override Table
+        // Override Table list and filters
         private static ObservableCollection<Override> _overrides;
         private Override _selectedOverride;
         private string _overrideFilter = "";
@@ -125,24 +131,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             updateModelTableAsync();
         }
 
-        private void addModel()
-        {
-            AddModelPopup addModel = new AddModelPopup();
-            addModel.Show();
-        }
-
-        private void modifyModel()
-        {
-            ModifyModelPopup modifyModel = new ModifyModelPopup();
-            modifyModel.Show();
-        }
-
-        private void addTimeTrial()
-        {
-            AddTimeTrialPopup addTimeTrial = new AddTimeTrialPopup();
-            addTimeTrial.Show();
-        }
-
         private async void deleteTTAsyncCall()
         {
             loading = true;
@@ -153,6 +141,10 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             loading = false;
         }
 
+        /// <summary>
+        /// Deletes the time trial from the database
+        /// </summary>
+        /// <returns> returns if the time trial was successfully deleted </returns>
         private bool deleteTT()
         {
             bool deleted = false;
@@ -189,18 +181,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             updateOptionTableAsync();
         }
 
-        private void addOption()
-        {
-            AddOptionPopup addOption = new AddOptionPopup();
-            addOption.Show();
-        }
-
-        private void modifyOption()
-        {
-            ModifyOptionPopup modifyOption = new ModifyOptionPopup();
-            modifyOption.Show();
-        }
-
         /// <summary>
         /// Calls updateOverrideTableAsync
         /// </summary>
@@ -210,12 +190,9 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             updateOverrideTableAsync();
         }
 
-        private void overrideModel()
-        {
-            OverrideModelPopup overrideModel = new OverrideModelPopup();
-            overrideModel.Show();
-        }
-
+        /// <summary>
+        /// Sends a model modification to the manager for deleting the override 
+        /// </summary>
         private void deleteOverride()
         {
             informationText = "";
@@ -225,11 +202,14 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 if (selectedOverride != null)
                 {
                     //Check if override is waiting to be deleted.
+                    //If there is an override already waiting to be deleted it will have the
+                    //same description as the new modification request
                     Modification mod = new Modification()
                     {
                         RequestDate = DateTime.Now,
                         ReviewDate = new DateTime(1900, 1, 1),
-                        Description = string.Format("Deleting override for {0}.  Override Time was: {1}.  Override Route was: {2}", selectedOverride.ModelNum, selectedOverride.OverrideTime, selectedOverride.OverrideRoute),
+                        Description = string.Format("Deleting override for {0}.  Override Time was: {1}.  " +
+                        "Override Route was: {2}", selectedOverride.ModelNum, selectedOverride.OverrideTime, selectedOverride.OverrideRoute),
                         State = 0,
                         Sender = "TEMPORARY SENDER",
                         Reviewer = "",
@@ -264,6 +244,42 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 informationText = "There was a problem accessing the database";
                 Console.WriteLine(e);
             }
+        }
+
+        private void addModel()
+        {
+            AddModelPopup addModel = new AddModelPopup();
+            addModel.Show();
+        }
+
+        private void modifyModel()
+        {
+            ModifyModelPopup modifyModel = new ModifyModelPopup();
+            modifyModel.Show();
+        }
+
+        private void addTimeTrial()
+        {
+            AddTimeTrialPopup addTimeTrial = new AddTimeTrialPopup();
+            addTimeTrial.Show();
+        }
+
+        private void addOption()
+        {
+            AddOptionPopup addOption = new AddOptionPopup();
+            addOption.Show();
+        }
+
+        private void modifyOption()
+        {
+            ModifyOptionPopup modifyOption = new ModifyOptionPopup();
+            modifyOption.Show();
+        }
+
+        private void overrideModel()
+        {
+            OverrideModelPopup overrideModel = new OverrideModelPopup();
+            overrideModel.Show();
         }
 
         private void viewRequests()
@@ -738,6 +754,9 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
         }
 
+        /// <summary>
+        /// Calculates the average production time of the shown time trials
+        /// </summary>
         private void calcTTAverages()
         {
             averageProdTime = 0;
@@ -769,6 +788,9 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             loading = false;
         }
 
+        /// <summary>
+        /// Updates the overrides list to only show overrides with the specified filters
+        /// </summary>
         private void updateOverrideTable()
         {
             try

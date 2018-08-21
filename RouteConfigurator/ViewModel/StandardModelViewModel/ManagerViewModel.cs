@@ -28,31 +28,37 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        //Table data
         private ObservableCollection<Modification> _newModels = new ObservableCollection<Modification>();
         private ObservableCollection<Modification> _newOptions = new ObservableCollection<Modification>();
         private ObservableCollection<Modification> _modifiedModels = new ObservableCollection<Modification>();
         private ObservableCollection<Modification> _modifiedOptions = new ObservableCollection<Modification>();
         private ObservableCollection<OverrideRequest> _overrides = new ObservableCollection<OverrideRequest>();
 
+        //New model helpers
         private string _NMSenderFilter = "";
         private string _NMBaseFilter = "";
         private string _NMBoxSizeFilter = "";
         private Modification _selectedNewModel;
 
+        //New option helpers
         private string _NOSenderFilter = "";
         private string _NOOptionCodeFilter = "";
         private string _NOBoxSizeFilter = "";
         private Modification _selectedNewOption;
 
+        //Model modification helpers
         private string _MMSenderFilter = "";
         private string _MMModelNameFilter = "";
         private Modification _selectedModifiedModel;
 
+        //Option modification helpers
         private string _OMSenderFilter = "";
         private string _OMOptionCodeFilter = "";
         private string _OMBoxSizeFilter = "";
         private Modification _selectedModifiedOption;
 
+        //Override request helpers
         private string _ORSenderFilter = "";
         private string _ORModelNameFilter = "";
         private OverrideRequest _selectedOverride;
@@ -89,6 +95,9 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         #endregion
 
         #region Commands
+        /// <summary>
+        /// Loads the information into the tables
+        /// </summary>
         private void loaded()
         {
             updateNewModelTableAsync();
@@ -98,6 +107,10 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             updateOverrideTableAsync();
         }
 
+        /// <summary>
+        /// Opens the supervisor screen in a new window so
+        /// the manager can see the current information in the database
+        /// </summary>
         private void openSupervisorView()
         {
             MainWindow secondWindow = new MainWindow();
@@ -109,6 +122,11 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             secondWindow.MinWidth = 1400;
         }
 
+        /// <summary>
+        /// Clears all filters and then reloads all tables.
+        /// Using the private variables and raisePropertyChanged to 
+        /// avoid updating each table multiple times.
+        /// </summary>
         private void refreshTables()
         {
             informationText = "";
@@ -156,18 +174,24 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             refreshTables();
         }
 
+        /// <summary>
+        /// Submits the checked modifications to the database
+        /// calls updateModification or updateOverride
+        /// </summary>
         private void submitChecked()
         {
             informationText = "Submitting changes...";
+
             int numApproved = 0;
             int numDenied = 0;
             int numError = 0;
             string errorText = "";
 
             //Go through each table
-            //check for state to equal 3 (approved) or 4 (declined)
+            //check for state to equal 3 (checked to approved) or 4 (checked to declined)
             foreach (Modification mod in newModels)
             {
+                //If modification is checked to approve
                 if (mod.State == 3)
                 {
                     mod.ModelBase = mod.ModelBase.ToUpper();
@@ -175,6 +199,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
                     try
                     {
+                        //Ensure information is still valid
                         if (mod.ModelBase.Length != 8)
                         {
                             errorText += string.Format("Error adding Model {0}. Invalid Model format.\n", mod.ModelBase);
@@ -224,6 +249,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                         Console.WriteLine(e.Message);
                     }
                 }
+                //If modification is checked to deny
+                //Update the modification in the database to save the state to denied
                 else if (mod.State == 4)
                 {
                     try
@@ -241,6 +268,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
             foreach (Modification mod in newOptions)
             {
+                //If modification is checked to approve
                 if (mod.State == 3)
                 {
                     mod.OptionCode = mod.OptionCode.ToUpper();
@@ -248,6 +276,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
                     try
                     {
+                        //Ensure information is still valid
                         if (mod.OptionCode.Length != 2)
                         {
                             errorText += string.Format("Error adding Option {0}. Option Code must be 2 characters.\n", mod.OptionCode);
@@ -303,6 +332,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                         Console.WriteLine(e.Message);
                     }
                 }
+                //If modification is checked to deny
+                //Update the modification in the database to save the state to denied
                 else if (mod.State == 4)
                 {
                     try
@@ -320,10 +351,12 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
             foreach (Modification mod in modifiedModels)
             {
+                //If modification is checked to approve
                 if (mod.State == 3)
                 {
                     try
                     {
+                        //Ensure information is still valid
                         if (mod.NewDriveTime <= 0)
                         {
                             errorText += string.Format("Error modifying model {0}.  Invalid Drive Time: {1}.\n", mod.ModelBase, mod.NewDriveTime);
@@ -362,6 +395,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                         Console.WriteLine(e.Message);
                     }
                 }
+                //If modification is checked to deny
+                //Update the modification in the database to save the state to denied
                 else if (mod.State == 4)
                 {
                     try
@@ -379,10 +414,12 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
             foreach (Modification mod in modifiedOptions)
             {
+                //If modification is checked to approve
                 if (mod.State == 3)
                 {
                     try
                     {
+                        //Ensure information is still valid
                         if (mod.NewTime <= 0)
                         {
                             errorText += string.Format("Error modifying option {0}.  Invalid time: {1}.\n", mod.OptionCode, mod.NewTime);
@@ -405,6 +442,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                         Console.WriteLine(e.Message);
                     }
                 }
+                //If modification is checked to deny
+                //Update the modification in the database to save the state to denied
                 else if (mod.State == 4)
                 {
                     try
@@ -422,12 +461,14 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
             foreach (OverrideRequest or in overrides)
             {
+                //If override request is checked to approve
                 if (or.State == 3)
                 {
                     or.ModelNum = or.ModelNum.ToUpper();
 
                     try
                     {
+                        //Ensure information is still valid
                         if (or.ModelNum.Length < 8)
                         {
                             errorText += string.Format("Error adding override {0}.  Invalid Model Number format.\n", or.ModelNum);
@@ -471,6 +512,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                         Console.WriteLine(e.Message);
                     }
                 }
+                //If override request is checked to deny
+                //Update the override in the database to save the state to denied
                 else if (or.State == 4)
                 {
                     try
@@ -486,6 +529,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 }
             }
 
+            //Display a summary message
             if (numError > 0)
             {
                 MessageBox.Show(string.Format("Approved: {0}\n" +

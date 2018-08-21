@@ -116,6 +116,8 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
         /// <summary>
         /// Clears all table filters and reloads the tables
+        /// Using the private variables and raisePropertyChanged to 
+        /// avoid updating each table multiple times.
         /// </summary>
         private void refreshTables()
         {

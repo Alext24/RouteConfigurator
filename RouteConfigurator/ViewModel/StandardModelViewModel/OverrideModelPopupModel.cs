@@ -26,6 +26,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        //Inputs
         private string _modelText = "";
         private StandardModel _model;
 
@@ -33,10 +34,12 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private int? _overrideRoute;
         private string _description;
 
+        //Model information for user reference
         private decimal? _modelTime;
         private string _modelRoute;
         private int _modelRouteInt;
 
+        //Current list of overrides to submit
         private ObservableCollection<OverrideRequest> _overridesToSubmit = new ObservableCollection<OverrideRequest>();
 
         private string _informationText;
@@ -133,6 +136,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     Console.WriteLine(e);
                     return;
                 }
+
                 //Clear input boxes
                 _modelText = "";
                 RaisePropertyChanged("modelText");
@@ -335,6 +339,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
+        /// Finds the model in the database associated with the modelText entered
+        /// and then updates the information
         /// Calls updateModelTime and updateModelRoute
         /// </summary>
         private void findModel()
@@ -382,6 +388,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 {
                     foreach (string option in options)
                     {
+                        //Check to see if the option is in the database
                         foundOption = false;
                         if (_serviceProxy.getFilteredOptions(option, model.BoxSize, true).ToList().Count == 1)
                         {
@@ -417,7 +424,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// <summary>
         /// Parses the model and creates a list of the options
         /// </summary>
-        /// <returns> list of the options</returns>
+        /// <returns> returns a list of the options </returns>
         private List<string> parseOptions()
         {
             List<string> optionsList = new List<string>();
@@ -511,6 +518,9 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// Ensures the model override is not a duplicate in the ready to submit list
         /// Calls checkComplete
         /// </summary>
+        /// <remarks> if an override request gets accepted by the manager and the model is
+        /// already overriden, the old override will be deleted and the new information
+        /// will be associated with the model </remarks>
         /// <returns> true if the override is valid and doesn't already exist, false otherwise </returns>
         private bool checkValid()
         {
@@ -518,37 +528,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
             if (valid)
             {
-                /* I'm not sure how to handle an already existing override request for a model
-                 * so I will allow multiple of the same model override
-                //Check if the override already exists in the database as an override
-                if(_serviceProxy.getModelOverride(modelText) != null)
-                {
-                    informationText = "This option already exists";
-                    valid = false;
-                }
-                else
-                {
-                    //Check if the option already exists in the database as a new override request
-                    if (_serviceProxy.getFilteredOverrideRequests("", modelText).ToList().Count > 0)
-                    {
-                        informationText = string.Format("Override for model {0} is already waiting for approval.", modelText);
-                        valid = false;
-                    }
-                    else
-                    {
-                        //Check if the option is a duplicate in the ready to submit list
-                        foreach (Override ov in overridesToSubmit)
-                        {
-                            if (modelText.Equals(ov.ModelNum))
-                            {
-                                informationText = string.Format("Override for model {0} is already ready to submit", modelText);
-                                valid = false;
-                            }
-                        }
-                    }
-                }
-                */
-
                 //Check if the option is a duplicate in the ready to submit list
                 foreach (OverrideRequest ov in overridesToSubmit)
                 {
@@ -579,14 +558,12 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     complete = false;
                     informationText = "Model does not exist, enter a different model";
                 }
-
-                if(complete && overrideTime == null || overrideTime <= 0)
+                else if(complete && overrideTime == null || overrideTime <= 0)
                 {
                     complete = false;
                     informationText = "Invalid override time";
                 }
-
-                if (complete && overrideRoute == null || overrideRoute <= 0)
+                else if (complete && overrideRoute == null || overrideRoute <= 0)
                 {
                     complete = false;
                     informationText = "Invalid override route";
@@ -594,6 +571,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
             else
             {
+                //If user has entered less than 8 characters for the model
                 if (!string.IsNullOrWhiteSpace(modelText))
                 {
                     informationText = "Invalid model format";
@@ -603,7 +581,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
             return complete;
         }
-
         #endregion
     }
 }

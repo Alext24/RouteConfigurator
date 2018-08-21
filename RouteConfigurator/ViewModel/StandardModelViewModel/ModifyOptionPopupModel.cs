@@ -24,17 +24,27 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        /// <summary>
+        /// List of unique option codes to populate a drop down box
+        /// </summary>
         private ObservableCollection<string> _optionCodes = new ObservableCollection<string>();
         private string _selectedOptionCode;
 
+        //Input filters
         private string _boxSize = "";
         private bool _exactBoxSize = false;
 
+        /// <summary>
+        /// All options found that meet the filters
+        /// These are the options that will be modified when submitted
+        /// </summary>
         private ObservableCollection<Option> _optionsFound = new ObservableCollection<Option>();
         private Option _selectedOption;
 
+        //New information
         private decimal? _newTime;
         private string _newName;
+
         private string _description;
 
         private string _informationText;
@@ -68,6 +78,9 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             loading = false;
         }
 
+        /// <summary>
+        /// Loads the list of unique option codes 
+        /// </summary>
         private void getOptionCodes()
         {
             try
@@ -92,6 +105,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
         /// <summary>
         /// Submits each option modification to the database
+        /// Calls checkComplete
         /// </summary>
         private void submit()
         {
@@ -99,7 +113,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             {
                 informationText = "No options selected to update.";
             }
-            else if (checkValid())
+            else if (checkComplete())
             {
                 try
                 {
@@ -333,6 +347,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private void updateOptionsTable()
         {
+            //If no filters are entered clear the list so no options will be updated
             if (string.IsNullOrWhiteSpace(selectedOptionCode) && string.IsNullOrWhiteSpace(boxSize))
             {
                 optionsFound = new ObservableCollection<Option>();
@@ -354,34 +369,10 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
-        /// Calls checkComplete
-        /// </summary>
-        /// <returns> checkComplete value </returns>
-        private bool checkValid()
-        {
-            bool valid = checkComplete();
-
-            /*  I'm not sure how to handle an already existing modification request for an option
-            *  so I will allow multiple of the same option requests.
-            if (valid)
-            {
-                //Check if the option already exists in the database as an option modification request
-                List<Modification> mods = _serviceProxy.getFilteredModifiedOptions("", selectedOptionCode, boxSize).ToList();
-                if (mods.Count > 0)
-                {
-                    informationText = string.Format("Option {0} is already waiting for approval.", selectedOptionCode);
-                    valid = false;
-                }
-            }
-            */
-
-            return valid;
-        }
-
-        /// <summary>
         /// Checks to see if new time or new name is filled out correctly
         /// before the modification can be added.  
         /// </summary>
+        /// <remarks> Either newDriveTime or newAVTime need to be filled out </remarks>
         /// <returns> true if the form is complete, otherwise false </returns>
         private bool checkComplete()
         {

@@ -24,10 +24,12 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        /// <summary>
+        /// List of modifications shown to user based on filters.
+        /// </summary>
         private ObservableCollection<Modification> _modifications = new ObservableCollection<Modification>();
 
-        private Modification _selectedModification;
-
+        // Modification table filters
         private string _MStateFilter = "";
         private string _MBaseFilter = "";
         private string _MBoxSizeFilter = "";
@@ -35,9 +37,12 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private string _MSenderFilter = "";
         private string _MReviewerFilter = "";
 
+        /// <summary>
+        /// List of override requests shown to user based on filters.
+        /// </summary>
         private ObservableCollection<OverrideRequest> _overrides = new ObservableCollection<OverrideRequest>();
-        private OverrideRequest _selectedOverride;
 
+        // Override request table filters and helpers
         private string _ORStateFilter = "";
         private string _ORModelNameFilter = "";
         private string _ORSenderFilter = "";
@@ -65,6 +70,9 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         #endregion
 
         #region Commands
+        /// <summary>
+        /// Loads the modification and override request tables with no filters
+        /// </summary>
         private void loaded()
         {
             updateModificationsTableAsync();
@@ -80,16 +88,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             {
                 _modifications = value;
                 RaisePropertyChanged("modifications");
-            }
-        }
-
-        public Modification selectedModification
-        {
-            get { return _selectedModification; }
-            set
-            {
-                _selectedModification = value;
-                RaisePropertyChanged("selectedModification");
             }
         }
 
@@ -199,16 +197,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
         }
 
-        public OverrideRequest selectedOverride
-        {
-            get { return _selectedOverride; }
-            set
-            {
-                _selectedOverride = value;
-                RaisePropertyChanged("selectedOverride");
-            }
-        }
-
         /// <summary>
         /// Calls updateOverridesTableAsync
         /// </summary>
@@ -310,22 +298,32 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             informationText = "";
         }
 
+        /// <summary>
+        /// Updates the modification table with the modifications that meet the filters
+        /// Calls getStateFilter
+        /// </summary>
+        /// <remarks>
+        /// state filter is used to determine what states should be shown (Accepted, Declined, Waiting)
+        /// </remarks>
         private void updateModificationsTable()
         {
             int stateFilter = getStateFilter(MStateFilter);
 
             try
             {
+                //If state is not being filtered for, get the modifications based of the other filters
                 if (stateFilter == -1)
                 {
                     modifications = new ObservableCollection<Modification>(
                         _serviceProxy.getFilteredModifications(MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
                 }
+                //If state is filtered for waiting modifications, get the waiting modifications based of the other filters
                 else if (stateFilter == 0)
                 {
                     modifications = new ObservableCollection<Modification>(
                         _serviceProxy.getFilteredWaitingModifications(MBaseFilter, MBoxSizeFilter, MOptionCodeFilter, MSenderFilter, MReviewerFilter));
                 }
+                //If state is filtered for other modifications, get the modifications based of the other filters and the state filter
                 else
                 {
                     modifications = new ObservableCollection<Modification>(
@@ -348,6 +346,10 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             informationText = "";
         }
 
+        /// <summary>
+        /// Updates the override request table with the requests that meet the filters
+        /// Calls getStateFilter
+        /// </summary>
         private void updateOverridesTable()
         {
             int stateFilter = getStateFilter(ORStateFilter);
@@ -364,6 +366,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
         }
 
+        /// <param name="stateText"> the user entered value for the state filter </param>
+        /// <returns> returns an integer that corresponds to the state filter </returns>
         private int getStateFilter(string stateText)
         {
             int stateFilter = -1;
@@ -396,7 +400,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
             return stateFilter;
         }
-
         #endregion
     }
 }

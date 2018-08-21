@@ -23,22 +23,26 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private IDataAccessService _serviceProxy = new DataAccessService();
 
+        /// <summary>
+        /// List of unique drive types (first 4 characters of the model ex. A1C1)
+        /// to populate a drop down box
+        /// </summary>
         private ObservableCollection<string> _driveTypes = new ObservableCollection<string>();
 
+        //Input filters
         private string _selectedDrive = "";
-
         private string _AVText = "";
-
         private string _boxSize = "";
-
         private bool _exactBoxSize = false;
 
+        /// <summary>
+        /// All models found that meet the filters
+        /// These are the models that will be modified when submitted
+        /// </summary>
         private ObservableCollection<StandardModel> _modelsFound = new ObservableCollection<StandardModel>();
 
-        private StandardModel _selectedModel;
-
+        //New information
         private decimal? _newDriveTime;
-
         private decimal? _newAVTime;
 
         private string _description;
@@ -74,6 +78,9 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             loading = false;
         }
 
+        /// <summary>
+        /// Loads the list of unique drive types
+        /// </summary>
         private void getDriveTypes()
         {
             try
@@ -98,6 +105,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
         /// <summary>
         /// Submits each model modification to the database
+        /// Calls checkComplete
         /// </summary>
         private void submit()
         {
@@ -105,7 +113,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             {
                 informationText = "No models selected to update.";
             }
-            else if (checkValid())
+            else if (checkComplete())
             {
                 try
                 {
@@ -266,20 +274,6 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
         }
 
-        public StandardModel selectedModel
-        {
-            get
-            {
-                return _selectedModel;
-            }
-            set
-            {
-                _selectedModel = value;
-                RaisePropertyChanged("selectedModel");
-                informationText = "";
-            }
-        }
-
         public decimal? newDriveTime
         {
             get
@@ -362,6 +356,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private void updateModelsTable()
         {
+            //If no filters are entered clear the list so no models will be updated
             if(string.IsNullOrWhiteSpace(selectedDrive) && string.IsNullOrWhiteSpace(AVText) && string.IsNullOrWhiteSpace(boxSize))
             {
                 modelsFound = new ObservableCollection<StandardModel>();
@@ -383,35 +378,10 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
-        /// Calls checkComplete
-        /// </summary>
-        /// <returns> checkComplete value </returns>
-        private bool checkValid()
-        {
-            bool valid = checkComplete();
-
-            /*  I'm not sure how to handle an already existing modification request for a model 
-            *  so I will allow multiple of the same model requests.
-            if (valid)
-            {
-                //Check if the model already exists in the database as a model modification request
-                string modelBase = string.Concat(selectedDrive, AVText);
-                List<Modification> mods = _serviceProxy.getFilteredModifiedModels("", modelBase).ToList();
-                if (mods.Count > 0)
-                {
-                    informationText = string.Format("Model {0} is already waiting for approval.", modelBase);
-                    valid = false;
-                }
-            }
-            */
-
-            return valid;
-        }
-
-        /// <summary>
         /// Checks to see if new drive time or new av time is filled out correctly
         /// before the modification can be added.  
         /// </summary>
+        /// <remarks> Either newDriveTime or newAVTime need to be filled out </remarks>
         /// <returns> true if the form is complete, otherwise false </returns>
         private bool checkComplete()
         {

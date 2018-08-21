@@ -70,7 +70,7 @@
 
                     <!--Modification Request Table-->
                     <DataGrid  Grid.Row="1" x:Name="ModificationTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
-                               ItemsSource="{Binding modifications}" SelectedValue="{Binding selectedModification}" AutoGenerateColumns="False" CanUserAddRows="False"
+                               ItemsSource="{Binding modifications}" AutoGenerateColumns="False" CanUserAddRows="False"
                                ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                         <DataGrid.RowStyle>
@@ -360,7 +360,7 @@
 
                     <!--Override Request Table-->
                     <DataGrid  Grid.Row="4" x:Name="OverrideTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
-                               ItemsSource="{Binding overrides}" SelectedValue="{Binding selectedOverride}" AutoGenerateColumns="False" CanUserAddRows="False"
+                               ItemsSource="{Binding overrides}" AutoGenerateColumns="False" CanUserAddRows="False"
                                ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                         <DataGrid.RowStyle>

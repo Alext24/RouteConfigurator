@@ -51,13 +51,20 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private List<string> _optionsList = new List<string>();
 
+        //Outputs
         private string _routeText;
         private string _prodSupCodeText;
         private decimal? _productionTime;
         private string _timeSearchModelNumber;
 
+        /// <summary>
+        /// Actual model found from the modelBase entered
+        /// </summary>
         private StandardModel _model;
 
+        /// <summary>
+        /// Time trials found for the full model and helper
+        /// </summary>
         private TimeTrial _selectedTimeTrial;
         private ObservableCollection<TimeTrial> _timeTrials = new ObservableCollection<TimeTrial>();
 
@@ -100,16 +107,21 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         #region Commands
         private async void submitToQueueAsync()
         {
+            loading = true;
             await Task.Run(() => submitToQueue());
+            loading = false;
         }
 
+        /// <summary>
+        /// Checks for valid information and then submits the route information to a queue
+        /// </summary>
         private void submitToQueue()
         {
             if (string.IsNullOrWhiteSpace(modelNumber))
             {
                 informationText = "Enter a valid model before submitting route.";
             }
-            else if (string.IsNullOrWhiteSpace(prodSupCodeText) || prodSupCodeText.Equals("N/A")) 
+            else if (string.IsNullOrWhiteSpace(prodSupCodeText) || prodSupCodeText.Equals("N/A"))
             {
                 informationText = "Information is not valid. Cannot submit.";
             }
@@ -118,6 +130,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 try
                 {
                     informationText = "Adding route to queue...";
+
                     RouteQueue route = new RouteQueue
                     {
                         Route = int.Parse(routeText),
@@ -142,6 +155,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         }
 
         /// <summary>
+        /// Searches for existing time trials for the timeSearchModelNumber
         /// Calls modelNumberSectionsAsync 
         /// </summary>
         private void timeSearch()
@@ -176,7 +190,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// Sets timeSearchModelNumber to the entered model number as well
         /// Calls searchModelAsync
         /// </summary>
-        public string modelNumber 
+        public string modelNumber
         {
             get
             {
@@ -235,7 +249,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// <summary>
         /// Calls timeSearch
         /// </summary>
-        public string timeSearchModelNumber 
+        public string timeSearchModelNumber
         {
             get
             {
@@ -303,7 +317,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
         }
 
-        public string informationText 
+        public string informationText
         {
             get
             {
@@ -360,7 +374,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 _options = "";
                 averageTime = null;
             }
-            else if(model.Length < 8)
+            else if (model.Length < 8)
             {
                 informationText = "Invalid Model Format";
                 _modelBase = "";
@@ -374,7 +388,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
                 bool isPower = false;
                 bool isControl = false;
-                foreach(char c in _options)
+                foreach (char c in _options)
                 {
                     if (c.Equals('P'))
                     {
@@ -429,10 +443,11 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     }
                     else
                     {
-                        averageTime = null;
                         informationText = "No time trials for this model exist";
+                        averageTime = null;
                     }
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     informationText = "There was a problem accessing the database.";
                     Console.WriteLine(e.Message);
@@ -448,18 +463,15 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             decimal sum = 0;
             decimal count = 0;
 
-            foreach(TimeTrial timeTrial in timeTrials)
+            foreach (TimeTrial timeTrial in timeTrials)
             {
                 sum += timeTrial.TotalTime;
                 count++;
             }
 
-            averageTime = sum/count;
+            averageTime = sum / count;
         }
 
-        /// <summary>
-        /// Calls searchModelAsync
-        /// </summary>
         private async void searchModelAsync()
         {
             loading = true;
@@ -519,32 +531,30 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         {
             try
             {
+                //Check if the model information is supposed to be overriden
                 Override modelOverride = _serviceProxy.getModelOverride(modelNumber);
 
                 if (modelOverride != null)
                 {
-                    //Model's information is currently overriden
+                    //Model's information should be overriden
                     routeText = modelOverride.OverrideRoute.ToString();
-
-                    //TimeSpan time = TimeSpan.FromHours((double)modelOverride.OverrideTime);
-                    //productionTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
                     productionTime = modelOverride.OverrideTime;
 
                     setProdSupCode(modelOverride.OverrideTime);
                 }
                 else
                 {
-                    //Model's information is not currently overriden
+                    //Model's information is not overriden
                     decimal totalTime = getTotalTime();
+                    productionTime = totalTime;
 
                     TimeSpan time = TimeSpan.FromHours((double)totalTime);
-                    //productionTimeText = string.Format("{0}:{1:00}", ((time.Days * 24) + time.Hours), time.Minutes);
-                    productionTime = totalTime;
 
                     setRoute(time);
                     setProdSupCode(totalTime);
                 }
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 informationText = "There was a problem accessing the database.";
                 Console.WriteLine(e.Message);
@@ -554,7 +564,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// <summary>
         /// Sums the base time, AV time, and all option times for the model
         /// </summary>
-        /// <returns> total production time for the model</returns>
+        /// <returns> total production time for the model </returns>
         private decimal getTotalTime()
         {
             decimal totalTime = 0;
@@ -569,6 +579,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
                 try
                 {
+                    //Check if all options have information in the database
                     foreach (string option in _optionsList)
                     {
                         foundOption = false;
@@ -600,57 +611,56 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     Console.WriteLine(e.Message);
                 }
             }
-
             return totalTime;
         }
 
         /// <summary>
         /// Determines the product supervisor code based off the production time
         /// </summary>
-        /// <param name="time"> the production time for the model</param>
+        /// <param name="time"> the production time for the model </param>
         private void setProdSupCode(decimal time)
         {
-            if(time <= 0)
+            if (time <= 0)
             {
                 prodSupCodeText = "";
             }
-            else if(time > 0 && time < 1.50M)
+            else if (time > 0 && time < 1.50M)
             {
                 prodSupCodeText = "3";
             }
-            else if(time >= 1.50M && time < 2.50M)
+            else if (time >= 1.50M && time < 2.50M)
             {
                 prodSupCodeText = "4";
             }
-            else if(time >= 2.50M && time < 4.00M)
+            else if (time >= 2.50M && time < 4.00M)
             {
                 prodSupCodeText = "5";
             }
-            else if(time >= 4.00M && time < 5.00M)
+            else if (time >= 4.00M && time < 5.00M)
             {
                 prodSupCodeText = "6";
             }
-            else if(time >= 5.00M && time < 9.00M)
+            else if (time >= 5.00M && time < 9.00M)
             {
                 prodSupCodeText = "7";
             }
-            else if(time >= 9.00M && time < 15.00M)
+            else if (time >= 9.00M && time < 15.00M)
             {
                 prodSupCodeText = "8";
             }
-            else if(time >= 15.00M && time < 20.00M)
+            else if (time >= 15.00M && time < 20.00M)
             {
                 prodSupCodeText = "9";
             }
-            else if(time >= 20.00M && time < 30.00M)
+            else if (time >= 20.00M && time < 30.00M)
             {
                 prodSupCodeText = "10";
             }
-            else if(time >= 30.00M && time < 40.00M)
+            else if (time >= 30.00M && time < 40.00M)
             {
                 prodSupCodeText = "11";
             }
-            else if(time >= 40.00M)
+            else if (time >= 40.00M)
             {
                 prodSupCodeText = "12";
             }
@@ -663,7 +673,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// <summary>
         /// Determines the route number based off the production time
         /// </summary>
-        /// <param name="time"> the production time for the model</param>
+        /// <param name="time"> the production time for the model </param>
         private void setRoute(TimeSpan time)
         {
             if (time.TotalMinutes <= 0)

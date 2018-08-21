@@ -108,7 +108,7 @@
                         <!--Row 2-5 setup: Model Table-->
                         <DataGrid  Grid.Row="2" Grid.RowSpan="4" Grid.Column="2" Grid.ColumnSpan="2" MaxHeight="129" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
                                CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" SelectionMode="Single"
-                               ItemsSource="{Binding modelsFound}" SelectedValue="{Binding selectedModel}">
+                               ItemsSource="{Binding modelsFound}">
 
                             <DataGrid.Columns>
                                 <DataGridTextColumn x:Name="Header1" Width="auto" MinWidth="100" FontSize="16" Header="Model"
