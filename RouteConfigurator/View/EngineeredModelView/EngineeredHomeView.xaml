@@ -34,7 +34,7 @@
 
                 <Grid.Resources>
                     <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
-                    <routeconfigurator:BooleanToVisiblityConverter x:Key="VisibilityConverter"/>
+                    <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
                 </Grid.Resources>
 
                 <Grid Panel.ZIndex="1" Height="100" Width="100">
@@ -113,9 +113,9 @@
                                   MaxDropDownHeight="150" FontSize="16" VerticalAlignment="Top"/>
 
                         <!--Row 3 setup: Components Table-->
-                        <DataGrid  Grid.Row="3" Grid.ColumnSpan="5" Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
-                                   ItemsSource="{Binding engineeredModelComponents}"  AutoGenerateColumns="False" BorderBrush="LightGray"
-                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
+                        <DataGrid Grid.Row="3" Grid.ColumnSpan="5" Height="250" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                                  ItemsSource="{Binding engineeredModelComponents}"  AutoGenerateColumns="False" BorderBrush="LightGray"
+                                  ToolTip="Hold 'Ctrl' while clicking to unselect the selection.">
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="CellEditEnding">

@@ -30,9 +30,11 @@
 
             <Grid.Resources>
                 <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
-                <routeconfigurator:BooleanToVisiblityConverter x:Key="VisibilityConverter"/>
                 <routeconfigurator:IntStateToTextStateConverter x:Key="StateConverter"/>
+                <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
 
+                <!--Tooltip for the datagrids so each modifications description can be shown
+                    in a user friendly display-->
                 <Style TargetType="ToolTip">
                     <Setter Property="ContentTemplate">
                         <Setter.Value>
@@ -69,9 +71,9 @@
                     <TextBlock Grid.Row="0" Text="Modification Requests" FontSize="16"/>
 
                     <!--Modification Request Table-->
-                    <DataGrid  Grid.Row="1" x:Name="ModificationTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
-                               ItemsSource="{Binding modifications}" AutoGenerateColumns="False" CanUserAddRows="False"
-                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+                    <DataGrid Grid.Row="1" x:Name="ModificationTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
+                              ItemsSource="{Binding modifications}" AutoGenerateColumns="False" CanUserAddRows="False"
+                              ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
@@ -93,8 +95,8 @@
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" MaxWidth="80" Margin="0 5 0 5"
                                                      Text="{Binding ElementName=ModificationTable, Path=DataContext.MStateFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Status" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Status" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text=""       FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -112,8 +114,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Request" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Date" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Request" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Date"    FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -132,8 +134,8 @@
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
                                                      Text="{Binding ElementName=ModificationTable, Path=DataContext.MBaseFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Model" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Model" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Name"  FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -151,8 +153,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="New Drive" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="New Drive" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Time"      FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -170,8 +172,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="New AV" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="New AV" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Time"   FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -189,8 +191,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Old Drive" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Old Drive" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Time"      FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -208,8 +210,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Old AV" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Old AV" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Time"   FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -228,8 +230,8 @@
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="50" Margin="0 5 0 5"
                                                      Text="{Binding ElementName=ModificationTable, Path=DataContext.MBoxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Box" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Size" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Box"  FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Size" FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -246,10 +248,10 @@
                                     <DataTemplate>
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="40" MaxWidth="60" Margin="0 5 0 5"
-                                                                Text="{Binding ElementName=ModificationTable, Path=DataContext.MOptionCodeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                     Text="{Binding ElementName=ModificationTable, Path=DataContext.MOptionCodeFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Option" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Code" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Option" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Code"   FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -267,8 +269,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="New" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="New"  FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Time" FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -286,8 +288,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Old" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Old"  FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Time" FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -306,8 +308,8 @@
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="100" MaxWidth="160" Margin="0 5 0 5"
                                                      Text="{Binding ElementName=ModificationTable, Path=DataContext.MSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Sender" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Sender" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text=""       FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -325,8 +327,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Review" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Date" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Review" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Date"   FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -345,13 +347,12 @@
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="100" MaxWidth="160" Margin="0 5 0 5"
                                                      Text="{Binding ElementName=ModificationTable, Path=DataContext.MReviewerFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Reviewer" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Reviewer" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text=""         FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
                             </DataGridTextColumn>
-
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -359,9 +360,9 @@
                     <TextBlock Grid.Row="3" Text="Override Requests" FontSize="16"/>
 
                     <!--Override Request Table-->
-                    <DataGrid  Grid.Row="4" x:Name="OverrideTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
-                               ItemsSource="{Binding overrides}" AutoGenerateColumns="False" CanUserAddRows="False"
-                               ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+                    <DataGrid Grid.Row="4" x:Name="OverrideTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
+                              ItemsSource="{Binding overrides}" AutoGenerateColumns="False" CanUserAddRows="False"
+                              ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
@@ -383,8 +384,8 @@
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" MaxWidth="80" Margin="0 5 0 5"
                                                      Text="{Binding ElementName=OverrideTable, Path=DataContext.ORStateFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Status" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Status" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text=""       FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -402,8 +403,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Request" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Date" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Request" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Date"    FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -420,10 +421,10 @@
                                     <DataTemplate>
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="100" Margin="0 5 0 5"
-                                                             Text="{Binding ElementName=OverrideTable, Path=DataContext.ORModelNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                     Text="{Binding ElementName=OverrideTable, Path=DataContext.ORModelNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Model" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Model" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Name"  FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -441,8 +442,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Override" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Override" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Time"     FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -460,8 +461,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Override" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Route" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Override" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Route"    FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -479,8 +480,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Old Model" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Old Model" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Time"      FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -498,8 +499,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Old Model" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Route" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Old Model" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Route"     FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -516,10 +517,10 @@
                                     <DataTemplate>
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" Margin="0 5 0 5" MinWidth="100" MaxWidth="160"
-                                                             Text="{Binding ElementName=OverrideTable, Path=DataContext.ORSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                     Text="{Binding ElementName=OverrideTable, Path=DataContext.ORSenderFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Sender" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Sender" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text=""       FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -537,8 +538,8 @@
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                            <TextBlock Text="Review" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="Date" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Review" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Date"   FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>
@@ -557,8 +558,8 @@
                                             <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="100" MaxWidth="160" Margin="0 5 0 5"
                                                      Text="{Binding ElementName=ModificationTable, Path=DataContext.ORReviewerFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                            <TextBlock Text="Reviewer" FontSize ="12" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Reviewer" FontSize="12" HorizontalAlignment="Center"/>
+                                            <TextBlock Text=""         FontSize="12" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTextColumn.HeaderTemplate>

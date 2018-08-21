@@ -30,8 +30,6 @@
                 </Grid.Resources>
 
                 <Grid Panel.ZIndex="1" Height="100" Width="100">
-                    <!--<Rectangle Width="100" Height="100" Fill="AliceBlue"/>-->
-                    <!--="{Binding loading, Converter={StaticResource VisConverter}}"/>-->
                     <fa:ImageAwesome Icon="Spinner" Spin="True" 
                                      Visibility="{Binding loading, Converter={StaticResource VisibilityConverter}}"/>
                 </Grid>

@@ -30,7 +30,7 @@
 
             <Grid.Resources>
                 <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
-                <routeconfigurator:BooleanToVisiblityConverter x:Key="VisibilityConverter"/>
+                <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
             </Grid.Resources>
 
             <Grid Panel.ZIndex="1" Height="100" Width="100">
@@ -39,92 +39,89 @@
             </Grid>
 
             <Border x:Name="content" Background="White" Padding="20" CornerRadius="20" Grid.Row="0" Width="auto" HorizontalAlignment="Center">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Center">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>      <!--Row 0-->
-                            <RowDefinition Height="auto"/>      <!--Row 1-->
-                            <RowDefinition Height="auto"/>      <!--Row 2-->
-                            <RowDefinition Height="auto"/>      <!--Row 3-->
-                            <RowDefinition Height="auto"/>      <!--Row 4-->
-                            <RowDefinition Height="auto"/>      <!--Row 5-->
-                            <RowDefinition Height="20"/>        <!--Row 6-->
-                            <RowDefinition Height="auto"/>      <!--Row 7-->
-                            <RowDefinition Height="auto"/>      <!--Row 8-->
-                            <RowDefinition Height="auto"/>      <!--Row 9-->
-                        </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>      <!--Row 0-->
+                        <RowDefinition Height="auto"/>      <!--Row 1-->
+                        <RowDefinition Height="auto"/>      <!--Row 2-->
+                        <RowDefinition Height="auto"/>      <!--Row 3-->
+                        <RowDefinition Height="auto"/>      <!--Row 4-->
+                        <RowDefinition Height="*"/>         <!--Row 5-->
+                        <RowDefinition Height="20"/>        <!--Row 6 Spacing-->
+                        <RowDefinition Height="auto"/>      <!--Row 7-->
+                        <RowDefinition Height="auto"/>      <!--Row 8-->
+                        <RowDefinition Height="auto"/>      <!--Row 9-->
+                    </Grid.RowDefinitions>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>    <!--Col 0-->
-                            <ColumnDefinition Width="auto"/>    <!--Col 1-->
-                            <ColumnDefinition Width="170"/>    <!--Col 2-->
-                            <ColumnDefinition Width="145"/>    <!--Col 2-->
-                        </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>    <!--Col 0-->
+                        <ColumnDefinition Width="auto"/>    <!--Col 1-->
+                        <ColumnDefinition Width="170"/>     <!--Col 2-->
+                        <ColumnDefinition Width="*"/>       <!--Col 3-->
+                    </Grid.ColumnDefinitions>
 
-                        <!--Row 0 setup: Title-->
-                        <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="Modify Model"
-                               Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center"/>
+                    <!--Row 0 setup: Title-->
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" Padding="10 0 10 10" Text="Modify Model" FontSize="20"/>
 
-                        <!--Row 1 setup: Search Criteria-->
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Criteria" FontSize="16"/>
+                    <!--Row 1 setup: Search Criteria-->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Search Criteria" FontSize="16"/>
 
-                        <!--Row 2 setup: Drive Type-->
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Drive Type" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <ComboBox Grid.Row="2" Grid.Column="1" MaxWidth="135" MaxDropDownHeight="200" Margin="5" IsTextSearchEnabled="True" ItemsSource="{Binding driveTypes}" SelectedValue="{Binding selectedDrive}"/>
+                    <!--Drive Type filter-->
+                    <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0" Text="Drive Type" FontSize="16"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" MaxWidth="135" MaxDropDownHeight="200" Margin="5" IsTextSearchEnabled="True" ItemsSource="{Binding driveTypes}" SelectedValue="{Binding selectedDrive}"/>
 
-                        <!--Row 3 setup: AV-->
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="AV" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <TextBox Grid.Row="3" Grid.Column="1" MaxWidth="135" Margin="5" Text="{Binding AVText}" FontSize="16"/>
+                    <!--AV filter-->
+                    <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0" Text="AV" FontSize="16"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" MaxWidth="135" Margin="5" Text="{Binding AVText}" FontSize="16"/>
 
-                        <!--Row 4 setup: Box Size-->
-                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Box Size" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Width="145">
-                            <TextBox Margin="5" Width="115" Text="{Binding boxSize}" FontSize="16"/>
-                            <CheckBox IsChecked="{Binding exactBoxSize}" VerticalAlignment="Center" Margin="0 0 5 0"/>
-                        </StackPanel>
+                    <!--Box Size filter-->
+                    <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0" Text="Box Size" FontSize="16"/>
+                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Width="145">
+                        <TextBox Margin="5" Width="115" Text="{Binding boxSize}" FontSize="16"/>
+                        <CheckBox IsChecked="{Binding exactBoxSize}" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                    </StackPanel>
 
-                        <!--Row 5 setup: Models found-->
-                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Models found:" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <TextBlock Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding modelsFound.Count}" FontSize="16"/>
+                    <!--Models found-->
+                    <TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="0 5 5 0" Text="Models found:" FontSize="16"/>
+                    <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Top" Padding="5 5 0 0" Text="{Binding modelsFound.Count}" FontSize="16"/>
 
-                        <!--Row 6 setup: Blank, Spacing-->
+                    <!--Row 6 setup: Blank, Spacing-->
 
-                        <!--Row 7 setup: New Times-->
-                        <TextBlock Grid.Row="7" Grid.Column="0" Text="New Drive Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding newDriveTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16" Width="135"/>
+                    <!--New Drive Time-->
+                    <TextBlock Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0" Text="New Drive Time" FontSize="16"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding newDriveTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16" Width="135"/>
 
-                        <TextBlock Grid.Row="7" Grid.Column="2" Text="New AV Time" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0"/>
-                        <TextBox Grid.Row="7" Grid.Column="3" Margin="5" Text="{Binding newAVTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16" Width="135" HorizontalAlignment="Right"/>
+                    <!--New AV Time-->
+                    <TextBlock Grid.Row="7" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0" Text="New AV Time" FontSize="16"/>
+                    <TextBox Grid.Row="7" Grid.Column="3" Margin="5" Text="{Binding newAVTime, TargetNullValue='', Converter={StaticResource TimeConverter}}" FontSize="16" Width="135" HorizontalAlignment="Left"/>
 
-                        <!--Row 8 setup: Description Header-->
-                        <TextBlock Grid.Row="8" Grid.Column="0" Text="Request Description" FontSize="16" Margin="5 0" VerticalAlignment="Center"/>
-                        <TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="3" Width="450" FontSize="16" MaxLines="2" Margin="5 0" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto"
-                                 Text="{Binding description}"/>
+                    <!--Row 8 setup: Description Header-->
+                    <TextBlock Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0" Text="Request Description" FontSize="16"/>
+                    <TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="3" Margin="5 0" Width="450" FontSize="16" HorizontalAlignment="Left"
+                             Text="{Binding description}" TextWrapping="WrapWithOverflow" MaxLines="2" VerticalScrollBarVisibility="Auto"/>
 
-                        <!--Row 9 setup: Submit Button-->
-                        <Button Grid.Row="9" Grid.Column="3" Content="Submit" Margin="0 5 0 0" HorizontalAlignment="Right"
-                            Command="{Binding submitCommand}"/>
+                    <!--Submit Button-->
+                    <Button Grid.Row="9" Grid.Column="3" Margin="0 5 0 0" HorizontalAlignment="Right" Content="Submit" Command="{Binding submitCommand}"/>
 
-                        <!--Row 2-5 setup: Model Table-->
-                        <DataGrid  Grid.Row="2" Grid.RowSpan="4" Grid.Column="2" Grid.ColumnSpan="2" MaxHeight="129" x:Name="ModelTable" BorderBrush="LightGray" IsReadOnly="True" AutoGenerateColumns="False"
-                               CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" SelectionMode="Single"
-                               ItemsSource="{Binding modelsFound}">
+                    <!--Model Table-->
+                    <DataGrid Grid.Row="2" Grid.RowSpan="4" Grid.Column="2" Grid.ColumnSpan="2" x:Name="ModelTable" IsReadOnly="True" AutoGenerateColumns="False"
+                              CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible"
+                              ItemsSource="{Binding modelsFound}">
 
-                            <DataGrid.Columns>
-                                <DataGridTextColumn x:Name="Header1" Width="auto" MinWidth="100" FontSize="16" Header="Model"
-                                                    Binding="{Binding Base}"/>
-                                <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size"
-                                                    Binding="{Binding BoxSize}"/>
-                                <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Drive Time"
-                                                    Binding="{Binding DriveTime, Converter={StaticResource TimeConverter}}"/>
-                                <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
-                                                    Binding="{Binding AVTime, Converter={StaticResource TimeConverter}}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                    </Grid>
-                </ScrollViewer>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="Header1" Width="auto" MinWidth="100" FontSize="16" Header="Model"
+                                                Binding="{Binding Base}"/>
+                            <DataGridTextColumn x:Name="Header2" Width="auto" FontSize="16" Header="Box Size"
+                                                Binding="{Binding BoxSize}"/>
+                            <DataGridTextColumn x:Name="Header3" Width="auto" FontSize="16" Header="Drive Time"
+                                                Binding="{Binding DriveTime, Converter={StaticResource TimeConverter}}"/>
+                            <DataGridTextColumn x:Name="Header4" Width="auto" FontSize="16" Header="AV Time"
+                                                Binding="{Binding AVTime, Converter={StaticResource TimeConverter}}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </Border>
+
             <!--Information text-->
             <TextBlock Grid.Row="1" Padding="0 4" Margin="10 0 10 0" TextWrapping="WrapWithOverflow"
                        FontSize="12" Text="{Binding informationText}"/>

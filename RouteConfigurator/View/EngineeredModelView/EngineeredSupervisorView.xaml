@@ -63,9 +63,9 @@
                         <!--Col 0 setup: Component Table Name-->
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="All Components" FontSize="16"/>
 
-                        <DataGrid  Grid.Row="1" Grid.Column="0" x:Name="ComponentTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
-                                   ItemsSource="{Binding components}" SelectedItem="{Binding selectedComponent}" AutoGenerateColumns="False"
-                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+                        <DataGrid Grid.Row="1" Grid.Column="0" x:Name="ComponentTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                                  ItemsSource="{Binding components}" SelectedItem="{Binding selectedComponent}" AutoGenerateColumns="False"
+                                  ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                             <DataGrid.Columns>
                                 <!--Column 1: Component Name-->
@@ -79,10 +79,10 @@
                                         <DataTemplate>
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
-                                                             Text="{Binding ElementName=ComponentTable, Path=DataContext.componentNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ElementName=ComponentTable, Path=DataContext.componentNameFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                                <TextBlock Text="Component" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="Name" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Component" FontSize="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Name"      FontSize="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -99,10 +99,10 @@
                                         <DataTemplate>
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="40" Margin="0 5 0 5"
-                                                             Text="{Binding ElementName=ComponentTable, Path=DataContext.componentEnclosureSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ElementName=ComponentTable, Path=DataContext.componentEnclosureSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                                <TextBlock Text="Enclosure" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="Size" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Enclosure" FontSize="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Size"      FontSize="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -120,8 +120,8 @@
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text=""     FontSize="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -132,9 +132,9 @@
                         <!--Col 2 setup: Component Table Name-->
                         <TextBlock Grid.Row="0" Grid.Column="2" Text="All Enclosures" FontSize="16"/>
 
-                        <DataGrid  Grid.Row="1" Grid.Column="2" x:Name="EnclosureTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
-                                   ItemsSource="{Binding enclosures}" SelectedItem="{Binding selectedEnclosure}" AutoGenerateColumns="False"
-                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+                        <DataGrid Grid.Row="1" Grid.Column="2" x:Name="EnclosureTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                                  ItemsSource="{Binding enclosures}" SelectedItem="{Binding selectedEnclosure}" AutoGenerateColumns="False"
+                                  ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                             <DataGrid.Columns>
                                 <!--Column 1: Enclosure Type-->
@@ -148,10 +148,10 @@
                                         <DataTemplate>
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
-                                                             Text="{Binding ElementName=EnclosureTable, Path=DataContext.enclosureTypeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ElementName=EnclosureTable, Path=DataContext.enclosureTypeFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                                <TextBlock Text="Enclosure" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="Type" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Enclosure" FontSize="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Type"      FontSize="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -168,10 +168,10 @@
                                         <DataTemplate>
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="40" Margin="0 5 0 5"
-                                                             Text="{Binding ElementName=EnclosureTable, Path=DataContext.enclosureSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ElementName=EnclosureTable, Path=DataContext.enclosureSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                                <TextBlock Text="Enclosure" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="Size" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Enclosure" FontSize="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Size"      FontSize="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -189,8 +189,8 @@
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time" FontSize="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text=""     FontSize="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -201,9 +201,9 @@
                         <!--Col 4 setup: Wire Gauge Table Name-->
                         <TextBlock Grid.Row="0" Grid.Column="4" Text="All Wire Guages" FontSize="16"/>
 
-                        <DataGrid  Grid.Row="1" Grid.Column="4" x:Name="WireGaugesTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
-                                   ItemsSource="{Binding wireGauges}" SelectedItem="{Binding selectedWireGauge}" AutoGenerateColumns="False"
-                                   ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+                        <DataGrid Grid.Row="1" Grid.Column="4" x:Name="WireGaugesTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="True"
+                                  ItemsSource="{Binding wireGauges}" SelectedItem="{Binding selectedWireGauge}" AutoGenerateColumns="False"
+                                  ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                             <DataGrid.Columns>
                                 <!--Column 1: Wire Gauge-->
@@ -217,10 +217,10 @@
                                         <DataTemplate>
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
-                                                             Text="{Binding ElementName=WireGaugesTable, Path=DataContext.wireGaugeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ElementName=WireGaugesTable, Path=DataContext.wireGaugeFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                                <TextBlock Text="Wire" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="Gauge" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Wire"  FontSize="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Gauge" FontSize="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -238,17 +238,16 @@
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
-                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="Percentage" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time"       FontSize="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Percentage" FontSize="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-
                         
-                        <!--Buttons-->
+                        <!--Components Buttons-->
                         <Grid Grid.Row="3" Grid.Column="0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -276,6 +275,7 @@
                             </Button>
                         </Grid>
                         
+                        <!--Enclosure Button-->
                         <Grid Grid.Row="3" Grid.Column="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -294,6 +294,7 @@
                             </Button>
                         </Grid>
                         
+                        <!--Wire Gauges Buttons-->
                         <Grid Grid.Row="3" Grid.Column="4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -320,8 +321,6 @@
                                 </Button.Content>
                             </Button>
                         </Grid>
-                        
-                        
                         
                         <!--Navigation Buttons-->
                         <Grid Grid.Row="7" Grid.ColumnSpan="7">

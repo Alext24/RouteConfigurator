@@ -30,7 +30,7 @@
 
             <Grid.Resources>
                 <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
-                <routeconfigurator:BooleanToVisiblityConverter x:Key="VisibilityConverter"/>
+                <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
             </Grid.Resources>
 
             <Grid Panel.ZIndex="1" Height="100" Width="100">
@@ -58,20 +58,16 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Row 0 setup: Title-->
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="ADD NEW COMPONENT"
-                               Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" Padding="10 0 10 10" FontSize="20" Text="ADD NEW COMPONENT"/>
 
                     <!--Row 1 setup: Input headers-->
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Component Name"
-                               FontSize="16" Padding="20 0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Padding="20 0" FontSize="16" Text="Component Name"/>
 
                     <!--Row 2 setup: Input boxes-->
-                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0" MinWidth="160" HorizontalAlignment="Stretch"
-                             Text="{Binding componentName}"/>
+                    <TextBox Grid.Row="2" Grid.Column="0" Margin="10 0" MinWidth="160" HorizontalAlignment="Stretch" FontSize="16" Text="{Binding componentName}"/>
 
                     <!--Row 3 setup: Description Header-->
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Request Description"
-                               FontSize="16" Padding="20 5 0 0"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Padding="20 5 0 0" FontSize="16" Text="Request Description"/>
 
                     <!--Row 4 setup: Description Text Box-->
                     <TextBox Grid.Row="4" Grid.Column="0" FontSize="16" Margin="10 0" HorizontalAlignment="Stretch" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto"
@@ -92,15 +88,14 @@
                     <!--Row 5 setup: Blank, spacing-->
 
                     <!--Row 6 Col 2 setup: Add Component Button-->
-                    <Button Grid.Row="6" Grid.Column="2" Content="Add Component" HorizontalAlignment="Right" Width="170" Command="{Binding addComponentCommand}"/>
+                    <Button Grid.Row="6" Grid.Column="2" HorizontalAlignment="Right" Width="170" Content="Add Component" Command="{Binding addComponentCommand}"/>
 
                     <!--Row 7 setup: Submit Button-->
-                    <Button Grid.Row="7" Grid.Column="2" Content="Submit Components" HorizontalAlignment="Right" Width="170" VerticalAlignment="Bottom"
+                    <Button Grid.Row="7" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="170" Content="Submit Components"
                             Command="{Binding submitCommand}"/>
 
                     <!--Components table header-->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="20 0" FontSize="16"
-                               Text="Current Components to Submit" VerticalAlignment="Bottom" Padding="0 5"/>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Padding="20 5" FontSize="16" Text="Current Components to Submit"/>
 
                     <!--Components table-->
                     <DataGrid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"

@@ -33,13 +33,13 @@
 
                 <Grid.Resources>
                     <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
-                    <routeconfigurator:BooleanToVisiblityConverter x:Key="VisibilityConverter"/>
                     <routeconfigurator:IntStateToTextStateConverter x:Key="StateConverter"/>
+                    <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
                 </Grid.Resources>
 
                 <Grid Panel.ZIndex="1" Height="100" Width="100">
                     <fa:ImageAwesome Icon="Spinner" Spin="True" 
-                                 Visibility="{Binding loading, Converter={StaticResource VisibilityConverter}}"/>
+                                     Visibility="{Binding loading, Converter={StaticResource VisibilityConverter}}"/>
                 </Grid>
 
                 <Border Background="White" Padding="20" CornerRadius="20" Grid.Row="0" HorizontalAlignment="Center">
@@ -59,8 +59,8 @@
 
                         <!--Route Queue Table-->
                         <DataGrid Grid.Row="1" x:Name="RouteQueueTable" CanUserResizeRows="False" CanUserResizeColumns="False" IsReadOnly="true"
-                              ItemsSource="{Binding routes}" SelectedValue="{Binding selectedRoute}" AutoGenerateColumns="False" CanUserAddRows="False"
-                              ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
+                                  ItemsSource="{Binding routes}" SelectedValue="{Binding selectedRoute}" AutoGenerateColumns="False" CanUserAddRows="False"
+                                  ToolTip="Hold 'Ctrl' while clicking to unselect the selection." AlternatingRowBackground="{StaticResource LightOrange}">
 
                             <DataGrid.Columns>
                                 <!--Column 1: Delete Button-->
@@ -110,7 +110,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                          IsChecked="{Binding IsApproved, UpdateSourceTrigger=PropertyChanged}"/>
+                                                      IsChecked="{Binding IsApproved, UpdateSourceTrigger=PropertyChanged}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -126,9 +126,9 @@
                                         <DataTemplate>
                                             <StackPanel HorizontalAlignment="Center">
                                                 <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="80" MaxWidth="90" Margin="0 5 0 5"
-                                                     Text="{Binding ElementName=RouteQueueTable, Path=DataContext.modelNumberFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ElementName=RouteQueueTable, Path=DataContext.modelNumberFilter, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                                <TextBlock Text="Model" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Model"  FontSize ="12" HorizontalAlignment="Center"/>
                                                 <TextBlock Text="Number" FontSize ="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
@@ -167,7 +167,7 @@
                                                 <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
                                                 <TextBlock Text="Product" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="Line" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Line"    FontSize ="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -186,7 +186,7 @@
                                                 <TextBox Visibility="Hidden" IsEnabled="False" FontSize="16" Margin="0 5 0 5"/>
 
                                                 <TextBlock Text="Production" FontSize ="12" HorizontalAlignment="Center"/>
-                                                <TextBlock Text="Time" FontSize ="12" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="Time"       FontSize ="12" HorizontalAlignment="Center"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTextColumn.HeaderTemplate>
@@ -194,10 +194,11 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
+                        <!--Buttons-->
                         <Button Grid.Row="2" Content="Submit Routes" Margin="0 5 0 0" HorizontalAlignment="Center"
-                            Command="{Binding submitRoutesCommand}"/>
+                                Command="{Binding submitRoutesCommand}"/>
                         <Button Grid.Row="2" Content="Go Back" Margin="0 5 0 0" HorizontalAlignment="Right"
-                            Command="{Binding goBackCommand}"/>
+                                Command="{Binding goBackCommand}"/>
                     </Grid>
                 </Border>
 

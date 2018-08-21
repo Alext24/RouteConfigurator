@@ -24,7 +24,7 @@
 
             <Grid.Resources>
                 <routeconfigurator:DecimalTimeToStringConverter x:Key="TimeConverter"/>
-                <routeconfigurator:BooleanToVisiblityConverter x:Key="VisibilityConverter"/>
+                <routeconfigurator:BooleanToVisiblityConverter  x:Key="VisibilityConverter"/>
             </Grid.Resources>
 
             <Grid Panel.ZIndex="1" Height="100" Width="100">
@@ -51,26 +51,20 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Row 0 setup: Title-->
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="ADD NEW WIRE GAUGE"
-                               Padding="10 0 10 10" FontSize="20" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="4" HorizontalAlignment="Center" Padding="10 0 10 10" FontSize="20" Text="ADD NEW WIRE GAUGE"/>
 
                     <!--Row 1 setup: Input headers-->
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Wire Gauge"
-                               FontSize="16" Padding="20 0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Wire Gauge" FontSize="16" Padding="20 0"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="Time Percentage"
-                               FontSize="16" Padding="20 0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="Time Percentage" FontSize="16" Padding="20 0"/>
 
                     <!--Row 2 setup: Input boxes-->
-                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0" HorizontalAlignment="Stretch"
-                             Text="{Binding wireGauge}"/>
+                    <TextBox Grid.Row="2" Grid.Column="0" FontSize="16" Margin="10 0" HorizontalAlignment="Stretch" Text="{Binding wireGauge}"/>
 
-                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" Width="160"
-                             Text="{Binding newTimePercentage, TargetNullValue=''}" ToolTip="Format Example: '0.35' hours"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" FontSize="16" Margin="10 0" Width="160" Text="{Binding newTimePercentage, TargetNullValue=''}" ToolTip="Format Example: '0.35' hours"/>
 
                     <!--Row 3 setup: Description Header-->
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Request Description"
-                               FontSize="16" Padding="20 5 0 0"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Padding="20 5 0 0" FontSize="16" Text="Request Description"/>
 
                     <!--Row 4 setup: Description Text Box-->
                     <TextBox Grid.Row="4" Grid.ColumnSpan="2" FontSize="16" MaxLines="2" Margin="10 0" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto"
@@ -86,8 +80,7 @@
                             Command="{Binding submitCommand}"/>
 
                     <!--Wire Gauge table header-->
-                    <TextBlock Grid.Row="6" Grid.Column="0" Margin="20 0" FontSize="16"
-                               Text="Current Wire Gauges to Submit" VerticalAlignment="Bottom" Padding="0 5"/>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Padding="20 5" VerticalAlignment="Bottom" FontSize="16" Text="Current Wire Gauges to Submit"/>
 
                     <!--Wire Gauge table-->
                     <DataGrid Grid.Row="7" Grid.Column="0" MinHeight="120" Width="auto" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False" 
