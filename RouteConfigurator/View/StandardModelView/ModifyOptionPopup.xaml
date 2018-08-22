@@ -68,14 +68,11 @@
 
                     <!--Option Code-->
                     <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0" Text="Option Code" FontSize="16"/>
-                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding optionCodes}" SelectedValue="{Binding selectedOptionCode}"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" MaxDropDownHeight="200" Margin="5" ItemsSource="{Binding optionCodes}" SelectedValue="{Binding selectedOptionCode}"/>
 
                     <!--Box Size-->
                     <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0" Text="Box Size" FontSize="16"/>
-                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-                        <TextBox Margin="5" Width="115" Text="{Binding boxSize}" FontSize="16"/>
-                        <CheckBox IsChecked="{Binding exactBoxSize}" VerticalAlignment="Center"/>
-                    </StackPanel>
+                    <ComboBox Grid.Row="3" Grid.Column="1" MaxDropDownHeight="200" Margin="5" IsEditable="True" ItemsSource="{Binding boxSizes}" SelectedValue="{Binding boxSize}"/>
 
                     <!--Options Found-->
                     <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="0 5 5 0" Text="Options found:" FontSize="16"/>
@@ -104,7 +101,7 @@
                     <!--Row 2 setup: Option Table-->
                     <DataGrid Grid.Row="2" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" x:Name="OptionTable" AutoGenerateColumns="False"
                               CanUserResizeRows="False" CanUserResizeColumns="False" VerticalAlignment="Stretch" IsReadOnly="True"
-                              ItemsSource="{Binding optionsFound}" SelectedValue="{Binding selectedOption}" VerticalScrollBarVisibility="Visible">
+                              ItemsSource="{Binding optionsFound}" VerticalScrollBarVisibility="Visible">
 
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="OptionCode" Width="auto" FontSize="16" Header="Option"

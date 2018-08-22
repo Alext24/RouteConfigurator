@@ -163,6 +163,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     informationText = "Invalid Model format.";
                 }
 
+                options = new ObservableCollection<Option>();
                 updateOptions();
                 updateInformation();
             }

@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:RouteConfigurator.View.StandardModelView"
       xmlns:routeconfigurator="clr-namespace:RouteConfigurator"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       mc:Ignorable="d" 
       MinHeight="700"
@@ -12,6 +13,12 @@
       Title="SupervisorView"
       DataContext="{Binding Supervisor, Source={StaticResource Locator}}">
       
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding loadedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Border Padding="50">
         <Border.Background>
             <ImageBrush ImageSource="/Images/Backgrounds/MountainLakeBackground.jpg"/>
@@ -95,8 +102,9 @@
                                     <DataGridTextColumn.HeaderTemplate>
                                         <DataTemplate>
                                             <StackPanel HorizontalAlignment="Center">
-                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="40" Margin="0 5 0 5"
-                                                         Text="{Binding ElementName=ModelTable, Path=DataContext.boxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                <ComboBox MaxDropDownHeight="200" IsEditable="True" FontSize="14" Margin="0 5 0 5" Width="60" 
+                                                          ItemsSource="{Binding ElementName=ModelTable, Path=DataContext.boxSizes}" 
+                                                          SelectedValue="{Binding ElementName=ModelTable, Path=DataContext.boxSizeFilter}"/>
 
                                                 <TextBlock Text="Box"  FontSize="12" HorizontalAlignment="Center"/>
                                                 <TextBlock Text="Size" FontSize="12" HorizontalAlignment="Center"/>
@@ -186,8 +194,9 @@
                                     <DataGridTextColumn.HeaderTemplate>
                                         <DataTemplate>
                                             <StackPanel HorizontalAlignment="Center">
-                                                <TextBox FontSize="16" VerticalContentAlignment="Center" MinWidth="30" MaxWidth="40" Margin="0 5 0 5"
-                                                         Text="{Binding ElementName=OptionTable, Path=DataContext.optionBoxSizeFilter, UpdateSourceTrigger=PropertyChanged}"/>
+                                                <ComboBox MaxDropDownHeight="200" IsEditable="True" FontSize="14" Margin="0 5 0 5" Width="60" 
+                                                          ItemsSource="{Binding ElementName=OptionTable, Path=DataContext.optionBoxSizes}" 
+                                                          SelectedValue="{Binding ElementName=OptionTable, Path=DataContext.optionBoxSizeFilter}"/>
 
                                                 <TextBlock Text="Box"  FontSize="12" HorizontalAlignment="Center"/>
                                                 <TextBlock Text="Size" FontSize="12" HorizontalAlignment="Center"/>

@@ -191,7 +191,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #endregion
 
         #region Public Variables
-        public string componentName 
+        public string componentName
         {
             get
             {
@@ -218,7 +218,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
         }
 
-        public ObservableCollection<Component> enclosureSizeTimes 
+        public ObservableCollection<Component> enclosureSizeTimes
         {
             get
             {
@@ -232,7 +232,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
         }
 
-        public string description 
+        public string description
         {
             get
             {
@@ -259,7 +259,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
         }
 
-        public string informationText 
+        public string informationText
         {
             get
             {
@@ -300,7 +300,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         private void newEnclosureSizeTimes()
         {
             enclosureSizeTimes = new ObservableCollection<Component>();
-            foreach(string enclosureSize in enclosureSizes)
+            foreach (string enclosureSize in enclosureSizes)
             {
                 enclosureSizeTimes.Add(new Component
                 {
@@ -375,10 +375,10 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
             else
             {
-                foreach(Component component in enclosureSizeTimes)
+                foreach (Component component in enclosureSizeTimes)
                 {
                     component.ComponentName = componentName;
-                    if(component.Time < 0)
+                    if (component.Time < 0)
                     {
                         component.Time = 0;
                     }

@@ -29,11 +29,15 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// </summary>
         private ObservableCollection<string> _driveTypes = new ObservableCollection<string>();
 
+        /// <summary>
+        /// List of unique box sizes for all models to populate a drop down box
+        /// </summary>
+        private ObservableCollection<string> _boxSizes = new ObservableCollection<string>();
+
         //Input filters
         private string _selectedDrive = "";
         private string _AVText = "";
         private string _boxSize = "";
-        private bool _exactBoxSize = false;
 
         /// <summary>
         /// All models found that meet the filters
@@ -74,19 +78,20 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private async void loaded()
         {
             loading = true;
-            await Task.Run(() => getDriveTypes());
+            await Task.Run(() => getInformation());
             loading = false;
         }
 
         /// <summary>
-        /// Loads the list of unique drive types
+        /// Loads the information, drive types and box sizes, needed for the page
         /// </summary>
-        private void getDriveTypes()
+        private void getInformation()
         {
             try
             {
-                informationText = "Loading drive types...";
+                informationText = "Loading Information...";
                 driveTypes = new ObservableCollection<string>(_serviceProxy.getDriveTypes());
+                boxSizes = new ObservableCollection<string>(_serviceProxy.getModelBoxSizes());
                 informationText = "";
             }
             catch (Exception e)
@@ -152,7 +157,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     RaisePropertyChanged("selectedDrive");
                     _AVText = "";
                     RaisePropertyChanged("AVText");
-                    _boxSize = "";
+                    _boxSize = null; 
                     RaisePropertyChanged("boxSize");
 
                     modelsFound = new ObservableCollection<StandardModel>();
@@ -182,6 +187,19 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             {
                 _driveTypes = value;
                 RaisePropertyChanged("driveTypes");
+            }
+        }
+
+        public ObservableCollection<string> boxSizes
+        {
+            get
+            {
+                return _boxSizes;
+            }
+            set
+            {
+                _boxSizes = value;
+                RaisePropertyChanged("boxSizes");
             }
         }
 
@@ -234,27 +252,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
             set
             {
-                _boxSize = value.ToUpper();
+                _boxSize = value == null ? value : value.ToUpper();
                 RaisePropertyChanged("boxSize");
-                informationText = "";
-
-                updateModelsTableAsync();
-            }
-        }
-
-        /// <summary>
-        /// Calls updateModelsTableAsync
-        /// </summary>
-        public bool exactBoxSize
-        {
-            get
-            {
-                return _exactBoxSize;
-            }
-            set
-            {
-                _exactBoxSize = value;
-                RaisePropertyChanged("exactBoxSize");
                 informationText = "";
 
                 updateModelsTableAsync();
@@ -366,7 +365,16 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 try
                 {
                     informationText = "Loading models...";
-                    modelsFound = new ObservableCollection<StandardModel>(_serviceProxy.getModelsFound(selectedDrive, AVText, boxSize, exactBoxSize));
+                    //If a box size is entered get the models that are that box size and meet the other filters
+                    if (!string.IsNullOrWhiteSpace(boxSize))
+                    {
+                        modelsFound = new ObservableCollection<StandardModel>(_serviceProxy.getModelsFound(selectedDrive, AVText, boxSize));
+                    }
+                    //If a box size is not entered get the models that meet the other filters
+                    else
+                    {
+                        modelsFound = new ObservableCollection<StandardModel>(_serviceProxy.getModelsFound(selectedDrive, AVText));
+                    }
                     informationText = "";
                 }
                 catch (Exception e)

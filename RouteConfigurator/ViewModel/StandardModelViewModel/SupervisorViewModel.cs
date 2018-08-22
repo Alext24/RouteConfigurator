@@ -37,11 +37,13 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private static ObservableCollection<StandardModel> _models;
         private StandardModel _selectedModel;
         private string _modelFilter = "";
+        private ObservableCollection<string> _boxSizes;
         private string _boxSizeFilter = "";
 
         // Options Table list and filters
         private static ObservableCollection<Option> _options;
         private string _optionFilter = "";
+        private ObservableCollection<string> _optionBoxSizes;
         private string _optionBoxSizeFilter = "";
 
         // Time Trial Table list, filters, and helpers
@@ -67,6 +69,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         #endregion
 
         #region RelayCommands
+        public RelayCommand loadedCommand { get; set; }
+
         public RelayCommand loadModelsCommand { get; set; }
         public RelayCommand addModelCommand { get; set; }
         public RelayCommand modifyModelCommand { get; set; }
@@ -100,6 +104,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 _goHomeAllowed = true;
             }
 
+            loadedCommand = new RelayCommand(loaded);
+
             loadModelsCommand = new RelayCommand(loadModels);
             addModelCommand = new RelayCommand(addModel);
             modifyModelCommand = new RelayCommand(modifyModel);
@@ -122,6 +128,32 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         #endregion
 
         #region Commands
+        private async void loaded()
+        {
+            loading = true;
+            await Task.Run(() => getInformation());
+            loading = false;
+        }
+
+        /// <summary>
+        /// Loads the information, box sizes, needed for the page
+        /// </summary>
+        private void getInformation()
+        {
+            try
+            {
+                informationText = "Loading Information...";
+                boxSizes = new ObservableCollection<string>(_serviceProxy.getModelBoxSizes());
+                optionBoxSizes = new ObservableCollection<string>(_serviceProxy.getOptionBoxSizes());
+                informationText = "";
+            }
+            catch (Exception e)
+            {
+                informationText = "There was a problem accessing the database";
+                Console.WriteLine(e);
+            }
+        }
+
         /// <summary>
         /// Calls updateModelTableAsync
         /// </summary>
@@ -377,6 +409,19 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
         }
 
+        public ObservableCollection<string> boxSizes
+        {
+            get
+            {
+                return _boxSizes;
+            }
+            set
+            {
+                _boxSizes = value;
+                RaisePropertyChanged("boxSizes");
+            }
+        }
+
         /// <summary>
         /// Calls updateModelTableAsync
         /// </summary>
@@ -388,7 +433,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
             set
             {
-                _boxSizeFilter = value.ToUpper();
+                _boxSizeFilter = value == null ? value : value.ToUpper();
                 RaisePropertyChanged("boxSizeFilter");
                 informationText = "";
 
@@ -428,6 +473,19 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
         }
 
+        public ObservableCollection<string> optionBoxSizes
+        {
+            get
+            {
+                return _optionBoxSizes;
+            }
+            set
+            {
+                _optionBoxSizes = value;
+                RaisePropertyChanged("optionBoxSizes");
+            }
+        }
+
         /// <summary>
         /// Calls updateOptionTableAsync
         /// </summary>
@@ -439,7 +497,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
             set
             {
-                _optionBoxSizeFilter = value.ToUpper();
+                _optionBoxSizeFilter = value == null ? value : value.ToUpper();
                 RaisePropertyChanged("optionBoxSizeFilter");
                 informationText = "";
 
@@ -689,7 +747,14 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             try
             {
                 informationText = "Retrieving models...";
-                models = new ObservableCollection<StandardModel>(_serviceProxy.getFilteredModels(modelFilter, boxSizeFilter));
+                if (string.IsNullOrWhiteSpace(boxSizeFilter))
+                {
+                    models = new ObservableCollection<StandardModel>(_serviceProxy.getFilteredModels(modelFilter, "", false));
+                }
+                else
+                {
+                    models = new ObservableCollection<StandardModel>(_serviceProxy.getFilteredModels(modelFilter, boxSizeFilter, true));
+                }
                 informationText = "";
             }
             catch (Exception e)
@@ -714,7 +779,14 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             try
             {
                 informationText = "Retrieving options...";
-                options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter, false));
+                if (string.IsNullOrWhiteSpace(optionBoxSizeFilter))
+                {
+                    options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionFilter, "", false));
+                }
+                else
+                {
+                    options = new ObservableCollection<Option>(_serviceProxy.getFilteredOptions(optionFilter, optionBoxSizeFilter, true));
+                }
                 informationText = "";
             }
             catch (Exception e)
@@ -770,7 +842,10 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 averageProdTime += timeTrial.TotalTime;
                 averageDriveTime += timeTrial.DriveTime;
                 averageAVTime += timeTrial.AVTime;
-                count++;
+                if(!(timeTrial.DriveTime == 0 && timeTrial.AVTime == 0))
+                {
+                    count++;
+                }
             }
 
             if (count != 0)

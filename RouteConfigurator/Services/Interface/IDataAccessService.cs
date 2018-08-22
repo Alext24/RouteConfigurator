@@ -12,9 +12,11 @@ namespace RouteConfigurator.Services.Interface
         #region Model Read
         StandardModel getModel(string modelName);
         IEnumerable<StandardModel> getModels();
-        IEnumerable<StandardModel> getFilteredModels(string modelFilter, string boxSizeFilter);
+        IEnumerable<StandardModel> getFilteredModels(string modelFilter, string boxSizeFilter, bool exact);
         IEnumerable<string> getDriveTypes();
-        IEnumerable<StandardModel> getModelsFound(string drive, string av, string boxSize, bool exact);
+        IEnumerable<string> getModelBoxSizes();
+        IEnumerable<StandardModel> getModelsFound(string drive, string av);
+        IEnumerable<StandardModel> getModelsFound(string drive, string av, string boxSize);
         #endregion
 
         #region Option Read
@@ -23,7 +25,9 @@ namespace RouteConfigurator.Services.Interface
         IEnumerable<Option> getModelOptions(List<string> optionsList, string boxSize);
         decimal getTotalOptionsTime(string boxSize, List<string> options);
         IEnumerable<string> getOptionCodes();
-        IEnumerable<Option> getOptionsFound(string optionCode, string boxSize, bool exact);
+        IEnumerable<string> getOptionBoxSizes();
+        IEnumerable<Option> getOptionsFound(string optionCode);
+        IEnumerable<Option> getOptionsFound(string optionCode, string boxSize);
         #endregion
 
         #region Override Read

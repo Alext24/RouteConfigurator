@@ -76,10 +76,7 @@
 
                     <!--Box Size filter-->
                     <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0 0 5 0" Text="Box Size" FontSize="16"/>
-                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Width="145">
-                        <TextBox Margin="5" Width="115" Text="{Binding boxSize}" FontSize="16"/>
-                        <CheckBox IsChecked="{Binding exactBoxSize}" VerticalAlignment="Center" Margin="0 0 5 0"/>
-                    </StackPanel>
+                    <ComboBox Grid.Row="4" Grid.Column="1" MaxDropDownHeight="200" Margin="5" IsEditable="True" ItemsSource="{Binding boxSizes}" SelectedValue="{Binding boxSize}"/>
 
                     <!--Models found-->
                     <TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="0 5 5 0" Text="Models found:" FontSize="16"/>

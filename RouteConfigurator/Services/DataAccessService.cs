@@ -41,13 +41,22 @@ namespace RouteConfigurator.Services
 
         /// <param name="modelFilter"> base name for the model (first 8 characters) </param>
         /// <param name="boxSizeFilter"> box size for the model </param>
+        /// <param name="exact"> determines if the box size needs to be equal to or just contained in the options's box size </param>
         /// <returns> returns a list of the models that contain the filters</returns>
-        public IEnumerable<StandardModel> getFilteredModels(string modelFilter, string boxSizeFilter)
+        public IEnumerable<StandardModel> getFilteredModels(string modelFilter, string boxSizeFilter, bool exact)
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
-                return context.Models.Where(model => model.Base.Contains(modelFilter) &&
-                                                     model.BoxSize.Contains(boxSizeFilter)).ToList();
+                if (exact)
+                {
+                    return context.Models.Where(x => x.Base.Contains(modelFilter) &&
+                                                     x.BoxSize.Equals(boxSizeFilter)).ToList();
+                }
+                else
+                {
+                    return context.Models.Where(x => x.Base.Contains(modelFilter) &&
+                                                     x.BoxSize.Contains(boxSizeFilter)).ToList();
+                }
             }
         }
 
@@ -61,27 +70,38 @@ namespace RouteConfigurator.Services
             }
         }
 
-        /// <param name="drive"> Drive for the model (first 4 characters of the model base) ex. A1C1 or Z1B1 </param>
-        /// <param name="av"> Amps and Voltage for the model (second 4 characters of the model base) ex. A002 or D124 </param>
-        /// <param name="boxSize"> box size for the model </param>
-        /// <param name="exact"> determines if the box size needs to be equal to or just contained in the model's box size </param>
-        /// <returns> returns a list of models that contain the filters</returns>
-        public IEnumerable<StandardModel> getModelsFound(string drive, string av, string boxSize, bool exact)
+        /// <returns> returns a list of unique box sizes for all models </returns>
+        public IEnumerable<string> getModelBoxSizes()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
-                if (exact)
-                {
-                    return context.Models.Where(x => x.Base.Contains(drive) &&
-                                                     x.Base.Contains(av) &&
-                                                     x.BoxSize.Equals(boxSize)).ToList();
-                }
-                else
-                {
-                    return context.Models.Where(x => x.Base.Contains(drive) &&
-                                                     x.Base.Contains(av) &&
-                                                     x.BoxSize.Contains(boxSize)).ToList();
-                }
+                return context.Models.Select(x => x.BoxSize).ToList().Distinct();
+            }
+        }
+
+        /// <param name="drive"> Drive for the model (first 4 characters of the model base) ex. A1C1 or Z1B1 </param>
+        /// <param name="av"> Amps and Voltage for the model (second 4 characters of the model base) ex. A002 or D124 </param>
+        /// <returns> returns a list of models that contain the filters</returns>
+        public IEnumerable<StandardModel> getModelsFound(string drive, string av)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Models.Where(x => x.Base.Contains(drive) &&
+                                                 x.Base.Contains(av)).ToList();
+            }
+        }
+
+        /// <param name="drive"> Drive for the model (first 4 characters of the model base) ex. A1C1 or Z1B1 </param>
+        /// <param name="av"> Amps and Voltage for the model (second 4 characters of the model base) ex. A002 or D124 </param>
+        /// <param name="boxSize"> box size for the model </param>
+        /// <returns> returns a list of models that meet the filters</returns>
+        public IEnumerable<StandardModel> getModelsFound(string drive, string av, string boxSize)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Models.Where(x => x.Base.Contains(drive) &&
+                                                 x.Base.Contains(av) &&
+                                                 x.BoxSize.Equals(boxSize)).ToList();
             }
         }
         #endregion
@@ -98,7 +118,7 @@ namespace RouteConfigurator.Services
 
         /// <param name="optionFilter"> option code for the option ex. PB or TW </param>
         /// <param name="optionBoxSizeFilter"> box size for the option </param>
-        /// <param name="exact"> determines if the box size needs to be equal to or just contained in the model's box size </param>
+        /// <param name="exact"> determines if the box size needs to be equal to or just contained in the options's box size </param>
         /// <returns> returns a list of the options that contain the filters</returns>
         public IEnumerable<Option> getFilteredOptions(string optionFilter, string optionBoxSizeFilter, bool exact)
         {
@@ -106,13 +126,13 @@ namespace RouteConfigurator.Services
             {
                 if (exact)
                 {
-                    return context.Options.Where(option => option.OptionCode.Contains(optionFilter) &&
-                                                           option.BoxSize.Equals(optionBoxSizeFilter)).ToList();
+                    return context.Options.Where(x => x.OptionCode.Contains(optionFilter) &&
+                                                      x.BoxSize.Equals(optionBoxSizeFilter)).ToList();
                 }
                 else
                 {
-                    return context.Options.Where(option => option.OptionCode.Contains(optionFilter) &&
-                                                           option.BoxSize.Contains(optionBoxSizeFilter)).ToList();
+                    return context.Options.Where(x => x.OptionCode.Contains(optionFilter) &&
+                                                      x.BoxSize.Contains(optionBoxSizeFilter)).ToList();
                 }
             }
         }
@@ -155,26 +175,34 @@ namespace RouteConfigurator.Services
             }
         }
 
-        /// <remarks> optionCode and boxSize should be "" instead of null to allow all options to be returned
-        ///           when neither are entered. </remarks>
-        /// <param name="optionCode"> option code to filter for </param>
-        /// <param name="boxSize"> box size for the option </param>
-        /// <param name="exact"> determines if the box size needs to be equal to or just contained in the option's box size </param>
-        /// <returns> returns a list of options that contain the filters </returns>
-        public IEnumerable<Option> getOptionsFound(string optionCode, string boxSize, bool exact)
+        /// <returns> returns a list of unique box sizes for all options </returns>
+        public IEnumerable<string> getOptionBoxSizes()
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
-                if (exact)
-                {
+                return context.Options.Select(x => x.BoxSize).ToList().Distinct();
+            }
+        }
+
+        /// <param name="optionCode"> option code to filter for </param>
+        /// <returns> returns a list of options that contain the option code </returns>
+        public IEnumerable<Option> getOptionsFound(string optionCode)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                    return context.Options.Where(option => option.OptionCode.Contains(optionCode)).ToList();
+            }
+        }
+
+        /// <param name="optionCode"> option code to filter for </param>
+        /// <param name="boxSize"> box size for the option </param>
+        /// <returns> returns a list of options that meet the filters </returns>
+        public IEnumerable<Option> getOptionsFound(string optionCode, string boxSize)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
                     return context.Options.Where(option => option.OptionCode.Contains(optionCode) &&
                                                            option.BoxSize.Equals(boxSize)).ToList();
-                }
-                else
-                {
-                    return context.Options.Where(option => option.OptionCode.Contains(optionCode) &&
-                                                           option.BoxSize.Contains(boxSize)).ToList();
-                }
             }
         }
         #endregion

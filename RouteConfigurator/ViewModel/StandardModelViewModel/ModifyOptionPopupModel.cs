@@ -30,9 +30,11 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private ObservableCollection<string> _optionCodes = new ObservableCollection<string>();
         private string _selectedOptionCode;
 
-        //Input filters
+        /// <summary>
+        /// List of unique box sizes for the options to populate a drop down box
+        /// </summary>
+        private ObservableCollection<string> _boxSizes = new ObservableCollection<string>();
         private string _boxSize = "";
-        private bool _exactBoxSize = false;
 
         /// <summary>
         /// All options found that meet the filters
@@ -74,19 +76,20 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private async void loaded()
         {
             loading = true;
-            await Task.Run(() => getOptionCodes());
+            await Task.Run(() => getInformation());
             loading = false;
         }
 
         /// <summary>
-        /// Loads the list of unique option codes 
+        /// Loads the information, option codes and box sizes, needed for the page 
         /// </summary>
-        private void getOptionCodes()
+        private void getInformation()
         {
             try
             {
-                informationText = "Loading option codes...";
+                informationText = "Loading Information...";
                 optionCodes = new ObservableCollection<string>(_serviceProxy.getOptionCodes());
+                boxSizes = new ObservableCollection<string>(_serviceProxy.getOptionBoxSizes());
                 informationText = "";
             }
             catch (Exception e)
@@ -147,7 +150,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                     //Clear input boxes
                     _selectedOptionCode = null;
                     RaisePropertyChanged("selectedOptionCode");
-                    _boxSize = "";
+                    _boxSize = null; 
                     RaisePropertyChanged("boxSize");
                     optionsFound = new ObservableCollection<Option>();
 
@@ -200,6 +203,19 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
         }
 
+        public ObservableCollection<string> boxSizes
+        {
+            get
+            {
+                return _boxSizes;
+            }
+            set
+            {
+                _boxSizes = value;
+                RaisePropertyChanged("boxSizes");
+            }
+        }
+
         /// <summary>
         /// Calls updateOptionsTableAsync
         /// </summary>
@@ -211,27 +227,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
             }
             set
             {
-                _boxSize = value.ToUpper();
+                _boxSize = value == null ? value : value.ToUpper();
                 RaisePropertyChanged("boxSize");
-                informationText = "";
-
-                updateOptionsTableAsync();
-            }
-        }
-
-        /// <summary>
-        /// Calls updateOptionsTableAsync
-        /// </summary>
-        public bool exactBoxSize
-        {
-            get
-            {
-                return _exactBoxSize;
-            }
-            set
-            {
-                _exactBoxSize = value;
-                RaisePropertyChanged("exactBoxSize");
                 informationText = "";
 
                 updateOptionsTableAsync();
@@ -357,7 +354,16 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 try
                 {
                     informationText = "Loading options...";
-                    optionsFound = new ObservableCollection<Option>(_serviceProxy.getOptionsFound(selectedOptionCode, boxSize, exactBoxSize));
+                    //If a box size is entered get the options that are that box size and meet the other filter
+                    if (!string.IsNullOrWhiteSpace(boxSize))
+                    {
+                        optionsFound = new ObservableCollection<Option>(_serviceProxy.getOptionsFound(selectedOptionCode, boxSize));
+                    }
+                    //If a box size is not entered get the options that meet the other filter
+                    else
+                    {
+                        optionsFound = new ObservableCollection<Option>(_serviceProxy.getOptionsFound(selectedOptionCode));
+                    }
                     informationText = "";
                 }
                 catch (Exception e)
