@@ -1,4 +1,5 @@
-﻿using RouteConfigurator.Services.Interface;
+﻿using RouteConfigurator.DTOs;
+using RouteConfigurator.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,6 +42,9 @@ namespace RouteConfigurator.Services
                 OnPropertyChanged("CurrentPageKey");
             }
         }
+
+        public UserDTO user { get; set; }
+
         public object Parameter { get; private set; }
         #endregion
 

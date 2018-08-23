@@ -120,10 +120,17 @@
     <Compile Include="Converters\CheckBoxToModStateConverter.cs" />
     <Compile Include="Converters\DecimalTimeToStringConverter.cs" />
     <Compile Include="Converters\IntStateToTextStateConverter.cs" />
+    <Compile Include="DTOs\UserDTO.cs" />
+    <Compile Include="DTOs\UserLoginCredentialsDTO.cs" />
     <Compile Include="Migrations\201808201821513_test.cs" />
     <Compile Include="Migrations\201808201821513_test.Designer.cs">
       <DependentUpon>201808201821513_test.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808231313550_AddedUserDBTable.cs" />
+    <Compile Include="Migrations\201808231313550_AddedUserDBTable.Designer.cs">
+      <DependentUpon>201808231313550_AddedUserDBTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\User.cs" />
     <Compile Include="Services\DataAccessService.cs" />
     <Compile Include="Services\FrameNavigationService.cs" />
     <Compile Include="ViewModel\EngineeredModelViewModel\Helper\EngineeredModelComponentEntry.cs" />
@@ -203,6 +210,13 @@
     <Compile Include="Model\EF_StandardModels\TimeTrial.cs" />
     <Compile Include="Model\EF_StandardModels\TimeTrialsOptionTime.cs" />
     <Compile Include="Model\EF_EngineeredModels\WireGauge.cs" />
+    <Compile Include="ViewModel\UserControlViewModel\AddUserViewModel.cs" />
+    <Compile Include="ViewModel\UserControlViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\SecurityHelpers\IHavePassword.cs" />
+    <Compile Include="ViewModel\SecurityHelpers\PasswordHelper.cs" />
+    <Compile Include="View\UserControlView\AddUserView.xaml.cs">
+      <DependentUpon>AddUserView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\EngineeredModelView\AddComponentPopup.xaml.cs">
       <DependentUpon>AddComponentPopup.xaml</DependentUpon>
     </Compile>
@@ -245,6 +259,9 @@
     <Compile Include="ViewModel\RouteQueueViewModel.cs" />
     <Compile Include="ViewModel\StandardModelViewModel\SupervisorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\UserControlView\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\StandardModelView\AddModelPopup.xaml.cs">
       <DependentUpon>AddModelPopup.xaml</DependentUpon>
     </Compile>
@@ -316,6 +333,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\UserControlView\AddUserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\EngineeredModelView\AddComponentPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -343,6 +364,10 @@
     <Page Include="View\EngineeredModelView\EngineeredRequestsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UserControlView\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\StandardModelView\AddModelPopup.xaml">
       <SubType>Designer</SubType>
@@ -459,6 +484,9 @@
     <EmbeddedResource Include="Migrations\201808201821513_test.resx">
       <DependentUpon>201808201821513_test.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808231313550_AddedUserDBTable.resx">
+      <DependentUpon>201808231313550_AddedUserDBTable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -500,6 +528,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="RouteConfiguratorIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Backgrounds\CoolBlue.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

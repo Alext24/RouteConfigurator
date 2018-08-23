@@ -25,5 +25,6 @@ namespace RouteConfigurator.Model.Context
         public virtual DbSet<EngineeredModification> EngineeredModifications { get; set; }
 
         public virtual DbSet<RouteQueue> RouteQueues { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }

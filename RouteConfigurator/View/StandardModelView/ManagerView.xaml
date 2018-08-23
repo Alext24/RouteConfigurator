@@ -1116,12 +1116,27 @@
 
                             <!--Left Grid-->
                             <Grid Grid.Column="0" HorizontalAlignment="Left">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
                                 <!--Open Supervisor View-->
                                 <Button Grid.Column="0" FontSize="16" Margin="0 0 5 0" x:Name="openSupervisorButton" Command="{Binding openSupervisorCommand}">
                                     <Button.Content>
                                         <StackPanel>
                                             <TextBlock TextAlignment="Center" Text="Open Supervisor"/>
                                             <TextBlock TextAlignment="Center" Text="View"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+
+                                <!--Add User-->
+                                <Button Grid.Column="1" FontSize="16" Margin="0 0 5 0" Width="{Binding ElementName=openSupervisorButton, Path=ActualWidth}" Command="{Binding addUserCommand}">
+                                    <Button.Content>
+                                        <StackPanel>
+                                            <TextBlock TextAlignment="Center" Text="Add"/>
+                                            <TextBlock TextAlignment="Center" Text="Users"/>
                                         </StackPanel>
                                     </Button.Content>
                                 </Button>

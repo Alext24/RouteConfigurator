@@ -65,6 +65,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
         public RelayCommand openSupervisorCommand { get; set; }
+        public RelayCommand addUserCommand { get; set; }
         public RelayCommand refreshTablesCommand { get; set; }
         public RelayCommand submitCheckedCommand { get; set; }
         public RelayCommand standardOrdersCommand { get; set; }
@@ -81,6 +82,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
             loadedCommand = new RelayCommand(loaded);
             openSupervisorCommand = new RelayCommand(openSupervisorView);
+            addUserCommand = new RelayCommand(addUser);
             refreshTablesCommand = new RelayCommand(refreshTables);
             submitCheckedCommand = new RelayCommand(submitCheckedAsync);
             standardOrdersCommand = new RelayCommand(standardOrders);
@@ -112,6 +114,11 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             secondWindow.Content = sup;
             secondWindow.MinHeight = 700;
             secondWindow.MinWidth = 1400;
+        }
+
+        private void addUser()
+        {
+            _navigationService.NavigateTo("AddUserView");
         }
 
         /// <summary>

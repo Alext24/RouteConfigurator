@@ -1,4 +1,5 @@
-﻿using RouteConfigurator.Model;
+﻿using RouteConfigurator.DTOs;
+using RouteConfigurator.Model;
 using RouteConfigurator.Model.EF_EngineeredModels;
 using RouteConfigurator.Model.EF_StandardModels;
 using RouteConfigurator.ViewModel.EngineeredModelViewModel.Helper;
@@ -9,6 +10,14 @@ namespace RouteConfigurator.Services.Interface
 {
     public interface IDataAccessService
     {
+
+        #region User
+        UserLoginCredentialsDTO GetUserLoginCredentials(string email);
+        UserDTO GetUser(string email);
+        bool checkDuplicateUser(string email);
+        void addUser(User user);
+        #endregion
+
         #region Model Read
         StandardModel getModel(string modelName);
         IEnumerable<StandardModel> getModels();

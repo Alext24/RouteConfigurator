@@ -166,7 +166,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
 
         private void supervisorLogin()
         {
-            _navigationService.NavigateTo("SupervisorView", true);
+            _navigationService.NavigateTo("LoginView");
         }
 
         private void managerLogin()

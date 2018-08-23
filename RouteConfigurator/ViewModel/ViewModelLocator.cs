@@ -15,6 +15,7 @@ using RouteConfigurator.Services;
 using RouteConfigurator.Services.Interface;
 using RouteConfigurator.ViewModel.EngineeredModelViewModel;
 using RouteConfigurator.ViewModel.StandardModelViewModel;
+using RouteConfigurator.ViewModel.UserControlViewModel;
 using System;
 
 namespace RouteConfigurator.ViewModel
@@ -56,6 +57,9 @@ namespace RouteConfigurator.ViewModel
             SimpleIoc.Default.Register<EngineeredRequestsViewModel>();
 
             SimpleIoc.Default.Register<RouteQueueViewModel>();
+
+            SimpleIoc.Default.Register<LoginViewModel>();
+            SimpleIoc.Default.Register<AddUserViewModel>();
         }
 
         public static void setupNavigation()
@@ -71,6 +75,9 @@ namespace RouteConfigurator.ViewModel
             navigationService.Configure("EngineeredManagerView", new System.Uri("/View/EngineeredModelView/EngineeredManagerView.xaml", UriKind.Relative));
 
             navigationService.Configure("RouteQueueView", new System.Uri("/View/RouteQueueView.xaml", UriKind.Relative));
+
+            navigationService.Configure("LoginView", new System.Uri("/View/UserControlView/LoginView.xaml", UriKind.Relative));
+            navigationService.Configure("AddUserView", new System.Uri("/View/UserControlView/AddUserView.xaml", UriKind.Relative));
 
             SimpleIoc.Default.Unregister<IFrameNavigationService>();
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
@@ -302,6 +309,26 @@ namespace RouteConfigurator.ViewModel
                 SimpleIoc.Default.Unregister<RouteQueueViewModel>();
                 SimpleIoc.Default.Register<RouteQueueViewModel>();
                 return ServiceLocator.Current.GetInstance<RouteQueueViewModel>();
+            }
+        }
+
+        public LoginViewModel Login
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<LoginViewModel>();
+                SimpleIoc.Default.Register<LoginViewModel>();
+                return ServiceLocator.Current.GetInstance<LoginViewModel>();
+            }
+        }
+
+        public AddUserViewModel AddUser 
+        {
+            get
+            {
+                SimpleIoc.Default.Unregister<AddUserViewModel>();
+                SimpleIoc.Default.Register<AddUserViewModel>();
+                return ServiceLocator.Current.GetInstance<AddUserViewModel>();
             }
         }
     }

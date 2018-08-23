@@ -9,6 +9,7 @@ using RouteConfigurator.Model.EF_EngineeredModels;
 using RouteConfigurator.Model.EF_StandardModels;
 using RouteConfigurator.Services.Interface;
 using RouteConfigurator.ViewModel.EngineeredModelViewModel.Helper;
+using RouteConfigurator.DTOs;
 
 namespace RouteConfigurator.Services
 {
@@ -16,6 +17,67 @@ namespace RouteConfigurator.Services
     {
         #region Constructor
         public DataAccessService() { }
+        #endregion
+
+        #region User Read
+        /// <summary>
+        /// Get User Credentials from the database
+        /// </summary>
+        /// <param name="email"> Primary key for users </param>
+        /// <returns> returns the login information for a user </returns>
+        public UserLoginCredentialsDTO GetUserLoginCredentials(string email)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Users.Where(x => x.Email.Equals(email))
+                                    .Select(y => new UserLoginCredentialsDTO
+                                    {
+                                        EmployeeType = y.EmployeeType,
+                                        PasswordHash = y.PasswordHash,
+                                        Salt = y.Salt
+                                    }).FirstOrDefault();
+            }
+        }
+
+        /// <param name="email"> Primary key for users </param>
+        /// <returns> returns the non-login information for a user </returns>
+        public UserDTO GetUser(string email)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return context.Users.Where(x => x.Email.Equals(email))
+                                    .Select(y => new UserDTO
+                                    {
+                                        FirstName = y.FirstName,
+                                        LastName = y.LastName,
+                                        Email = y.Email,
+                                        EmployeeType = y.EmployeeType
+                                    }).FirstOrDefault();
+            }
+        }
+
+        /// <param name="email"> Primary key for users </param>
+        /// <returns> returns true if the user email is already in use, otherwise false </returns>
+        public bool checkDuplicateUser(string email)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                return (context.Users.Where(x => x.Email.Equals(email)).FirstOrDefault() == null ? false : true);
+            }
+        }
+
+        /// <summary>
+        /// Adds a user to the database
+        /// </summary>
+        /// <param name="user"> user to add </param>
+        public void addUser(User user)
+        {
+            using (RouteConfiguratorDB context = new RouteConfiguratorDB())
+            {
+                context.Users.Add(user);
+                context.SaveChanges();
+            }
+        }
         #endregion
 
         #region Model Read
@@ -26,7 +88,7 @@ namespace RouteConfigurator.Services
         {
             using (RouteConfiguratorDB context = new RouteConfiguratorDB())
             {
-                return context.Models.Find(modelName) ;
+                return context.Models.Find(modelName);
             }
         }
 
