@@ -17,7 +17,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
-        private readonly INavigationService _navigationService;
+        private readonly IFrameNavigationService _navigationService;
 
         /// <summary>
         /// Data access service to retrieve data from a data source
@@ -115,7 +115,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
                         ReviewedDate = new DateTime(1900, 1, 1),
                         Description = string.IsNullOrWhiteSpace(description) ? "no description entered" : description,
                         State = 0,
-                        Sender = "TEMPORARY SENDER",
+                        Sender = string.Format("{0} {1}", _navigationService.user.FirstName, _navigationService.user.LastName),
                         Reviewer = "",
                         IsNew = true,
                         ComponentName = component.ComponentName,

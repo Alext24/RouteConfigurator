@@ -17,7 +17,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
-        private readonly INavigationService _navigationService;
+        private readonly IFrameNavigationService _navigationService;
 
         /// <summary>
         /// Data access service to retrieve data from a data source

@@ -1,17 +1,12 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Views;
-using RouteConfigurator.DTOs;
 using RouteConfigurator.Model;
 using RouteConfigurator.Services;
 using RouteConfigurator.Services.Interface;
 using RouteConfigurator.ViewModel.SecurityHelpers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RouteConfigurator.ViewModel.UserControlViewModel
@@ -81,7 +76,7 @@ namespace RouteConfigurator.ViewModel.UserControlViewModel
         }
 
         /// <summary>
-        /// Function for attempting to log in the user
+        /// Creates a new user
         /// </summary>
         /// <param name="parameter"> Password Box </param>
         private void createAccount(IHavePassword parameter)

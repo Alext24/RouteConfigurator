@@ -21,7 +21,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
-        private readonly INavigationService _navigationService;
+        private readonly IFrameNavigationService _navigationService;
 
         /// <summary>
         /// Data access service to retrieve data from a data source
@@ -203,6 +203,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                 {
                     mod.ModelBase = mod.ModelBase.ToUpper();
                     mod.BoxSize = mod.BoxSize.ToUpper();
+                    mod.ProductLine = mod.ProductLine.ToUpper();
 
                     try
                     {
@@ -232,6 +233,11 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                             errorText += string.Format("Error adding Model {0}. Invalid AV Time: {1}.\n", mod.ModelBase, mod.NewAVTime);
                             numError++;
                         }
+                        else if (string.IsNullOrWhiteSpace(mod.ProductLine))
+                        {
+                            errorText += string.Format("Error adding Model {0}. Invalid Product Line: {1}.\n", mod.ModelBase, mod.ProductLine);
+                            numError++;
+                        }
                         else
                         {
                             StandardModel model = new StandardModel()
@@ -239,7 +245,8 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
                                 Base = mod.ModelBase,
                                 BoxSize = mod.BoxSize,
                                 DriveTime = mod.NewDriveTime,
-                                AVTime = mod.NewAVTime
+                                AVTime = mod.NewAVTime,
+                                Line = mod.ProductLine
                             };
 
                             _serviceProxy.addModel(model);
@@ -1088,7 +1095,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private void updateModification(Modification mod)
         {
             mod.ReviewDate = DateTime.Now;
-            mod.Reviewer = "TEMPORARY REVIEWER";
+            mod.Reviewer = string.Format("{0} {1}", _navigationService.user.FirstName, _navigationService.user.LastName);
 
             _serviceProxy.updateModification(mod);
         }
@@ -1101,7 +1108,7 @@ namespace RouteConfigurator.ViewModel.StandardModelViewModel
         private void updateOverride(OverrideRequest or)
         {
             or.ReviewDate = DateTime.Now;
-            or.Reviewer = "TEMPORARY REVIEWER";
+            or.Reviewer = string.Format("{0} {1}", _navigationService.user.FirstName, _navigationService.user.LastName);
 
             _serviceProxy.updateOverrideRequest(or);
         }

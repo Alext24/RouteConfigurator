@@ -21,7 +21,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
-        private readonly INavigationService _navigationService;
+        private readonly IFrameNavigationService _navigationService;
 
         /// <summary>
         /// Data access service to retrieve data from a data source
@@ -973,7 +973,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         private void updateModification(EngineeredModification mod)
         {
             mod.ReviewedDate = DateTime.Now;
-            mod.Reviewer = "TEMPORARY REVIEWER";
+            mod.Reviewer = string.Format("{0} {1}", _navigationService.user.FirstName, _navigationService.user.LastName);
 
             _serviceProxy.updateEngineeredModification(mod);
         }

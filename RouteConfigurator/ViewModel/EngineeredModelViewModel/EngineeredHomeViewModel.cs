@@ -20,7 +20,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         /// <summary>
         /// Navigation service to help navigate to other pages
         /// </summary>
-        private readonly INavigationService _navigationService;
+        private readonly IFrameNavigationService _navigationService;
 
         /// <summary>
         /// Data access service to retrieve data from a data source
@@ -63,8 +63,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
         #region RelayCommands
         public RelayCommand loadedCommand { get; set; }
         public RelayCommand submitToQueueCommand { get; set; }
-        public RelayCommand supervisorLoginCommand { get; set; }
-        public RelayCommand managerLoginCommand { get; set; }
+        public RelayCommand loginCommand { get; set; }
         public RelayCommand routeQueueCommand { get; set; }
         public RelayCommand standardOrdersCommand { get; set; }
         public RelayCommand cellEditEndingCommand { get; set; }
@@ -80,8 +79,7 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
 
             loadedCommand = new RelayCommand(loadedAsync);
             submitToQueueCommand = new RelayCommand(submitToQueueAsync);
-            supervisorLoginCommand = new RelayCommand(supervisorLogin);
-            managerLoginCommand = new RelayCommand(managerLogin);
+            loginCommand = new RelayCommand(login);
             routeQueueCommand = new RelayCommand(routeQueue);
             standardOrdersCommand = new RelayCommand(standardOrders);
             cellEditEndingCommand = new RelayCommand (cellChanged);
@@ -171,14 +169,23 @@ namespace RouteConfigurator.ViewModel.EngineeredModelViewModel
             }
         }
 
-        private void supervisorLogin()
+        private void login()
         {
-            _navigationService.NavigateTo("EngineeredSupervisorView", true);
-        }
-
-        private void managerLogin()
-        {
-            _navigationService.NavigateTo("EngineeredManagerView");
+            if(_navigationService.user == null)
+            {
+                _navigationService.NavigateTo("LoginView");
+            }
+            else
+            {
+                if (_navigationService.user.EmployeeType.Equals("Manager"))
+                {
+                    _navigationService.NavigateTo("EngineeredManagerView");
+                }
+                else if (_navigationService.user.EmployeeType.Equals("Supervisor"))
+                {
+                    _navigationService.NavigateTo("EngineeredSupervisorView", true);
+                }
+            }
         }
 
         private void routeQueue()
